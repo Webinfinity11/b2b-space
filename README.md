@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# B2B Space
 
-## Getting Started
+კომპანიებს შორის გარიგებების პლატფორმა. Next.js 16 (App Router) + TypeScript + Tailwind 4 + Prisma 7 + PostgreSQL.
 
-First, run the development server:
+## ლოკალური გაშვება
 
 ```bash
+npm install
+npm run db:dev            # ლოკალური PGlite Postgres :54329 (ცალკე ტერმინალში)
+npx prisma migrate deploy # migration-ები
+npm run db:seed         # ადმინი (ADMIN_EMAIL/ADMIN_PASSWORD) + კატეგორიები
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+შემოწმება: `npm run lint && npm run typecheck && npm run build`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## არქიტექტურა
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| ზონა | მარშრუტები | დაცვა |
+|---|---|---|
+| საჯარო საიტი | `/`, `/companies`, `/offers`, `/categories/[slug]` | — |
+| მომხმარებლის/კომპანიის პანელი | `/app/*`, `/company/*` | `requireUser` / `requireCompany(permission)` |
+| ადმინისტრატორის პანელი | `/admin/*` (ცალკე layout) | `requireAdmin`; სხვა როლი იღებს 404-ს |
 
-## Learn More
+- **უფლებები**: `src/lib/authz.ts` (გვერდებისა და მოქმედებების guard-ები), `src/lib/permissions.ts` (კომპანიის როლები და უფლებები), `src/lib/scope.ts` (ჩანაწერის დონის ფილტრები). `proxy.ts` მხოლოდ UX გადამისამართებისთვისაა, დაცვას არ უზრუნველყოფს.
+- **სესიები**: შემთხვევითი token cookie-ში, ბაზაში ინახება მხოლოდ SHA-256 hash; პაროლები bcrypt-ით.
+- **ანონიმურობა**: საჯარო მონაცემები მხოლოდ `toPublicOffer()`-ით გადის (`src/lib/public.ts`).
+- **ტექსტები**: ყველა ტექსტი ერთ ფაილშია, `src/i18n/ka.ts`. ფორმატირება `src/lib/format.ts`-ით ხდება (`ka-GE`).
+- **ფაილები**: `UPLOAD_DIR/public` იხსნება `/files/*` მისამართით, `UPLOAD_DIR/private` კი მხოლოდ უფლების შემოწმების შემდეგ.
+- **თანხები**: `Decimal`. სხვადასხვა ვალუტა არასდროს ჯამდება.
 
-To learn more about Next.js, take a look at the following resources:
+## ეტაპები
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [x] 1. საფუძველი, დიზაინ-სისტემა, საჯარო გვერდები, ორი ცალკე პანელი
+- [x] 2. რეგისტრაცია/შესვლა, პროფილი, კომპანია, წევრები და უფლებები, შემოწმება, კატეგორიები
+- [x] 3. შეთავაზებები/მოთხოვნები, კატალოგი და ფილტრები, ანონიმურობა, გამოხმაურებები
+- [x] 4. პირადი მიმოწერა (polling), სტრუქტურირებული პირობები, ვერსიები, ორმხრივი დადასტურება
+- [x] 5. ინვოისები (ნომრები sequence-ით, უცვლელი snapshot), PDF ქართული შრიფტით, გადახდების ხელით აღრიცხვა, ფინანსები
+- [ ] 6. მოდერაცია და საჩივრები, ადმინის ფინანსები და პარამეტრები, დახვეწა
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+ღია კითხვები: [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md).

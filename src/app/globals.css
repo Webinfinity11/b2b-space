@@ -1,26 +1,104 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Manrope (Latin, digits) — Georgian glyphs fall back to Noto Sans Georgian */
+@font-face {
+  font-family: "Manrope";
+  src: url("/fonts/Manrope-Latin.woff2") format("woff2");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+20BE, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --font-sans: "Manrope", "Noto Sans Georgian Variable", "Noto Sans Georgian", system-ui, sans-serif;
+
+  /* Dealio navy palette */
+  --color-navy: #071426;
+  --color-navy-2: #0b1a2e;
+  --color-navy-3: #0e2036;
+  --color-canvas: #071426;
+  --color-surface: #0b1a2e;
+  --color-surface-2: #0e2036;
+  --color-accent: #8ec5ed;
+  --color-accent-strong: #8ec5ed;
+  --color-accent-hover: #a9d4f3;
+  --color-ink: #ffffff;
+  --color-secondary: #b5c1d0;
+  --color-muted: #8493a7;
+  --color-line: #17283d;
+  --color-success: #3ccf8e;
+  --color-warning: #e8b04b;
+  --color-danger: #f07878;
+
+  --radius-card: 14px;
+  --shadow-card: 0 10px 30px -18px rgb(0 0 0 / 0.55);
+  --container-site: 1240px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-text-size-adjust: 100%;
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  font-weight: 650;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-navy);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--color-accent);
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: rgb(142 197 237 / 0.18); border-radius: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* Soft glass card used across the app (Dealio card style) */
+.card-glass {
+  background: linear-gradient(150deg, rgb(142 197 237 / 0.09), rgb(142 197 237 / 0.012) 75%);
+  border: 1px solid rgb(142 197 237 / 0.08);
+  border-bottom-color: rgb(142 197 237 / 0.16);
+}
+
+/* Tables become stacked cards on phones (labels come from data-label, see ResponsiveTable) */
+@media (max-width: 767px) {
+  .rtable thead { display: none; }
+  .rtable table, .rtable tbody, .rtable tr, .rtable td { display: block; width: 100%; }
+  .rtable tbody { border: 0 !important; }
+  .rtable tr {
+    margin-bottom: 10px;
+    border: 1px solid var(--color-line) !important;
+    border-radius: var(--radius-card);
+    background: rgb(255 255 255 / 0.012);
+    padding: 6px 4px;
+  }
+  .rtable td { padding: 6px 12px !important; }
+  .rtable td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 2px;
+    font-size: 11px;
+    color: var(--color-muted);
+  }
 }

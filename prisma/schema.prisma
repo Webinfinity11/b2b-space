@@ -1,0 +1,748 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────────── Users & auth ───────────────────────────────
+
+enum PlatformRole {
+  USER
+  ADMIN
+  FINANCE_MANAGER
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+model User {
+  id              String       @id @default(cuid())
+  firstName       String
+  lastName        String
+  email           String       @unique
+  phone           String?
+  passwordHash    String
+  platformRole    PlatformRole @default(USER)
+  status          UserStatus   @default(ACTIVE)
+  emailVerifiedAt DateTime?
+  phoneVerifiedAt DateTime?
+  lastLoginAt     DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  sessions              Session[]
+  memberships           CompanyMember[]
+  createdCompanies      Company[]                 @relation("CompanyCreatedBy")
+  offers                Offer[]
+  responses             OfferResponse[]
+  participations        ConversationParticipant[]
+  messages              Message[]
+  dealVersionsCreated   DealTermsVersion[]
+  dealApprovals         DealApproval[]
+  notifications         Notification[]
+  auditLogs             AuditLog[]
+  verificationDecisions VerificationDecision[]
+  verificationDocuments VerificationDocument[]
+  paymentRecords        PaymentRecord[]
+  invoiceStatusChanges  InvoiceStatusChange[]
+  invitationsSent       CompanyInvitation[]
+  reports               Report[]                  @relation("ReportReporter")
+  reportsHandled        Report[]                  @relation("ReportHandler")
+
+  @@index([platformRole])
+  @@index([status])
+}
+
+/// Server-side session. The cookie holds a random token; only its SHA-256 hash is stored.
+model Session {
+  id         String   @id @default(cuid())
+  userId     String
+  tokenHash  String   @unique
+  expiresAt  DateTime
+  ip         String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+  lastUsedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// ─────────────────────────────── Companies ───────────────────────────────
+
+enum VerificationStatus {
+  PENDING
+  IN_REVIEW
+  VERIFIED
+  REJECTED
+  SUSPENDED
+}
+
+enum MemberRole {
+  OWNER
+  EMPLOYEE
+  FINANCE
+}
+
+enum MemberStatus {
+  ACTIVE
+  REMOVED
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  parentId  String?
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  parent    Category?         @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children  Category[]        @relation("CategoryTree")
+  companies CompanyCategory[]
+  offers    Offer[]
+
+  @@index([parentId])
+  @@index([isActive, sortOrder])
+}
+
+model Company {
+  id                 String             @id @default(cuid())
+  slug               String             @unique
+  legalName          String
+  tradeName          String?
+  registrationNumber String
+  taxNumber          String?
+  country            String             @default("GE")
+  city               String?
+  legalAddress       String
+  description        String?
+  activities         String?
+  /// Free-text activity area when none of the listed categories fits.
+  customCategory     String?
+  website            String?
+  facebookUrl        String?
+  linkedinUrl        String?
+  instagramUrl       String?
+  contactPerson      String
+  contactEmail       String
+  contactPhone       String?
+  showEmailPublicly  Boolean            @default(false)
+  showPhonePublicly  Boolean            @default(false)
+  logoUrl            String?
+  coverUrl           String?
+  verificationStatus VerificationStatus @default(PENDING)
+  verifiedAt         DateTime?
+  createdById        String
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  createdBy             User                   @relation("CompanyCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+  categories            CompanyCategory[]
+  members               CompanyMember[]
+  invitations           CompanyInvitation[]
+  media                 CompanyMedia[]
+  verificationDocuments VerificationDocument[]
+  verificationDecisions VerificationDecision[]
+  offers                Offer[]
+  responses             OfferResponse[]
+  participations        ConversationParticipant[]
+  dealsAsSeller         DealTerms[]            @relation("DealSellerCompany")
+  dealsAsBuyer          DealTerms[]            @relation("DealBuyerCompany")
+  approvals             DealApproval[]
+  invoicesAsSeller      Invoice[]              @relation("InvoiceSellerCompany")
+  invoicesAsBuyer       Invoice[]              @relation("InvoiceBuyerCompany")
+
+  @@unique([country, registrationNumber])
+  @@index([verificationStatus])
+  @@index([country, city])
+  @@index([createdAt])
+}
+
+model CompanyCategory {
+  companyId  String
+  categoryId String
+
+  company  Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  @@id([companyId, categoryId])
+  @@index([categoryId])
+}
+
+model CompanyMember {
+  id          String       @id @default(cuid())
+  companyId   String
+  userId      String
+  role        MemberRole   @default(EMPLOYEE)
+  /// Fine-grained permissions for EMPLOYEE / FINANCE members (see src/lib/permissions.ts). OWNER has all.
+  permissions String[]     @default([])
+  status      MemberStatus @default(ACTIVE)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, userId])
+  @@index([userId])
+}
+
+model CompanyInvitation {
+  id          String     @id @default(cuid())
+  companyId   String
+  email       String
+  role        MemberRole @default(EMPLOYEE)
+  permissions String[]   @default([])
+  tokenHash   String     @unique
+  invitedById String
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  revokedAt   DateTime?
+  createdAt   DateTime   @default(now())
+
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  invitedBy User    @relation(fields: [invitedById], references: [id], onDelete: Restrict)
+
+  @@index([companyId])
+  @@index([email])
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+model CompanyMedia {
+  id        String    @id @default(cuid())
+  companyId String
+  type      MediaType
+  url       String
+  caption   String?
+  sortOrder Int       @default(0)
+  createdAt DateTime  @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, sortOrder])
+}
+
+/// Private document. `storageKey` points to the private upload dir; never served publicly.
+model VerificationDocument {
+  id           String   @id @default(cuid())
+  companyId    String
+  storageKey   String
+  fileName     String
+  mimeType     String
+  sizeBytes    Int
+  uploadedById String
+  createdAt    DateTime @default(now())
+
+  company    Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  uploadedBy User    @relation(fields: [uploadedById], references: [id], onDelete: Restrict)
+
+  @@index([companyId])
+}
+
+model VerificationDecision {
+  id         String             @id @default(cuid())
+  companyId  String
+  reviewerId String
+  fromStatus VerificationStatus
+  toStatus   VerificationStatus
+  comment    String?
+  createdAt  DateTime           @default(now())
+
+  company  Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  reviewer User    @relation(fields: [reviewerId], references: [id], onDelete: Restrict)
+
+  @@index([companyId, createdAt])
+}
+
+// ─────────────────────────────── Offers & requests ───────────────────────────────
+
+enum OfferType {
+  OFFER
+  REQUEST
+}
+
+enum ItemKind {
+  PRODUCT
+  SERVICE
+}
+
+enum PriceType {
+  FIXED
+  FROM
+  RANGE
+  NEGOTIABLE
+  NONE
+}
+
+enum OfferVisibility {
+  PUBLIC
+  REGISTERED
+}
+
+enum OfferStatus {
+  DRAFT
+  PUBLISHED
+  ACCEPTING_RESPONSES
+  NEGOTIATING
+  CLOSED
+  EXPIRED
+  ARCHIVED
+}
+
+model Offer {
+  id            String          @id @default(cuid())
+  type          OfferType
+  title         String
+  description   String
+  categoryId    String?
+  itemKind      ItemKind        @default(PRODUCT)
+  priceType     PriceType       @default(NONE)
+  priceMin      Decimal?        @db.Decimal(18, 2)
+  priceMax      Decimal?        @db.Decimal(18, 2)
+  currency      String?
+  quantity      Decimal?        @db.Decimal(18, 3)
+  unit          String?
+  deliveryTerms String?
+  country       String?         @default("GE")
+  city          String?
+  validUntil    DateTime?
+  authorUserId  String
+  companyId     String?
+  /// When true the public site/API never exposes author or company identity.
+  isAnonymous   Boolean         @default(false)
+  visibility    OfferVisibility @default(PUBLIC)
+  status        OfferStatus     @default(DRAFT)
+  publishedAt   DateTime?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  category    Category?         @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  author      User              @relation(fields: [authorUserId], references: [id], onDelete: Restrict)
+  company     Company?          @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  attachments OfferAttachment[]
+  responses   OfferResponse[]
+  conversations Conversation[]
+
+  @@index([status, type, publishedAt])
+  @@index([categoryId])
+  @@index([companyId])
+  @@index([authorUserId])
+}
+
+model OfferAttachment {
+  id         String   @id @default(cuid())
+  offerId    String
+  url        String
+  fileName   String
+  mimeType   String
+  sizeBytes  Int
+  isImage    Boolean  @default(false)
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  offer Offer @relation(fields: [offerId], references: [id], onDelete: Cascade)
+
+  @@index([offerId])
+}
+
+enum ResponseStatus {
+  SENT
+  VIEWED
+  ACCEPTED
+  DECLINED
+  WITHDRAWN
+}
+
+model OfferResponse {
+  id                 String         @id @default(cuid())
+  offerId            String
+  responderUserId    String
+  responderCompanyId String?
+  message            String
+  status             ResponseStatus @default(SENT)
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  offer            Offer         @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  responder        User          @relation(fields: [responderUserId], references: [id], onDelete: Restrict)
+  responderCompany Company?      @relation(fields: [responderCompanyId], references: [id], onDelete: Restrict)
+  conversation     Conversation?
+
+  @@index([offerId, createdAt])
+  @@index([responderUserId])
+  @@index([responderCompanyId])
+}
+
+// ─────────────────────────────── Conversations ───────────────────────────────
+
+model Conversation {
+  id            String    @id @default(cuid())
+  offerId       String?
+  responseId    String?   @unique
+  subject       String
+  lastMessageAt DateTime  @default(now())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  offer        Offer?                    @relation(fields: [offerId], references: [id], onDelete: SetNull)
+  response     OfferResponse?            @relation(fields: [responseId], references: [id], onDelete: SetNull)
+  participants ConversationParticipant[]
+  messages     Message[]
+  dealTerms    DealTerms?
+
+  @@index([offerId])
+  @@index([lastMessageAt])
+}
+
+enum ParticipantSide {
+  AUTHOR
+  RESPONDER
+}
+
+model ConversationParticipant {
+  id               String          @id @default(cuid())
+  conversationId   String
+  userId           String
+  companyId        String?
+  side             ParticipantSide
+  /// Whether this participant's identity is shown to the other side (anonymous requests).
+  identityRevealed Boolean         @default(true)
+  lastReadAt       DateTime?
+  createdAt        DateTime        @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Restrict)
+  company      Company?     @relation(fields: [companyId], references: [id], onDelete: Restrict)
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+  @@index([companyId])
+}
+
+enum MessageKind {
+  TEXT
+  FILE
+  SYSTEM
+  TERMS
+}
+
+model Message {
+  id             String      @id @default(cuid())
+  conversationId String
+  senderId       String?
+  kind           MessageKind @default(TEXT)
+  body           String
+  fileUrl        String?
+  fileName       String?
+  fileMime       String?
+  fileSize       Int?
+  createdAt      DateTime    @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User?        @relation(fields: [senderId], references: [id], onDelete: SetNull)
+
+  @@index([conversationId, createdAt])
+}
+
+// ─────────────────────────────── Deal terms ───────────────────────────────
+
+enum DealStatus {
+  DRAFT
+  SENT_FOR_APPROVAL
+  CHANGES_REQUESTED
+  APPROVED_BY_ONE
+  APPROVED_BY_BOTH
+  SUPERSEDED
+  CANCELLED
+}
+
+enum DealSide {
+  SELLER
+  BUYER
+}
+
+model DealTerms {
+  id               String   @id @default(cuid())
+  conversationId   String   @unique
+  sellerUserId     String
+  buyerUserId      String
+  sellerCompanyId  String?
+  buyerCompanyId   String?
+  currentVersionId String?  @unique
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  conversation   Conversation       @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sellerCompany  Company?           @relation("DealSellerCompany", fields: [sellerCompanyId], references: [id], onDelete: Restrict)
+  buyerCompany   Company?           @relation("DealBuyerCompany", fields: [buyerCompanyId], references: [id], onDelete: Restrict)
+  versions       DealTermsVersion[] @relation("DealVersions")
+  currentVersion DealTermsVersion?  @relation("DealCurrentVersion", fields: [currentVersionId], references: [id], onDelete: SetNull)
+}
+
+/// Immutable once sent for approval — every change creates a new version.
+model DealTermsVersion {
+  id               String     @id @default(cuid())
+  dealTermsId      String
+  versionNumber    Int
+  status           DealStatus @default(DRAFT)
+  currency         String
+  discountAmount   Decimal    @default(0) @db.Decimal(18, 2)
+  taxRatePercent   Decimal?   @db.Decimal(5, 2)
+  taxAmount        Decimal    @default(0) @db.Decimal(18, 2)
+  deliveryTerms    String?
+  deliveryCost     Decimal    @default(0) @db.Decimal(18, 2)
+  subtotal         Decimal    @db.Decimal(18, 2)
+  total            Decimal    @db.Decimal(18, 2)
+  paymentTerms     String?
+  validUntil       DateTime?
+  notes            String?
+  createdById      String
+  createdAt        DateTime   @default(now())
+
+  dealTerms      DealTerms       @relation("DealVersions", fields: [dealTermsId], references: [id], onDelete: Cascade)
+  currentOf      DealTerms?      @relation("DealCurrentVersion")
+  createdBy      User            @relation(fields: [createdById], references: [id], onDelete: Restrict)
+  items          DealTermsItem[]
+  approvals      DealApproval[]
+  invoice        Invoice?
+
+  @@unique([dealTermsId, versionNumber])
+}
+
+model DealTermsItem {
+  id          String   @id @default(cuid())
+  versionId   String
+  name        String
+  description String?
+  quantity    Decimal  @db.Decimal(18, 3)
+  unit        String
+  unitPrice   Decimal  @db.Decimal(18, 2)
+  lineTotal   Decimal  @db.Decimal(18, 2)
+  sortOrder   Int      @default(0)
+
+  version DealTermsVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+
+  @@index([versionId])
+}
+
+enum ApprovalDecision {
+  APPROVED
+  CHANGES_REQUESTED
+}
+
+model DealApproval {
+  id        String           @id @default(cuid())
+  versionId String
+  side      DealSide
+  userId    String
+  companyId String?
+  decision  ApprovalDecision
+  comment   String?
+  createdAt DateTime         @default(now())
+
+  version DealTermsVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  user    User             @relation(fields: [userId], references: [id], onDelete: Restrict)
+  company Company?         @relation(fields: [companyId], references: [id], onDelete: Restrict)
+
+  @@unique([versionId, side])
+}
+
+// ─────────────────────────────── Invoices ───────────────────────────────
+
+enum InvoiceStatus {
+  DRAFT
+  ISSUED
+  SENT
+  VIEWED
+  PARTIALLY_PAID
+  PAID
+  OVERDUE
+  CANCELLED
+  REFUNDED
+}
+
+model Invoice {
+  id                 String        @id @default(cuid())
+  number             String        @unique
+  dealTermsVersionId String        @unique
+  sellerCompanyId    String?
+  buyerCompanyId     String?
+  sellerUserId       String
+  buyerUserId        String
+  status             InvoiceStatus @default(ISSUED)
+  issuedAt           DateTime      @default(now())
+  dueDate            DateTime?
+  currency           String
+  subtotal           Decimal       @db.Decimal(18, 2)
+  discountAmount     Decimal       @default(0) @db.Decimal(18, 2)
+  taxAmount          Decimal       @default(0) @db.Decimal(18, 2)
+  deliveryCost       Decimal       @default(0) @db.Decimal(18, 2)
+  total              Decimal       @db.Decimal(18, 2)
+  paidAmount         Decimal       @default(0) @db.Decimal(18, 2)
+  paymentTerms       String?
+  notes              String?
+  /// Frozen copy of seller/buyer legal data and terms at the moment of creation.
+  snapshot           Json
+  correctsInvoiceId  String?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  dealTermsVersion DealTermsVersion      @relation(fields: [dealTermsVersionId], references: [id], onDelete: Restrict)
+  sellerCompany    Company?              @relation("InvoiceSellerCompany", fields: [sellerCompanyId], references: [id], onDelete: Restrict)
+  buyerCompany     Company?              @relation("InvoiceBuyerCompany", fields: [buyerCompanyId], references: [id], onDelete: Restrict)
+  correctsInvoice  Invoice?              @relation("InvoiceCorrections", fields: [correctsInvoiceId], references: [id], onDelete: Restrict)
+  corrections      Invoice[]             @relation("InvoiceCorrections")
+  items            InvoiceItem[]
+  payments         PaymentRecord[]
+  statusHistory    InvoiceStatusChange[]
+
+  @@index([sellerCompanyId, status])
+  @@index([buyerCompanyId, status])
+  @@index([sellerUserId])
+  @@index([buyerUserId])
+  @@index([dueDate])
+}
+
+model InvoiceItem {
+  id          String  @id @default(cuid())
+  invoiceId   String
+  name        String
+  description String?
+  quantity    Decimal @db.Decimal(18, 3)
+  unit        String
+  unitPrice   Decimal @db.Decimal(18, 2)
+  lineTotal   Decimal @db.Decimal(18, 2)
+  sortOrder   Int     @default(0)
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
+}
+
+model InvoiceStatusChange {
+  id          String         @id @default(cuid())
+  invoiceId   String
+  fromStatus  InvoiceStatus?
+  toStatus    InvoiceStatus
+  changedById String
+  comment     String?
+  createdAt   DateTime       @default(now())
+
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  changedBy User    @relation(fields: [changedById], references: [id], onDelete: Restrict)
+
+  @@index([invoiceId, createdAt])
+}
+
+/// Manually recorded payment (no payment provider yet). Never created automatically.
+model PaymentRecord {
+  id           String   @id @default(cuid())
+  invoiceId    String
+  amount       Decimal  @db.Decimal(18, 2)
+  currency     String
+  paidAt       DateTime
+  method       String?
+  reference    String?
+  note         String?
+  recordedById String
+  createdAt    DateTime @default(now())
+
+  invoice    Invoice @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
+  recordedBy User    @relation(fields: [recordedById], references: [id], onDelete: Restrict)
+
+  @@index([invoiceId])
+}
+
+// ─────────────────────────────── Notifications, moderation, audit ───────────────────────────────
+
+enum NotificationType {
+  NEW_RESPONSE
+  NEW_REPLY
+  NEW_MESSAGE
+  TERMS_SENT
+  TERMS_APPROVED
+  TERMS_REJECTED
+  INVOICE_CREATED
+  PAYMENT_DUE_SOON
+  INVOICE_OVERDUE
+  COMPANY_STATUS_CHANGED
+  MEMBER_INVITED
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  body      String?
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt, createdAt])
+}
+
+enum ReportStatus {
+  OPEN
+  IN_REVIEW
+  RESOLVED
+  DISMISSED
+}
+
+model Report {
+  id          String       @id @default(cuid())
+  reporterId  String
+  targetType  String
+  targetId    String
+  reason      String
+  status      ReportStatus @default(OPEN)
+  handledById String?
+  resolution  String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  reporter  User  @relation("ReportReporter", fields: [reporterId], references: [id], onDelete: Restrict)
+  handledBy User? @relation("ReportHandler", fields: [handledById], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@index([targetType, targetId])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  action     String
+  entityType String
+  entityId   String?
+  metadata   Json?
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([entityType, entityId])
+  @@index([actorId])
+}
+
+model PlatformSetting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}
