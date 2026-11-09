@@ -12,7 +12,7 @@ export function OfferCard({ offer }: { offer: PublicOffer }) {
   return (
     <Link
       href={`/offers/${offer.id}`}
-      className="group flex h-full gap-3.5 rounded-card border border-line bg-white/[0.012] p-3 transition-colors hover:border-accent/30 hover:bg-accent/[0.04]"
+      className="group flex h-full gap-3.5 rounded-card border border-line bg-card p-3 transition-colors hover:border-accent/30 hover:bg-accent/[0.04]"
     >
       <div
         aria-hidden="true"

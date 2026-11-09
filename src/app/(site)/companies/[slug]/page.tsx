@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element -- user uploads and design photos */
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -37,14 +38,13 @@ export default async function CompanyPage({ params }: PageProps<"/companies/[slu
 
   return (
     <>
-      <div className="relative h-32 bg-navy md:h-40">
-        <div
-          aria-hidden="true"
-          className="h-full w-full opacity-[0.08]"
-          style={{ backgroundImage: "linear-gradient(#8EC5ED 1px, transparent 1px), linear-gradient(90deg, #8EC5ED 1px, transparent 1px)", backgroundSize: "48px 48px" }}
-        />
+      {/* Decorative banner from the design photo set */}
+      <div aria-hidden="true" className="grid h-36 grid-cols-3 gap-2 overflow-hidden rounded-[18px] md:h-44">
+        {[0, 4, 7].map((i) => (
+          <img key={i} src={`/images/tile-${i}.jpg`} alt="" className="h-full w-full rounded-[14px] border border-line object-cover saturate-[.85]" />
+        ))}
       </div>
-      <div className="mx-auto max-w-site px-4 sm:px-6">
+      <div className="px-3 sm:px-5">
         <div className="relative -mt-12 flex flex-col gap-5 rounded-card border border-line bg-surface p-5 shadow-card md:flex-row md:items-center md:p-6">
           <CompanyLogo name={name} url={company.logoUrl} size={88} />
           <div className="min-w-0 flex-1">

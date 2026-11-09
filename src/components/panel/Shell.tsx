@@ -51,7 +51,7 @@ export function Shell({
       <div className="flex items-center justify-between px-1">
         <Logo href={homeHref} />
         {variant === "admin" && <span className="rounded-md bg-accent/10 px-1.5 py-0.5 text-[10px] font-bold text-accent">ADMIN</span>}
-        <button type="button" onClick={() => setOpen(false)} aria-label={ka.nav.close} className="grid size-8 place-items-center rounded-full text-secondary hover:bg-white/5 lg:hidden">
+        <button type="button" onClick={() => setOpen(false)} aria-label={ka.nav.close} className="grid size-8 place-items-center rounded-full text-secondary hover:bg-chip lg:hidden">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
             <path d="m6 6 12 12M6 18 18 6" />
           </svg>
@@ -71,7 +71,7 @@ export function Shell({
                       href={item.href}
                       aria-current={active ? "page" : undefined}
                       className={`flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-[13.5px] transition-colors ${
-                        active ? "bg-accent font-semibold text-navy shadow-[0_3px_16px_rgb(142_197_237/0.07)]" : "text-secondary hover:bg-accent/[0.065] hover:text-ink"
+                        active ? "bg-accent font-semibold text-deep shadow-[0_3px_16px_rgb(142_197_237/0.07)]" : "text-secondary hover:bg-accent/[0.065] hover:text-ink"
                       }`}
                     >
                       <span className="flex min-w-0 items-center gap-2.5">
@@ -79,9 +79,9 @@ export function Shell({
                         <span className="truncate">{item.label}</span>
                       </span>
                       {item.badge ? (
-                        <span className={`rounded-md px-1.5 text-[11px] font-semibold tabular-nums ${active ? "bg-navy/15" : "bg-white/[0.06] text-secondary"}`}>{item.badge}</span>
+                        <span className={`rounded-md px-1.5 text-[11px] font-semibold tabular-nums ${active ? "bg-deep/15" : "bg-chip text-secondary"}`}>{item.badge}</span>
                       ) : active ? (
-                        <span aria-hidden="true" className="size-1 rounded-full bg-navy" />
+                        <span aria-hidden="true" className="size-1 rounded-full bg-deep" />
                       ) : null}
                     </Link>
                   </li>
@@ -101,7 +101,7 @@ export function Shell({
   );
 
   return (
-    <div className="min-h-dvh bg-navy lg:pl-[264px]">
+    <div className="min-h-dvh bg-canvas lg:pl-[264px]">
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-[264px] border-r border-line bg-navy lg:block">{sidebar}</aside>
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden">

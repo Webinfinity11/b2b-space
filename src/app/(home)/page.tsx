@@ -10,8 +10,7 @@ import { Badge, VerifiedMark } from "@/components/ui/Badge";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { controlClass } from "@/components/ui/styles";
-import { Shell, type NavGroup } from "@/components/panel/Shell";
-import { ProfileMenu } from "@/components/panel/ProfileMenu";
+import { SiteShell } from "@/components/site/SiteShell";
 import { CompanyLogo } from "@/components/site/CompanyLogo";
 
 /** Decorative photos from the design kit — shown only when an offer has no own images, and labelled as such. */
@@ -39,91 +38,8 @@ export default async function HomeWorkspace({ searchParams }: PageProps<"/">) {
     return s ? `/?${s}` : "/";
   };
 
-  const groups: NavGroup[] = [
-    {
-      items: [
-        { href: "/", label: ka.ws.home, icon: "home" },
-        { href: "/offers", label: ka.nav.offers, icon: "tag" },
-        { href: "/companies", label: ka.nav.companies, icon: "building" },
-        ...(user
-          ? [{ href: user.platformRole === "ADMIN" ? "/admin" : "/app", label: ka.ws.myPanel, icon: "user" as const }]
-          : [
-              { href: "/login", label: ka.nav.login, icon: "user" as const },
-              { href: "/register", label: ka.nav.register, icon: "plus" as const },
-            ]),
-      ],
-    },
-  ];
-  const panelHref = user?.platformRole === "ADMIN" ? "/admin" : "/app";
-
   return (
-    <Shell
-      variant="site"
-      homeHref="/"
-      groups={groups}
-      mainClassName="px-0 py-0"
-      sidebarBottom={
-        <div className="card-glass rounded-[15px] px-3 pb-4 pt-5 text-center">
-          <h2 className="text-sm font-semibold">{ka.ws.promoTitle}</h2>
-          <p className="mt-1 text-xs text-muted">{ka.ws.promoText}</p>
-          <Link href={user ? "/company/new" : "/register"} className="mt-4 inline-flex h-10 items-center justify-center gap-2 rounded-full bg-accent px-4 text-[13px] font-semibold text-navy hover:bg-accent-hover">
-            {ka.ws.promoButton} <Icon name="arrowUp" size={14} />
-          </Link>
-        </div>
-      }
-      footerNote={
-        <div className="mt-3 space-y-2 px-3">
-          <div className="flex flex-col gap-1 text-[11px] text-muted">
-            <Link href="/terms" className="hover:text-secondary">{ka.footer.terms}</Link>
-            <Link href="/privacy" className="hover:text-secondary">{ka.footer.privacy}</Link>
-          </div>
-          <div className="flex items-center gap-2 text-[11px] text-muted">
-            <span aria-hidden="true" className="size-1.5 rounded-full bg-success" /> {ka.ws.space}
-          </div>
-        </div>
-      }
-      top={
-        <>
-          <div className="min-w-0">
-            <h1 className="truncate text-[17px] font-medium tracking-tight sm:text-[19px]">
-              {user ? (
-                <>
-                  {ka.top.hello} <strong className="font-bold">{user.firstName}</strong>
-                </>
-              ) : (
-                <strong className="font-bold">{ka.ws.hello}</strong>
-              )}
-              <span className="text-accent">.</span>
-            </h1>
-            <p className="mt-0.5 hidden items-center gap-1.5 text-xs text-muted sm:flex">
-              <Icon name="pin" size={13} /> {ka.ws.subtitle}
-            </p>
-          </div>
-          <div className="flex items-center gap-2 sm:gap-3">
-            <form action="/" method="get" className="hidden md:block" role="search">
-              <label className="flex h-10 w-60 items-center gap-2 rounded-[10px] border border-line bg-white/[0.015] px-3 text-muted focus-within:border-accent/50">
-                <Icon name="search" size={16} />
-                <input name="q" type="search" defaultValue={filters.q} placeholder={ka.ws.search} aria-label={ka.ws.search} className="w-full bg-transparent text-sm text-ink placeholder:text-muted focus:outline-none" />
-              </label>
-            </form>
-            {user ? (
-              <ProfileMenu
-                initials={`${user.firstName[0] ?? ""}${user.lastName[0] ?? ""}`}
-                firstName={user.firstName}
-                fullName={`${user.firstName} ${user.lastName}`}
-                sub={user.email}
-                profileHref={panelHref}
-              />
-            ) : (
-              <>
-                <ButtonLink href="/login" variant="ghost" size="sm" className="max-sm:hidden">{ka.nav.login}</ButtonLink>
-                <ButtonLink href="/register" size="sm">{ka.nav.register}</ButtonLink>
-              </>
-            )}
-          </div>
-        </>
-      }
-    >
+    <SiteShell mainClassName="px-0 py-0" searchDefault={filters.q}>
       <div className="grid min-w-0 lg:h-[calc(100dvh-72px)] lg:grid-cols-[minmax(340px,0.75fr)_minmax(0,1fr)]">
         {/* ── List column ── */}
         <section className="flex min-h-0 min-w-0 flex-col border-line lg:border-r" aria-label={ka.nav.offers}>
@@ -137,7 +53,7 @@ export default async function HomeWorkspace({ searchParams }: PageProps<"/">) {
               options={categories.flatMap((c) => [{ value: c.slug, label: c.name }, ...c.children.map((ch) => ({ value: ch.slug, label: `— ${ch.name}` }))])}
             />
             <Pill name="sort" value={sort} label={ka.catalog.sortNewest} options={[{ value: "validUntil", label: ka.catalog.sortValidUntil }]} />
-            <button type="submit" aria-label={ka.common.filter} title={ka.common.filter} className="grid size-9 place-items-center rounded-full bg-accent text-navy hover:bg-accent-hover">
+            <button type="submit" aria-label={ka.common.filter} title={ka.common.filter} className="grid size-9 place-items-center rounded-full bg-accent text-deep hover:bg-accent-hover">
               <Icon name="search" size={15} />
             </button>
           </form>
@@ -169,7 +85,7 @@ export default async function HomeWorkspace({ searchParams }: PageProps<"/">) {
           {selected ? <Detail data={selected} index={selectedIndex} /> : <EmptyDetail registerHref={user ? "/company/new" : "/register"} />}
         </section>
       </div>
-    </Shell>
+    </SiteShell>
   );
 }
 
@@ -210,7 +126,7 @@ function ListCard({ offer, selected, href, index }: { offer: PublicOffer; select
     </>
   );
   const cls = `group flex gap-3.5 rounded-card border p-2.5 transition-colors ${
-    selected ? "border-accent/35 bg-gradient-to-r from-accent/10 to-accent/[0.04] shadow-[0_4px_14px_rgb(0_0_0/0.12)]" : "border-line bg-white/[0.012] hover:border-accent/20 hover:bg-accent/[0.04]"
+    selected ? "border-accent/35 bg-gradient-to-r from-accent/10 to-accent/[0.04] shadow-[0_4px_14px_rgb(0_0_0/0.12)]" : "border-line bg-card hover:border-accent/20 hover:bg-accent/[0.04]"
   }`;
   return (
     <div role="listitem" className="min-w-0">
@@ -246,7 +162,7 @@ function Detail({ data, index }: { data: NonNullable<Awaited<ReturnType<typeof g
       <div className="grid h-[340px] grid-cols-[minmax(0,2.6fr)_minmax(0,1fr)] gap-3">
         <div className="relative min-h-0 overflow-hidden rounded-[16px] border border-line">
           <img src={gallery[0]} alt={illustrative ? "" : offer.title} className="h-full w-full object-cover" />
-          <span className="absolute right-3 top-3 rounded-full bg-navy/60 px-2.5 py-1 text-[11px] text-secondary backdrop-blur">
+          <span className="absolute right-3 top-3 rounded-full bg-deep/60 px-2.5 py-1 text-[11px] text-white/80 backdrop-blur">
             {illustrative ? ka.ws.illustrative : `1 / ${images.length}`}
           </span>
         </div>
@@ -301,7 +217,7 @@ function Detail({ data, index }: { data: NonNullable<Awaited<ReturnType<typeof g
 
       {/* Price card + white floating card (as in the design) */}
       <div className="relative pb-4">
-        <div className="rounded-[16px] border border-accent/10 bg-gradient-to-br from-[#13304d] to-[#0b1a2e] p-6 xl:pr-[290px]">
+        <div className="rounded-[16px] border border-accent/10 price-card p-6 xl:pr-[290px]">
           <div className="text-sm font-semibold">{ka.ws.priceTitle}</div>
           <div className="mt-2 text-2xl font-bold tracking-tight tabular-nums xl:whitespace-nowrap">{offerPriceLabel(offer)}</div>
           <div className="mt-2 flex items-center gap-2 text-xs text-secondary">
@@ -323,17 +239,17 @@ function Detail({ data, index }: { data: NonNullable<Awaited<ReturnType<typeof g
             </div>
           )}
         </div>
-        <div className="mt-4 rounded-[18px] bg-white p-5 text-navy shadow-2xl xl:absolute xl:-top-6 xl:right-4 xl:mt-0 xl:w-[270px] xl:rotate-[-5deg]">
+        <div className="mt-4 rounded-[18px] bg-white p-5 text-deep shadow-2xl xl:absolute xl:-top-6 xl:right-4 xl:mt-0 xl:w-[270px] xl:rotate-[-5deg]">
           <div className="text-[15px] font-semibold">{ka.home.howItWorks}</div>
           <ol className="mt-3 space-y-2 text-[13px] text-[#334155]">
             {ka.home.steps.map((s, i) => (
               <li key={s.title} className="flex items-center gap-2">
-                <span className="grid size-5 shrink-0 place-items-center rounded-full bg-navy text-[10px] font-bold text-accent">{i + 1}</span>
+                <span className="grid size-5 shrink-0 place-items-center rounded-full bg-deep text-[10px] font-bold text-[#8EC5ED]">{i + 1}</span>
                 {s.title}
               </li>
             ))}
           </ol>
-          <Link href={`/offers/${offer.id}`} className="mt-4 flex h-11 items-center justify-center gap-2 rounded-full bg-navy text-sm font-medium text-white hover:bg-navy-3">
+          <Link href={`/offers/${offer.id}`} className="mt-4 flex h-11 items-center justify-center gap-2 rounded-full bg-deep text-sm font-medium text-white hover:bg-[#16304f]">
             {ka.ws.respond} <Icon name="arrow" size={15} />
           </Link>
         </div>

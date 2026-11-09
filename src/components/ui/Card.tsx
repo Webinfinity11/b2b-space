@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`rounded-card border border-line bg-white/[0.012] shadow-card ${className}`}>{children}</div>;
+  return <div className={`rounded-card border border-line bg-card shadow-card ${className}`}>{children}</div>;
 }
 
 export function CardHeader({ title, text, action }: { title: ReactNode; text?: ReactNode; action?: ReactNode }) {
@@ -37,7 +37,7 @@ export function PageHeader({ title, text, action }: { title: ReactNode; text?: R
 
 export function EmptyState({ text, action }: { text: ReactNode; action?: ReactNode }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-4 rounded-card border border-dashed border-line bg-white/[0.012] px-6 py-12 text-center">
+    <div className="flex flex-col items-center justify-center gap-4 rounded-card border border-dashed border-line bg-card px-6 py-12 text-center">
       <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true" className="text-accent">
         <rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor" opacity="0.5" />
         <rect x="22" y="6" width="12" height="12" rx="2" fill="none" stroke="currentColor" strokeWidth="2" />

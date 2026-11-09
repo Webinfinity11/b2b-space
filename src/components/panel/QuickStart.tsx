@@ -27,10 +27,10 @@ export function QuickActions({ isOwner, hasCompany }: { isOwner: boolean; hasCom
             key={a.href}
             href={a.href}
             className={`group flex items-start gap-3 rounded-card border p-4 shadow-card transition-colors ${
-              a.primary ? "card-glass border-accent/20 hover:border-accent/40" : "border-line bg-white/[0.012] hover:border-accent/30 hover:bg-accent/[0.04]"
+              a.primary ? "card-glass border-accent/20 hover:border-accent/40" : "border-line bg-card hover:border-accent/30 hover:bg-accent/[0.04]"
             }`}
           >
-            <span className={`grid size-9 shrink-0 place-items-center rounded-lg ${a.primary ? "bg-accent text-navy" : "bg-accent/10 text-accent"}`}>
+            <span className={`grid size-9 shrink-0 place-items-center rounded-lg ${a.primary ? "bg-accent text-deep" : "bg-accent/10 text-accent"}`}>
               <Icon name={a.icon} />
             </span>
             <span>

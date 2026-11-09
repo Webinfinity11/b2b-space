@@ -3,12 +3,12 @@ import type { ReactNode } from "react";
 type Tone = "neutral" | "success" | "warning" | "danger" | "info" | "navy";
 
 const tones: Record<Tone, string> = {
-  neutral: "bg-white/[0.06] text-secondary",
+  neutral: "bg-chip text-secondary",
   success: "bg-success/12 text-success",
   warning: "bg-warning/12 text-warning",
   danger: "bg-danger/12 text-danger",
   info: "bg-accent/10 text-accent",
-  navy: "bg-accent text-navy",
+  navy: "bg-accent text-deep",
 };
 
 export function Badge({ tone = "neutral", children }: { tone?: Tone; children: ReactNode }) {

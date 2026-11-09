@@ -14,7 +14,7 @@ export function CompanyCard({ company }: { company: PublicCompanyCard }) {
   return (
     <Link
       href={`/companies/${company.slug}`}
-      className="group flex h-full gap-3.5 rounded-card border border-line bg-white/[0.012] p-3 transition-colors hover:border-accent/30 hover:bg-accent/[0.04]"
+      className="group flex h-full gap-3.5 rounded-card border border-line bg-card p-3 transition-colors hover:border-accent/30 hover:bg-accent/[0.04]"
     >
       <CompanyLogo name={name} url={company.logoUrl} size={84} />
       <div className="flex min-w-0 flex-1 flex-col justify-center">

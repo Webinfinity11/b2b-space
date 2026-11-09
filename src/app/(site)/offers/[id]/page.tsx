@@ -55,7 +55,7 @@ export default async function OfferPage({ params }: PageProps<"/offers/[id]">) {
   }
 
   return (
-    <div className="mx-auto max-w-site px-4 py-8 sm:px-6 md:py-12">
+    <div>
       <nav className="mb-4 text-sm text-muted">
         <Link href="/offers" className="hover:text-ink">{ka.nav.offers}</Link>
         {offer.category && (

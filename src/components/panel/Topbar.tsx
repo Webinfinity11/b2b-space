@@ -2,9 +2,11 @@ import Link from "next/link";
 import { ka } from "@/i18n/ka";
 import { Icon } from "@/components/ui/Icon";
 import { ProfileMenu } from "./ProfileMenu";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { getTheme } from "@/lib/theme";
 
 /** Workspace top bar: greeting, search, notifications, profile (navy design). */
-export function Topbar({
+export async function Topbar({
   firstName,
   fullName,
   sub,
@@ -25,6 +27,7 @@ export function Topbar({
   notificationsHref?: string | null;
   profileHref?: string;
 }) {
+  const theme = await getTheme();
   const initials = fullName
     .split(" ")
     .map((p) => p.slice(0, 1))
@@ -43,11 +46,12 @@ export function Topbar({
       </div>
       <div className="flex items-center gap-2 sm:gap-3">
         <form action={searchAction} method="get" className="hidden md:block" role="search">
-          <label className="flex h-10 w-60 items-center gap-2 rounded-[10px] border border-line bg-white/[0.015] px-3 text-muted focus-within:border-accent/50">
+          <label className="flex h-10 w-60 items-center gap-2 rounded-[10px] border border-line bg-field px-3 text-muted focus-within:border-accent/50">
             <Icon name="search" size={16} />
             <input name="q" type="search" placeholder={searchPlaceholder} aria-label={searchPlaceholder} className="w-full bg-transparent text-sm text-ink placeholder:text-muted focus:outline-none" />
           </label>
         </form>
+        <ThemeToggle initial={theme} />
         {notificationsHref && (
           <Link href={notificationsHref} aria-label={ka.panel.notifications} className="relative grid size-10 place-items-center rounded-full border border-line text-secondary hover:border-accent/40 hover:text-ink">
             <Icon name="bell" size={17} />

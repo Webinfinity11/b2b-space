@@ -15,7 +15,7 @@ export function RolePicker({ name, defaultValue, idPrefix }: { name: string; def
         <label
           key={r}
           htmlFor={`${idPrefix}-${r}`}
-          className="flex cursor-pointer items-start gap-3 rounded-lg border border-line bg-surface p-3 hover:border-accent has-[:checked]:border-navy has-[:checked]:bg-accent/10"
+          className="flex cursor-pointer items-start gap-3 rounded-lg border border-line bg-surface p-3 hover:border-accent has-[:checked]:border-accent has-[:checked]:bg-accent/10"
         >
           <input id={`${idPrefix}-${r}`} type="radio" name={name} value={r} defaultChecked={current === r} className="mt-1 size-4 accent-navy" />
           <span>

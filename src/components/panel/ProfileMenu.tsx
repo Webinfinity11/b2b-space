@@ -23,7 +23,7 @@ export function ProfileMenu({ initials, firstName, fullName, sub, profileHref }:
   return (
     <div className="relative" ref={ref}>
       <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 text-sm text-secondary hover:text-ink">
-        <span aria-hidden="true" className="grid size-9 place-items-center rounded-full border-2 border-white/15 bg-gradient-to-br from-[#B8D9F1] to-[#5A7F9D] text-xs font-extrabold text-navy">
+        <span aria-hidden="true" className="grid size-9 place-items-center rounded-full border-2 border-line bg-gradient-to-br from-[#B8D9F1] to-[#5A7F9D] text-xs font-extrabold text-deep">
           {initials}
         </span>
         <span className="hidden max-w-32 truncate sm:inline">{firstName}</span>

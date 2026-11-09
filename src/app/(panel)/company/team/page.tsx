@@ -40,7 +40,7 @@ export default async function TeamPage() {
               <CardBody>
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div aria-hidden="true" className="grid size-10 place-items-center rounded-full bg-gradient-to-br from-[#B8D9F1] to-[#5A7F9D] font-bold text-navy">
+                    <div aria-hidden="true" className="grid size-10 place-items-center rounded-full bg-gradient-to-br from-[#B8D9F1] to-[#5A7F9D] font-bold text-deep">
                       {m.user.firstName.slice(0, 1)}
                     </div>
                     <div>
@@ -113,7 +113,7 @@ export default async function TeamPage() {
               <ol className="space-y-2 rounded-lg bg-canvas p-3 text-sm">
                 {ka.team.steps.map((s, i) => (
                   <li key={i} className="flex gap-2">
-                    <span className="grid size-5 shrink-0 place-items-center rounded-full bg-accent text-[11px] font-semibold text-navy">{i + 1}</span>
+                    <span className="grid size-5 shrink-0 place-items-center rounded-full bg-accent text-[11px] font-semibold text-deep">{i + 1}</span>
                     <span>{s}</span>
                   </li>
                 ))}

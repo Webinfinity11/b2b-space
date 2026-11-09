@@ -52,7 +52,7 @@ export default async function ConversationPage({ params }: PageProps<"/app/conve
           text={others.map((p) => partyLabel(p, mySide, user.id)).join(", ")}
           action={
             canInvoice ? (
-              <a href="#invoice" className="inline-flex h-9 items-center gap-2 rounded-full bg-accent px-3 text-sm font-medium text-navy hover:bg-accent-hover">
+              <a href="#invoice" className="inline-flex h-9 items-center gap-2 rounded-full bg-accent px-3 text-sm font-medium text-deep hover:bg-accent-hover">
                 <Icon name="invoice" size={16} /> {ka.invoice.composerButton}
               </a>
             ) : deal?.dealSide === "BUYER" ? (
@@ -77,7 +77,7 @@ export default async function ConversationPage({ params }: PageProps<"/app/conve
                       </div>
                     </div>
                     <div className="mt-3 flex gap-2">
-                      <Link href={msg.fileUrl} className="flex-1 rounded-lg bg-accent px-3 py-2 text-center text-sm font-medium text-navy hover:bg-accent-hover">{ka.invoice.chatCardOpen}</Link>
+                      <Link href={msg.fileUrl} className="flex-1 rounded-lg bg-accent px-3 py-2 text-center text-sm font-medium text-deep hover:bg-accent-hover">{ka.invoice.chatCardOpen}</Link>
                       <a href={`/api/invoices/${invId}/pdf`} target="_blank" className="rounded-lg border border-line px-3 py-2 text-sm font-medium hover:border-accent">{ka.invoice.chatCardPdf}</a>
                     </div>
                     <div className="mt-2 text-[11px] text-muted">{formatDateTime(msg.createdAt)}</div>
@@ -96,15 +96,15 @@ export default async function ConversationPage({ params }: PageProps<"/app/conve
             const sender = msg.senderId ? byUser.get(msg.senderId) : null;
             return (
               <div key={msg.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[85%] rounded-xl px-4 py-2.5 sm:max-w-[70%] ${mine ? "bg-accent text-navy" : "border border-line bg-surface"}`}>
+                <div className={`max-w-[85%] rounded-xl px-4 py-2.5 sm:max-w-[70%] ${mine ? "bg-accent text-deep" : "border border-line bg-surface"}`}>
                   {!mine && sender && <div className="mb-0.5 text-xs font-medium text-accent-strong">{partyLabel(sender, mySide, user.id)}</div>}
                   {msg.body && <p className="whitespace-pre-line break-words text-sm">{msg.body}</p>}
                   {msg.kind === "FILE" && (
-                    <a href={`/api/chat-files/${msg.id}`} target="_blank" className={`mt-1 flex items-center gap-1.5 text-sm underline ${mine ? "text-navy" : "text-accent"}`}>
+                    <a href={`/api/chat-files/${msg.id}`} target="_blank" className={`mt-1 flex items-center gap-1.5 text-sm underline ${mine ? "text-deep" : "text-accent"}`}>
                       📎 <span className="truncate">{msg.fileName}</span>
                     </a>
                   )}
-                  <div className={`mt-1 text-[11px] ${mine ? "text-navy/60" : "text-muted"}`}>
+                  <div className={`mt-1 text-[11px] ${mine ? "text-deep/60" : "text-muted"}`}>
                     {formatDateTime(msg.createdAt)}
                     {mine && msg.id === lastMine?.id && othersLastRead && othersLastRead >= msg.createdAt ? ` · ${ka.chat.read}` : ""}
                   </div>

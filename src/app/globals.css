@@ -30,6 +30,12 @@
   --color-success: #3ccf8e;
   --color-warning: #e8b04b;
   --color-danger: #f07878;
+  /* fixed (theme-independent) deep navy: text on the light-blue accent, the white floating card */
+  --color-deep: #071426;
+  /* translucent layers on the dark canvas (themed) */
+  --color-card: rgb(255 255 255 / 0.012);
+  --color-field: rgb(255 255 255 / 0.015);
+  --color-chip: rgb(255 255 255 / 0.06);
 
   --radius-card: 14px;
   --shadow-card: 0 10px 30px -18px rgb(0 0 0 / 0.55);
@@ -40,6 +46,32 @@ html {
   -webkit-text-size-adjust: 100%;
   color-scheme: dark;
 }
+
+/* ───────────── Light theme (toggle) — same structure, light surfaces ───────────── */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --color-navy: #ffffff;
+  --color-navy-2: #ffffff;
+  --color-navy-3: #eef3f9;
+  --color-canvas: #f3f6fa;
+  --color-surface: #ffffff;
+  --color-surface-2: #f1f5f9;
+  --color-ink: #10223a;
+  --color-secondary: #475569;
+  --color-muted: #64748b;
+  --color-line: #e2e8f0;
+  --color-accent-strong: #2a78b0;
+  --color-accent-hover: #7cb7e3;
+  --color-success: #13915e;
+  --color-warning: #b7791f;
+  --color-danger: #d14646;
+  --color-card: #ffffff;
+  --color-field: #ffffff;
+  --color-chip: #eef3f8;
+  --shadow-card: 0 1px 2px rgb(16 34 58 / 0.05), 0 10px 26px -18px rgb(16 34 58 / 0.22);
+}
+/* accent as TEXT needs more contrast on white; fills (bg-accent) keep the brand blue */
+:root[data-theme="light"] .text-accent { color: #2a78b0; }
 
 body {
   background: var(--color-canvas);
@@ -80,6 +112,14 @@ input[type="radio"] {
   border: 1px solid rgb(142 197 237 / 0.08);
   border-bottom-color: rgb(142 197 237 / 0.16);
 }
+:root[data-theme="light"] .card-glass {
+  background: linear-gradient(150deg, rgb(142 197 237 / 0.22), #ffffff 72%);
+  border-color: #dbe7f3;
+}
+
+/* Price block on the home workspace */
+.price-card { background: linear-gradient(135deg, #13304d, #0b1a2e); }
+:root[data-theme="light"] .price-card { background: linear-gradient(135deg, #e3f0fb, #ffffff); }
 
 /* Tables become stacked cards on phones (labels come from data-label, see ResponsiveTable) */
 @media (max-width: 767px) {

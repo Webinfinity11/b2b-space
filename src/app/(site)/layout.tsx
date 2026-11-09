@@ -1,12 +1,5 @@
-import { Header } from "@/components/site/Header";
-import { Footer } from "@/components/site/Footer";
+import { SiteShell } from "@/components/site/SiteShell";
 
 export default function SiteLayout({ children }: LayoutProps<"/">) {
-  return (
-    <div className="flex min-h-dvh flex-col">
-      <Header />
-      <main className="flex-1">{children}</main>
-      <Footer />
-    </div>
-  );
+  return <SiteShell>{children}</SiteShell>;
 }
