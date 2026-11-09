@@ -6,6 +6,7 @@ import { getTheme } from "@/lib/theme";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { HeaderSearch } from "@/components/ui/HeaderSearch";
 import { Shell, type NavGroup } from "@/components/panel/Shell";
 import { ProfileMenu } from "@/components/panel/ProfileMenu";
 
@@ -85,19 +86,12 @@ export async function SiteShell({
             </p>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
-            <form action="/" method="get" className="hidden md:block" role="search">
-              <label className="flex h-10 w-60 items-center gap-2 rounded-[10px] border border-line bg-field px-3 text-muted focus-within:border-accent/50">
-                <Icon name="search" size={16} />
-                <input
-                  name="q"
-                  type="search"
-                  defaultValue={searchDefault}
-                  placeholder={ka.ws.search}
-                  aria-label={ka.ws.search}
-                  className="w-full bg-transparent text-sm text-ink placeholder:text-muted focus:outline-none"
-                />
-              </label>
-            </form>
+            <div className="hidden md:block">
+              <HeaderSearch defaultValue={searchDefault} />
+            </div>
+            <a href="/search" aria-label={ka.search.pageTitle} className="grid size-10 shrink-0 place-items-center rounded-full border border-line text-secondary hover:border-accent/40 hover:text-ink md:hidden">
+              <Icon name="search" size={17} />
+            </a>
             <ThemeToggle initial={theme} />
             {user ? (
               <ProfileMenu

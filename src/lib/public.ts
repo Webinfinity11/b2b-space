@@ -302,3 +302,65 @@ export async function getOfferCities() {
   });
   return rows.map((r) => r.city!).filter(Boolean);
 }
+
+// ─────────────────────────────── Global search ───────────────────────────────
+
+/**
+ * Header search across companies, offers and categories. Offers go through toPublicOffer,
+ * and the company-name match is restricted to non-anonymous offers so anonymity is never revealed.
+ */
+export async function globalSearch(q: string, loggedIn: boolean, limit = 5) {
+  const term = q.trim().slice(0, 100);
+  if (term.length < 2) return { companies: [], offers: [], categories: [] };
+  const like = { contains: term, mode: "insensitive" as const };
+
+  const [companies, offerRows, categories] = await Promise.all([
+    db.company.findMany({
+      where: {
+        AND: [
+          listedCompany,
+          {
+            OR: [
+              { legalName: like },
+              { tradeName: like },
+              { description: like },
+              { activities: like },
+              { city: like },
+              { customCategory: like },
+              { categories: { some: { category: { name: like } } } },
+            ],
+          },
+        ],
+      },
+      select: publicCompanySelect,
+      orderBy: [{ verificationStatus: "asc" }, { createdAt: "desc" }],
+      take: limit,
+    }),
+    db.offer.findMany({
+      where: {
+        AND: [
+          liveOfferWhere(loggedIn),
+          {
+            OR: [
+              { title: like },
+              { description: like },
+              { city: like },
+              { category: { name: like } },
+              { isAnonymous: false, company: { OR: [{ legalName: like }, { tradeName: like }] } },
+            ],
+          },
+        ],
+      },
+      select: offerInternalSelect,
+      orderBy: { publishedAt: "desc" },
+      take: limit,
+    }),
+    db.category.findMany({
+      where: { isActive: true, name: like },
+      select: { name: true, slug: true, parent: { select: { name: true } } },
+      orderBy: { sortOrder: "asc" },
+      take: limit,
+    }),
+  ]);
+  return { companies, offers: offerRows.map(toPublicOffer), categories };
+}
