@@ -24,9 +24,11 @@
     "next": "16.4.4",
     "pdfkit": "^0.20.2",
     "pg": "^8.23.1",
+    "prisma": "^7.10.1",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "server-only": "^0.0.1",
+    "tsx": "^4.23.15",
     "zod": "^4.6.7"
   },
   "devDependencies": {
@@ -42,9 +44,7 @@
     "dotenv": "^18.0.10",
     "eslint": "^9",
     "eslint-config-next": "16.4.4",
-    "prisma": "^7.10.1",
     "tailwindcss": "^4",
-    "tsx": "^4.23.15",
     "typescript": "^5"
   },
   "allowScripts": {
