@@ -72,7 +72,7 @@ export default async function HomeWorkspace({ searchParams }: PageProps<"/">) {
           </div>
           <div className="flex items-center justify-between border-t border-line px-4 py-3 text-[11px] text-muted sm:px-6">
             <span className="flex items-center gap-2">
-              <span aria-hidden="true" className="size-1.5 rounded-full bg-success" /> {ka.ws.space}
+              {ka.ws.space}
             </span>
             <Link href={user ? "/company/offers/new?type=OFFER" : "/register"} aria-label={ka.offerForm.newOffer} className="grid size-9 place-items-center rounded-full border border-line text-secondary hover:border-accent/40 hover:text-ink">
               <Icon name="plus" size={16} />

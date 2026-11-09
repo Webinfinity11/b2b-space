@@ -50,7 +50,7 @@ export async function SiteShell({
           <p className="mt-1 text-xs text-muted">{ka.ws.promoText}</p>
           <Link
             href={user ? "/company/new" : "/register"}
-            className="mt-4 inline-flex h-10 items-center justify-center gap-2 rounded-full bg-accent px-4 text-[13px] font-semibold text-deep hover:bg-accent-hover"
+            className="mt-4 flex h-10 w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-accent px-3 text-[12.5px] font-semibold text-deep hover:bg-accent-hover"
           >
             {ka.ws.promoButton} <Icon name="arrowUp" size={14} />
           </Link>
@@ -63,7 +63,7 @@ export async function SiteShell({
             <Link href="/privacy" className="hover:text-secondary">{ka.footer.privacy}</Link>
           </div>
           <div className="flex items-center gap-2 text-[11px] text-muted">
-            <span aria-hidden="true" className="size-1.5 rounded-full bg-success" /> {ka.ws.space}
+            {ka.ws.space}
           </div>
         </div>
       }

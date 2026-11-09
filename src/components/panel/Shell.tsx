@@ -94,7 +94,7 @@ export function Shell({
       {sidebarBottom && <div className="mt-4 space-y-3">{sidebarBottom}</div>}
       {footerNote ?? (
         <Link href="/" className="mt-3 flex items-center gap-2 px-3 text-[11px] text-muted hover:text-secondary">
-          <span aria-hidden="true" className="size-1.5 rounded-full bg-success" /> {ka.nav.backToSite}
+          {ka.nav.backToSite}
         </Link>
       )}
     </div>
