@@ -11,7 +11,8 @@ import { PrismaClient } from "../src/generated/prisma/client";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL, max: 1 }) });
 const DOMAIN = "demo.b2bspace.ge";
-const PASSWORD = process.env.ADMIN_PASSWORD ?? "change-me-123";
+const PASSWORD = process.env.DEMO_PASSWORD;
+if (!PASSWORD && !process.argv.includes("--remove")) throw new Error("Set DEMO_PASSWORD to create demo accounts");
 
 const PEOPLE = [
   { key: "nino", firstName: "ნინო", lastName: "ბერიძე", phone: "+995 555 100 201" },
@@ -48,7 +49,7 @@ async function main() {
   if (process.argv.includes("--remove")) return remove();
   await remove();
 
-  const hash = await bcrypt.hash(PASSWORD, 12);
+  const hash = await bcrypt.hash(PASSWORD!, 12);
   const users: Record<string, string> = {};
   for (const p of PEOPLE) {
     const u = await db.user.create({
