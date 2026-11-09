@@ -95,7 +95,9 @@ export async function loginAction(_: FormState, formData: FormData): Promise<For
 
   const user = await db.user.findUnique({ where: { email } });
   const ok = await bcrypt.compare(password, user?.passwordHash ?? DUMMY_HASH);
-  if (!user || !ok) {
+  // Admin login form: only platform admins may sign in there
+  const adminForm = formData.get("admin") === "1";
+  if (!user || !ok || (adminForm && user.platformRole !== "ADMIN")) {
     if (user) await audit({ actorId: user.id, action: "auth.login_failed", entityType: "User", entityId: user.id });
     return fail(ka.auth.invalidCredentials, formData);
   }
@@ -107,7 +109,7 @@ export async function loginAction(_: FormState, formData: FormData): Promise<For
   await audit({ actorId: user.id, action: "auth.login", entityType: "User", entityId: user.id });
 
   const fallback = user.platformRole === "ADMIN" ? "/admin" : "/app";
-  redirect(safeNext(formData.get("next")) ?? fallback);
+  redirect(adminForm ? "/admin" : (safeNext(formData.get("next")) ?? fallback));
 }
 
 export async function logoutAction() {
