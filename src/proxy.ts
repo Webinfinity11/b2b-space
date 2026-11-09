@@ -10,7 +10,8 @@ export function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
   if (path === "/admin/login") return NextResponse.next();
   if (!request.cookies.has(SESSION_COOKIE)) {
-    if (path === "/admin" || path.startsWith("/admin/")) return NextResponse.redirect(new URL("/admin/login", request.url));
+    // Admin area: show the admin sign-in form right at the requested URL (no redirect)
+    if (path === "/admin" || path.startsWith("/admin/")) return NextResponse.rewrite(new URL("/admin/login", request.url));
     const url = new URL("/login", request.url);
     url.searchParams.set("next", path);
     return NextResponse.redirect(url);

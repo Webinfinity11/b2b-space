@@ -21,11 +21,10 @@ export async function requireUser(next?: string): Promise<CurrentUser> {
   return user;
 }
 
-/** Admin page guard. Non-admins get a plain 404 so the admin panel is not discoverable. */
+/** Admin page guard. Guests and non-admins are sent to the admin sign-in. */
 export async function requireAdmin(): Promise<CurrentUser> {
   const user = await getCurrentUser();
-  if (!user) redirect("/admin/login");
-  if (user.platformRole !== "ADMIN") notFound();
+  if (!user || user.platformRole !== "ADMIN") redirect("/admin/login");
   return user;
 }
 
