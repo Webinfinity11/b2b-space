@@ -10,6 +10,7 @@ import { db } from "@/lib/db";
 import { fail, invalid, zCheckbox, zText, type FormState } from "@/lib/forms";
 import { notify } from "@/lib/notify";
 import { slugify } from "@/lib/slug";
+import { loadDemoData, removeDemoData } from "@/lib/demo-data";
 
 // ─────────────────────────────── Company verification ───────────────────────────────
 
@@ -154,4 +155,25 @@ export async function adminArchiveOfferAction(formData: FormData) {
   await audit({ actorId: admin.id, action: "offer.admin_archived", entityType: "Offer", entityId: offer.id });
   revalidatePath("/admin/offers");
   revalidatePath("/offers");
+}
+
+// ─────────────────────────────── Demo data ───────────────────────────────
+
+/** Loads (or reloads) the clearly marked demo set so the platform can be shown. Admin only, audited. */
+export async function loadDemoDataAction(_: FormState, formData: FormData): Promise<FormState> {
+  const admin = await assertAdmin();
+  const password = String(formData.get("demoPassword") ?? "");
+  if (password.length < 6) return fail(ka.validation.formErrors, formData, { demoPassword: ka.validation.tooShort(6) });
+  await loadDemoData(db, password);
+  await audit({ actorId: admin.id, action: "demo.loaded", entityType: "Platform" });
+  revalidatePath("/", "layout");
+  return { ok: true, message: ka.demo.loaded };
+}
+
+export async function removeDemoDataAction(): Promise<FormState> {
+  const admin = await assertAdmin();
+  const n = await removeDemoData(db);
+  await audit({ actorId: admin.id, action: "demo.removed", entityType: "Platform", metadata: { users: n } });
+  revalidatePath("/", "layout");
+  return { ok: true, message: ka.demo.removed };
 }

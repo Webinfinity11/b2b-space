@@ -6,6 +6,8 @@ import { formatDateTime, formatMoney } from "@/lib/format";
 import { companyName } from "@/lib/public";
 import { Card, CardBody, CardHeader, PageHeader, StatCard } from "@/components/ui/Card";
 import { VerificationBadge } from "@/components/panel/StatusBadges";
+import { ActionForm, Field, Input, SubmitButton } from "@/components/ui/Form";
+import { loadDemoDataAction, removeDemoDataAction } from "@/actions/admin";
 
 const LIVE = ["PUBLISHED", "ACCEPTING_RESPONSES", "NEGOTIATING"] as const;
 
@@ -103,6 +105,21 @@ export default async function AdminOverviewPage() {
           </CardBody>
         </Card>
       </div>
+
+      <Card className="mt-6">
+        <CardHeader title={ka.demo.title} text={ka.demo.text} />
+        <CardBody className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <ActionForm action={loadDemoDataAction} className="flex flex-col gap-3 sm:flex-row sm:items-end">
+            <Field label={ka.demo.password} name="demoPassword">
+              <Input name="demoPassword" placeholder="b2b123-" autoComplete="off" />
+            </Field>
+            <SubmitButton>{ka.demo.load}</SubmitButton>
+          </ActionForm>
+          <ActionForm action={removeDemoDataAction}>
+            <SubmitButton variant="danger">{ka.demo.remove}</SubmitButton>
+          </ActionForm>
+        </CardBody>
+      </Card>
     </>
   );
 }
