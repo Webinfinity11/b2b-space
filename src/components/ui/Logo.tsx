@@ -9,10 +9,7 @@ export function Logo({ href = "/" }: { tone?: "dark" | "light"; href?: string })
         <path d="M3 12 9 8v19H3ZM12 3l6 4v20h-6ZM21 11l6 4v12h-6Z" fill="currentColor" />
         <path d="M3 6 9 2v4L3 10ZM21 4l6 4v4l-6-4Z" fill="#8EC5ED" />
       </svg>
-      <span className="text-[19px] font-bold tracking-[-0.03em]">
-        {ka.brand}
-        <span className="text-accent">.</span>
-      </span>
+      <span className="text-[19px] font-bold tracking-[-0.03em]">{ka.brand}</span>
     </Link>
   );
 }

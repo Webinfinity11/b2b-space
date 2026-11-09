@@ -93,7 +93,7 @@ export async function loadDemoData(db: PrismaClient, password: string) {
       description: "ცემენტი M400, 50 კგ ტომრებში. მიწოდება თბილისში 2 დღეში, რეგიონებში — შეთანხმებით.", anonymous: false },
     { author: "nino", company: true, type: "OFFER", title: "არმატურა A500C, Ø12 (დემო)", cat: "samsheneblo-masalebi", priceType: "FIXED", priceMin: "2150", currency: "GEL", quantity: "40", unit: "ტონა",
       description: "არმატურა სერტიფიკატით, ჭრა ზომაზე შესაძლებელია.", anonymous: false },
-    { author: "giorgi", company: true, type: "OFFER", title: "სატვირთო გადაზიდვა თბილისი — სტამბოლი (დემო)", cat: "satvirto-gadazidvebi", priceType: "RANGE", priceMin: "1800", priceMax: "2400", currency: "USD", quantity: null, unit: null,
+    { author: "giorgi", company: true, type: "OFFER", title: "სატვირთო გადაზიდვა თბილისი — სტამბოლი (დემო)", cat: "satvirto-gadazidvebi", priceType: "RANGE", priceMin: "4900", priceMax: "6500", currency: "GEL", quantity: null, unit: null,
       description: "სრული ტრაილერი (FTL), 13.6 მ, 24 ტონამდე. ვადა 4–5 დღე.", anonymous: false },
     { author: "mariam", company: true, type: "OFFER", title: "CRM სისტემის დანერგვა მცირე ბიზნესისთვის (დემო)", cat: "programuli-uzrunvelqopa", priceType: "NEGOTIABLE", priceMin: null, currency: null, quantity: null, unit: null,
       description: "CRM-ის დანერგვა, მონაცემების მიგრაცია და თანამშრომლების ტრენინგი.", anonymous: false },
