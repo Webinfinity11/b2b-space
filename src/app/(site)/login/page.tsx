@@ -29,8 +29,8 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
     >
       <ActionForm action={loginAction} className="space-y-4">
         {next && <input type="hidden" name="next" value={next} />}
-        <Field label={ka.auth.email} name="email">
-          <Input name="email" type="email" autoComplete="email" required />
+        <Field label={ka.auth.emailOrLogin} name="email">
+          <Input name="email" type="text" autoComplete="username" autoCapitalize="none" spellCheck={false} required />
         </Field>
         <Field label={ka.auth.password} name="password">
           <Input name="password" type="password" autoComplete="current-password" required />

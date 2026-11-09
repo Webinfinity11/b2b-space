@@ -29,7 +29,21 @@ async function main() {
   const email = process.env.ADMIN_EMAIL?.trim().toLowerCase();
   const password = process.env.ADMIN_PASSWORD;
   if (email && password) {
-    const existing = await db.user.findUnique({ where: { email } });
+    let existing = await db.user.findUnique({ where: { email } });
+    if (!existing) {
+      // ADMIN_EMAIL changed (e.g. email → plain login): move the single existing admin to the new login.
+      const admins = await db.user.findMany({ where: { platformRole: "ADMIN" } });
+      if (admins.length === 1) {
+        existing = await db.user.update({ where: { id: admins[0].id }, data: { email } });
+        console.log(`Admin login changed: ${admins[0].email} → ${email}`);
+      }
+    }
+    if (existing && process.env.ADMIN_SYNC_PASSWORD === "1") {
+      // Explicitly requested: make the stored admin password match ADMIN_PASSWORD.
+      await db.user.update({ where: { id: existing.id }, data: { passwordHash: await bcrypt.hash(password, 12) } });
+      await db.session.deleteMany({ where: { userId: existing.id } });
+      console.log(`Admin password synced: ${email}`);
+    }
     if (!existing) {
       await db.user.create({
         data: {
@@ -43,7 +57,7 @@ async function main() {
       });
       console.log(`Admin created: ${email}`);
     } else if (existing.platformRole !== "ADMIN") {
-      await db.user.update({ where: { email }, data: { platformRole: "ADMIN" } });
+      await db.user.update({ where: { id: existing.id }, data: { platformRole: "ADMIN" } });
       console.log(`Admin role granted: ${email}`);
     }
   } else {

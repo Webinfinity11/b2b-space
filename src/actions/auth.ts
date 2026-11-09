@@ -74,7 +74,11 @@ export async function registerAction(_: FormState, formData: FormData): Promise<
   redirect(safeNext(formData.get("next")) ?? "/app");
 }
 
-const loginSchema = z.object({ email: zEmail, password: z.string().min(1, { error: ka.validation.required }) });
+// Email for regular users; the platform admin may use a plain login name (ADMIN_EMAIL).
+const loginSchema = z.object({
+  email: z.string({ error: ka.validation.required }).trim().toLowerCase().min(1, { error: ka.validation.required }).max(200),
+  password: z.string().min(1, { error: ka.validation.required }),
+});
 
 // Pre-computed hash so unknown emails take the same time as wrong passwords.
 const DUMMY_HASH = bcrypt.hashSync("dummy-password-for-timing", 12);

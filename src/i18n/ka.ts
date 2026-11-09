@@ -163,6 +163,7 @@ export const ka = {
     firstName: "სახელი",
     lastName: "გვარი",
     email: "ელფოსტა",
+    emailOrLogin: "ელფოსტა ან ლოგინი",
     phone: "ტელეფონი",
     password: "პაროლი",
     passwordConfirm: "გაიმეორეთ პაროლი",
