@@ -585,6 +585,7 @@ export const ka = {
     inviteEmailButton: "რეგისტრაცია",
     inviteLinkNote: (link: string) => `რეგისტრაციის ბმული: ${link}`,
     tabLogin: "შესვლა",
+    choose: "აირჩიეთ…",
     regActivity: "საქმიანობა",
     regPersonShort: "საკონტაქტო პირი",
     stepNext: "შემდეგი",

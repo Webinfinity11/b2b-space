@@ -86,10 +86,10 @@ export async function AuthScreen({ tab, next, registered, invited }: { tab: "log
                   <Field label={ka.companyForm.registrationNumber} name="registrationNumber"><Input name="registrationNumber" inputMode="numeric" required /></Field>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <Field label={c.industry} name="categoryId">
-                      <Select name="categoryId" placeholder="—" options={categories.map((x) => ({ value: x.id, label: x.name }))} required />
+                      <Select name="categoryId" placeholder={c.choose} options={categories.map((x) => ({ value: x.id, label: x.name }))} required />
                     </Field>
                     <Field label={c.city} name="city">
-                      <Select name="city" placeholder="—" options={CITIES.map((x) => ({ value: x, label: x }))} required />
+                      <Select name="city" placeholder={c.choose} options={CITIES.map((x) => ({ value: x, label: x }))} required />
                     </Field>
                   </div>
                 </>
