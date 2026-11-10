@@ -53,7 +53,6 @@ const errorsOf = (e: z.ZodError) => Object.fromEntries(e.issues.map((i) => [Stri
  */
 export async function registerAction(_: FormState, formData: FormData): Promise<FormState> {
   const ip = (await clientIp()) ?? "unknown";
-  if (!rateLimit(`register:${ip}`, 5, 15 * 60_000)) return fail(ka.auth.tooManyAttempts, formData);
   const invitedMode = formData.get("mode") === "invited";
 
   const raw = Object.fromEntries(formData);
@@ -63,6 +62,8 @@ export async function registerAction(_: FormState, formData: FormData): Promise<
     const errors = { ...(parsed.success ? {} : errorsOf(parsed.error)), ...(company && !company.success ? errorsOf(company.error) : {}) };
     return fail(ka.validation.formErrors, formData, errors);
   }
+  // Only well-formed submissions count towards the limit (typos in the form do not lock people out).
+  if (!rateLimit(`register:${ip}`, 10, 15 * 60_000)) return fail(ka.auth.tooManyAttempts, formData);
   const d = parsed.data;
 
   const exists = await db.user.findUnique({ where: { email: d.email }, select: { id: true } });

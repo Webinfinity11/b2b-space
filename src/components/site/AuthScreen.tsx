@@ -7,18 +7,13 @@ import { Icon } from "@/components/ui/Icon";
 import { ActionForm, Checkbox, Field, Input, Select, SubmitButton } from "@/components/ui/Form";
 import { AuthCard } from "./AuthCard";
 import { AuthTabs } from "./AuthTabs";
+import { FormSteps } from "./FormSteps";
 
 /** Sign-in and company registration on one page (tabs). */
 export async function AuthScreen({ tab, next, registered, invited }: { tab: "login" | "register"; next?: string; registered?: boolean; invited?: boolean }) {
   const categories = invited ? [] : await getCategoryTree();
   const c = ka.sgba;
 
-  const legend = (n: number, title: string) => (
-    <legend className="mb-4 flex items-center gap-2.5 text-sm font-bold text-ink">
-      <span className="grid size-6 place-items-center rounded-full bg-accent text-[11px] text-white">{n}</span>
-      {title}
-    </legend>
-  );
 
   const person = (
     <>
@@ -78,34 +73,48 @@ export async function AuthScreen({ tab, next, registered, invited }: { tab: "log
   ) : (
     <>
       <p className="mb-6 text-sm leading-relaxed text-secondary">{c.regText}</p>
-      <ActionForm action={registerAction} className="space-y-7">
+      <ActionForm action={registerAction}>
         <input type="hidden" name="mode" value="company" />
-        <fieldset>
-          {legend(1, c.regCompany)}
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field label={ka.companyForm.legalName} name="legalName"><Input name="legalName" required /></Field>
-            <Field label={ka.companyForm.registrationNumber} name="registrationNumber"><Input name="registrationNumber" inputMode="numeric" required /></Field>
-            <Field label={c.industry} name="categoryId">
-              <Select name="categoryId" placeholder="—" options={categories.map((x) => ({ value: x.id, label: x.name }))} required />
-            </Field>
-            <Field label={c.city} name="city">
-              <Select name="city" placeholder="—" options={CITIES.map((x) => ({ value: x, label: x }))} required />
-            </Field>
-            <Field label={c.role} name="businessRole">
-              <Select name="businessRole" defaultValue="BOTH" options={["BUYER", "SELLER", "BOTH"].map((r) => ({ value: r, label: c.roles[r] }))} />
-            </Field>
-            <Field label={c.size} name="size">
-              <Select name="size" defaultValue="SMALL" options={["SMALL", "MEDIUM", "LARGE"].map((r) => ({ value: r, label: c.sizeFull[r] }))} />
-            </Field>
-            <Field label={c.direction} name="direction"><Input name="direction" placeholder={c.directionHint} /></Field>
-            <Field label={c.legalAddressOptional} name="legalAddress"><Input name="legalAddress" /></Field>
-          </div>
-        </fieldset>
-        <fieldset className="border-t border-line pt-6">
-          {legend(2, c.regPerson)}
-          <div className="space-y-4">{person}</div>
-        </fieldset>
-        <SubmitButton className="w-full" size="lg">{c.registerCompany}</SubmitButton>
+        <FormSteps
+          submit={<SubmitButton className="w-full" size="lg">{c.registerCompany}</SubmitButton>}
+          steps={[
+            {
+              title: c.regCompany,
+              content: (
+                <>
+                  <Field label={ka.companyForm.legalName} name="legalName"><Input name="legalName" required /></Field>
+                  <Field label={ka.companyForm.registrationNumber} name="registrationNumber"><Input name="registrationNumber" inputMode="numeric" required /></Field>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <Field label={c.industry} name="categoryId">
+                      <Select name="categoryId" placeholder="—" options={categories.map((x) => ({ value: x.id, label: x.name }))} required />
+                    </Field>
+                    <Field label={c.city} name="city">
+                      <Select name="city" placeholder="—" options={CITIES.map((x) => ({ value: x, label: x }))} required />
+                    </Field>
+                  </div>
+                </>
+              ),
+            },
+            {
+              title: c.regActivity,
+              content: (
+                <>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <Field label={c.role} name="businessRole">
+                      <Select name="businessRole" defaultValue="BOTH" options={["BUYER", "SELLER", "BOTH"].map((r) => ({ value: r, label: c.roles[r] }))} />
+                    </Field>
+                    <Field label={c.size} name="size">
+                      <Select name="size" defaultValue="SMALL" options={["SMALL", "MEDIUM", "LARGE"].map((r) => ({ value: r, label: c.sizeFull[r] }))} />
+                    </Field>
+                  </div>
+                  <Field label={c.direction} name="direction" optional><Input name="direction" placeholder={c.directionHint} /></Field>
+                  <Field label={c.legalAddressOptional} name="legalAddress" optional><Input name="legalAddress" /></Field>
+                </>
+              ),
+            },
+            { title: c.regPersonShort, content: person },
+          ]}
+        />
       </ActionForm>
       <p className="mt-5 text-center text-sm text-muted">
         {c.regInvited} <Link href="/register?invited=1" className="font-medium text-accent hover:underline">{c.regInvitedLink}</Link>
