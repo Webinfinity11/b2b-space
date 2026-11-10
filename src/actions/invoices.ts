@@ -29,7 +29,7 @@ export async function createInvoiceAction(_: FormState, formData: FormData): Pro
   if (version.invoice) return fail(i18n.alreadyExists);
 
   const dueRaw = String(formData.get("dueDate") ?? "");
-  const dueDate = dueRaw ? new Date(`${dueRaw}T23:59:59`) : null;
+  const dueDate = dueRaw ? new Date(`${dueRaw}T23:59:59+04:00`) : null;
   if (dueDate && Number.isNaN(dueDate.getTime())) return fail(ka.validation.formErrors, formData, { dueDate: ka.validation.date });
 
   const snapshot = await buildInvoiceSnapshot(deal, version);
@@ -126,7 +126,7 @@ const paymentSchema = z.object({
   paidAt: z
     .string()
     .min(1, { error: ka.validation.required })
-    .transform((s) => new Date(`${s}T12:00:00`))
+    .transform((s) => new Date(`${s}T12:00:00+04:00`))
     .refine((d) => !Number.isNaN(d.getTime()) && d <= new Date(Date.now() + 864e5), { error: ka.validation.date }),
   method: z.string().trim().max(100),
   reference: z.string().trim().max(200),

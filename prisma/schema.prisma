@@ -32,6 +32,7 @@ model User {
   emailVerifiedAt DateTime?
   phoneVerifiedAt DateTime?
   lastLoginAt     DateTime?
+  emailNotifications Boolean @default(true)
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
 

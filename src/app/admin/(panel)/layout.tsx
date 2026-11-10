@@ -29,7 +29,17 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
     },
     {
       title: ka.admin.moderation,
-      items: [{ href: "/admin/offers", label: ka.admin.offers, icon: "tag" }],
+      items: [
+        { href: "/admin/offers", label: ka.admin.offers, icon: "tag" },
+        { href: "/admin/conversations", label: ka.admin.conversations, icon: "chat" },
+      ],
+    },
+    {
+      title: ka.admin.financeGroup,
+      items: [
+        { href: "/admin/invoices", label: ka.admin.invoices, icon: "invoice" },
+        { href: "/admin/finance", label: ka.admin.finance, icon: "chart" },
+      ],
     },
     {
       title: ka.admin.auditLog,

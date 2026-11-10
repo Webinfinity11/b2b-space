@@ -12,7 +12,9 @@ import { computeTotals, dealSideFor, otherSideUserIds, requireDealContext, type 
 import { fail, type FormState } from "@/lib/forms";
 import { notify } from "@/lib/notify";
 import { formatMoney } from "@/lib/format";
-import { buildInvoiceSnapshot } from "@/lib/invoices";
+import { CORRECTABLE, buildInvoiceSnapshot } from "@/lib/invoices";
+import { ForbiddenError } from "@/lib/authz";
+import type { InvoiceStatus } from "@/generated/prisma/enums";
 
 const v = ka.validation;
 const t = ka.terms;
@@ -39,7 +41,7 @@ const termsSchema = z.object({
   validUntil: z
     .string()
     .optional()
-    .transform((s) => (s ? new Date(`${s}T23:59:59`) : null))
+    .transform((s) => (s ? new Date(`${s}T23:59:59+04:00`) : null))
     .refine((d) => d === null || (!Number.isNaN(d.getTime()) && d > new Date()), { error: v.futureDate }),
   notes: z.string().trim().max(2000, { error: v.tooLong(2000) }),
 });
@@ -235,7 +237,7 @@ export async function sendInvoiceAction(_: FormState, formData: FormData): Promi
   const parsed = termsSchema.safeParse(Object.fromEntries(formData));
   const { items, errors: itemErrors } = parseItems(formData);
   const dueRaw = String(formData.get("dueDate") ?? "");
-  const dueDate = dueRaw ? new Date(`${dueRaw}T23:59:59`) : null;
+  const dueDate = dueRaw ? new Date(`${dueRaw}T23:59:59+04:00`) : null;
   const dueError: Record<string, string> = dueDate && Number.isNaN(dueDate.getTime()) ? { dueDate: v.date } : {};
   if (!parsed.success || Object.keys(itemErrors).length || Object.keys(dueError).length) {
     const errors = { ...(parsed.success ? {} : Object.fromEntries(parsed.error.issues.map((i) => [String(i.path[0]), i.message]))), ...itemErrors, ...dueError };
@@ -245,6 +247,19 @@ export async function sendInvoiceAction(_: FormState, formData: FormData): Promi
   const totals = computeTotals(items, d.discountAmount, d.taxRatePercent || null, d.deliveryCost);
   if (totals.discount.gt(totals.subtotal)) return fail(v.formErrors, formData, { discountAmount: t.discountTooBig });
 
+  // Correction: a new invoice replaces an unpaid one from the same deal; the original is cancelled.
+  const correctsId = String(formData.get("correctsInvoiceId") ?? "") || null;
+  const correctionReason = String(formData.get("correctionReason") ?? "").trim().slice(0, 1000);
+  let original: { id: string; number: string; status: string } | null = null;
+  if (correctsId) {
+    original = await db.invoice.findFirst({
+      where: { id: correctsId, dealTermsVersion: { dealTerms: { conversationId: c.id } } },
+      select: { id: true, number: true, status: true },
+    });
+    if (!original || !CORRECTABLE.includes(original.status)) return fail(ka.invoice.cannotCorrect, formData);
+    if (!correctionReason) return fail(v.formErrors, formData, { correctionReason: ka.invoice.reasonRequired });
+  }
+
   const firstOf = (side: "SELLER" | "BUYER") =>
     [...c.participants].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()).find((p) => dealSideFor(p.side, c.offer?.type ?? null) === side)!;
   const seller = firstOf("SELLER");
@@ -252,6 +267,11 @@ export async function sendInvoiceAction(_: FormState, formData: FormData): Promi
   const versionNumber = (c.dealTerms?.versions[0]?.versionNumber ?? 0) + 1;
 
   const { invoiceId, number } = await db.$transaction(async (tx) => {
+    if (original) {
+      // Re-checked inside the transaction so two parallel corrections can't both win.
+      const locked = await tx.invoice.updateMany({ where: { id: original.id, status: { in: CORRECTABLE as InvoiceStatus[] } }, data: { status: "CANCELLED" } });
+      if (locked.count !== 1) throw new ForbiddenError();
+    }
     const deal =
       c.dealTerms ??
       (await tx.dealTerms.create({
@@ -307,12 +327,18 @@ export async function sendInvoiceAction(_: FormState, formData: FormData): Promi
         paymentTerms: version.paymentTerms,
         notes: version.notes,
         snapshot: snapshot as unknown as Prisma.InputJsonValue,
+        correctsInvoiceId: original?.id ?? null,
         items: {
           create: version.items.map((it) => ({ name: it.name, description: it.description, quantity: it.quantity, unit: it.unit, unitPrice: it.unitPrice, lineTotal: it.lineTotal, sortOrder: it.sortOrder })),
         },
-        statusHistory: { create: { fromStatus: null, toStatus: "ISSUED", changedById: ctx.userId } },
+        statusHistory: { create: { fromStatus: null, toStatus: "ISSUED", changedById: ctx.userId, comment: original ? ka.invoice.correctsComment(original.number, correctionReason) : null } },
       },
     });
+    if (original) {
+      await tx.invoiceStatusChange.create({
+        data: { invoiceId: original.id, fromStatus: original.status as InvoiceStatus, toStatus: "CANCELLED", changedById: ctx.userId, comment: ka.invoice.correctedByComment(num, correctionReason) },
+      });
+    }
     return { invoiceId: inv.id, number: num };
   });
 
@@ -328,9 +354,18 @@ export async function sendInvoiceAction(_: FormState, formData: FormData): Promi
     },
   });
   await db.conversation.update({ where: { id: c.id }, data: { lastMessageAt: new Date() } });
-  await notify(otherSideUserIds(c, "SELLER", ctx.userId), { type: "INVOICE_CREATED", title: ka.invoice.notifyCreated(number), link: `/app/conversations/${c.id}` });
+  await notify(otherSideUserIds(c, "SELLER", ctx.userId), {
+    type: "INVOICE_CREATED",
+    title: original ? ka.invoice.notifyCorrected(number, original.number) : ka.invoice.notifyCreated(number),
+    body: original ? correctionReason : undefined,
+    link: original ? `/app/invoices/${invoiceId}` : `/app/conversations/${c.id}`,
+  });
   await audit({ actorId: ctx.userId, action: "invoice.created", entityType: "Invoice", entityId: invoiceId, metadata: { number, total: totals.total.toString(), currency: d.currency } });
-  if (formData.get("stay") === "1") {
+  if (original) {
+    await audit({ actorId: ctx.userId, action: "invoice.corrected", entityType: "Invoice", entityId: original.id, metadata: { original: original.number, replacement: number, reason: correctionReason } });
+    revalidatePath(`/app/invoices/${original.id}`);
+  }
+  if (formData.get("stay") === "1" && !original) {
     revalidatePath(`/app/conversations/${c.id}`);
     return { ok: true, message: ka.invoice.sentToChat(number) };
   }

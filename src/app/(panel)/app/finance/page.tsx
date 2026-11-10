@@ -32,8 +32,8 @@ export default async function FinancePage({ searchParams }: PageProps<"/app/fina
         visibleInvoices(user.id, m),
         { status: { notIn: ["DRAFT", "CANCELLED"] } },
         currency ? { currency } : {},
-        from ? { issuedAt: { gte: new Date(`${from}T00:00:00`) } } : {},
-        to ? { issuedAt: { lte: new Date(`${to}T23:59:59`) } } : {},
+        from ? { issuedAt: { gte: new Date(`${from}T00:00:00+04:00`) } } : {},
+        to ? { issuedAt: { lte: new Date(`${to}T23:59:59+04:00`) } } : {},
       ],
     },
   });

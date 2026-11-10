@@ -45,7 +45,7 @@ yarn-error.log*
 next-env.d.ts
 
 # local PGlite database
-/.pgdata
+/.pgdata*
 /DEMO_ACCOUNTS.md
 
 # local production builds

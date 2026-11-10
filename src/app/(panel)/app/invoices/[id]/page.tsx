@@ -7,7 +7,7 @@ import { cancelInvoiceAction, markInvoiceSentAction, markInvoiceViewed, recordPa
 import { getActiveMembership, requireUser } from "@/lib/authz";
 import { db } from "@/lib/db";
 import { formatDate, formatDateTime, formatMoney, formatNumber } from "@/lib/format";
-import { canManageInvoice, effectiveStatus, type InvoiceParty, type InvoiceSnapshot } from "@/lib/invoices";
+import { CORRECTABLE, canManageInvoice, effectiveStatus, type InvoiceParty, type InvoiceSnapshot } from "@/lib/invoices";
 import { visibleInvoices } from "@/lib/scope";
 import { ButtonLink } from "@/components/ui/Button";
 import { Card, CardBody, CardHeader, PageHeader } from "@/components/ui/Card";
@@ -29,6 +29,8 @@ export default async function InvoicePage({ params }: PageProps<"/app/invoices/[
       items: { orderBy: { sortOrder: "asc" } },
       payments: { orderBy: { paidAt: "desc" }, include: { recordedBy: { select: { firstName: true, lastName: true } } } },
       statusHistory: { orderBy: { createdAt: "desc" }, include: { changedBy: { select: { firstName: true, lastName: true } } } },
+      correctsInvoice: { select: { id: true, number: true } },
+      corrections: { select: { id: true, number: true }, orderBy: { createdAt: "desc" } },
     },
   });
   const snap = inv.snapshot as unknown as InvoiceSnapshot;
@@ -52,6 +54,16 @@ export default async function InvoicePage({ params }: PageProps<"/app/invoices/[
           </>
         }
       />
+      {(inv.correctsInvoice || inv.corrections.length > 0) && (
+        <div className="mb-4 space-y-1 rounded-lg border border-accent/50 bg-accent/10 px-4 py-3 text-sm">
+          {inv.correctsInvoice && (
+            <p>{i.correctsLabel} <Link href={`/app/invoices/${inv.correctsInvoice.id}`} className="font-medium text-accent-strong hover:underline">{inv.correctsInvoice.number}</Link></p>
+          )}
+          {inv.corrections.map((c) => (
+            <p key={c.id}>{i.correctedByLabel} <Link href={`/app/invoices/${c.id}`} className="font-medium text-accent-strong hover:underline">{c.number}</Link></p>
+          ))}
+        </div>
+      )}
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div className="space-y-6">
           <Card>
@@ -160,6 +172,9 @@ export default async function InvoicePage({ params }: PageProps<"/app/invoices/[
                     <input type="hidden" name="invoiceId" value={inv.id} />
                     <SubmitButton variant="secondary" className="w-full">{i.markSent}</SubmitButton>
                   </ActionForm>
+                )}
+                {CORRECTABLE.includes(inv.status) && (
+                  <ButtonLink href={`/app/invoices/${inv.id}/correct`} variant="secondary" className="w-full">{i.correct}</ButtonLink>
                 )}
                 {["ISSUED", "SENT", "VIEWED"].includes(inv.status) && (
                   <details className="rounded-lg border border-line">

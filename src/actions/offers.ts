@@ -53,7 +53,7 @@ const offerSchema = z
     validUntil: z
       .string()
       .optional()
-      .transform((s) => (s ? new Date(`${s}T23:59:59`) : null))
+      .transform((s) => (s ? new Date(`${s}T23:59:59+04:00`) : null))
       .refine((d) => d === null || (!Number.isNaN(d.getTime()) && d > new Date()), { error: v.futureDate }),
     visibility: z.enum(["PUBLIC", "REGISTERED"]),
     isAnonymous: zCheckbox,

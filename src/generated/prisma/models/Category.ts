@@ -486,10 +486,6 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type CategoryUpdateOneWithoutChildrenNestedInput = {
   create?: Prisma.XOR<Prisma.CategoryCreateWithoutChildrenInput, Prisma.CategoryUncheckedCreateWithoutChildrenInput>
   connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutChildrenInput

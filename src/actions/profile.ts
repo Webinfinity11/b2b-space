@@ -38,3 +38,11 @@ export async function changePasswordAction(_: FormState, formData: FormData): Pr
   await audit({ actorId: user.id, action: "auth.password_changed", entityType: "User", entityId: user.id });
   return { ok: true, message: ka.profile.passwordChanged };
 }
+
+export async function updateEmailPrefsAction(_: FormState, formData: FormData): Promise<FormState> {
+  const user = await assertUser();
+  const on = formData.get("emailNotifications") === "on";
+  await db.user.update({ where: { id: user.id }, data: { emailNotifications: on } });
+  revalidatePath("/app/profile");
+  return { ok: true, message: ka.common.saved };
+}

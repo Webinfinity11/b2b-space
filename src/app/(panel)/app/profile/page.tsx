@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ka } from "@/i18n/ka";
-import { changePasswordAction, updateProfileAction } from "@/actions/profile";
+import { changePasswordAction, updateEmailPrefsAction, updateProfileAction } from "@/actions/profile";
 import { getMemberships, requireUser } from "@/lib/authz";
 import { companyName } from "@/lib/public";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardBody, CardHeader, PageHeader } from "@/components/ui/Card";
-import { ActionForm, Field, Input, SubmitButton } from "@/components/ui/Form";
+import { ActionForm, Checkbox, Field, Input, SubmitButton } from "@/components/ui/Form";
 import { VerificationBadge } from "@/components/panel/StatusBadges";
 
 export const metadata: Metadata = { title: ka.profile.title };
@@ -54,6 +54,15 @@ export default async function ProfilePage() {
                 <Field label={ka.auth.passwordConfirm} name="passwordConfirm">
                   <Input name="passwordConfirm" type="password" autoComplete="new-password" required />
                 </Field>
+                <SubmitButton variant="secondary">{ka.common.save}</SubmitButton>
+              </ActionForm>
+            </CardBody>
+          </Card>
+          <Card>
+            <CardHeader title={ka.email.prefsTitle} text={ka.email.prefsText} />
+            <CardBody>
+              <ActionForm action={updateEmailPrefsAction} className="space-y-4">
+                <Checkbox name="emailNotifications" label={ka.email.prefsLabel} defaultChecked={user.emailNotifications} />
                 <SubmitButton variant="secondary">{ka.common.save}</SubmitButton>
               </ActionForm>
             </CardBody>

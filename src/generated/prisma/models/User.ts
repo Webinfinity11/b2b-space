@@ -36,6 +36,7 @@ export type UserMinAggregateOutputType = {
   emailVerifiedAt: Date | null
   phoneVerifiedAt: Date | null
   lastLoginAt: Date | null
+  emailNotifications: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -52,6 +53,7 @@ export type UserMaxAggregateOutputType = {
   emailVerifiedAt: Date | null
   phoneVerifiedAt: Date | null
   lastLoginAt: Date | null
+  emailNotifications: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,6 +70,7 @@ export type UserCountAggregateOutputType = {
   emailVerifiedAt: number
   phoneVerifiedAt: number
   lastLoginAt: number
+  emailNotifications: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -86,6 +89,7 @@ export type UserMinAggregateInputType = {
   emailVerifiedAt?: true
   phoneVerifiedAt?: true
   lastLoginAt?: true
+  emailNotifications?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -102,6 +106,7 @@ export type UserMaxAggregateInputType = {
   emailVerifiedAt?: true
   phoneVerifiedAt?: true
   lastLoginAt?: true
+  emailNotifications?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -118,6 +123,7 @@ export type UserCountAggregateInputType = {
   emailVerifiedAt?: true
   phoneVerifiedAt?: true
   lastLoginAt?: true
+  emailNotifications?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -207,6 +213,7 @@ export type UserGroupByOutputType = {
   emailVerifiedAt: Date | null
   phoneVerifiedAt: Date | null
   lastLoginAt: Date | null
+  emailNotifications: boolean
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -244,6 +251,7 @@ export type UserWhereInput = {
   emailVerifiedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   phoneVerifiedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  emailNotifications?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   sessions?: Prisma.SessionListRelationFilter
@@ -278,6 +286,7 @@ export type UserOrderByWithRelationInput = {
   emailVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   phoneVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailNotifications?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   sessions?: Prisma.SessionOrderByRelationAggregateInput
@@ -315,6 +324,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   emailVerifiedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   phoneVerifiedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  emailNotifications?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   sessions?: Prisma.SessionListRelationFilter
@@ -349,6 +359,7 @@ export type UserOrderByWithAggregationInput = {
   emailVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   phoneVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailNotifications?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -371,6 +382,7 @@ export type UserScalarWhereWithAggregatesInput = {
   emailVerifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   phoneVerifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   lastLoginAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  emailNotifications?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -387,6 +399,7 @@ export type UserCreateInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -421,6 +434,7 @@ export type UserUncheckedCreateInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -455,6 +469,7 @@ export type UserUpdateInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -489,6 +504,7 @@ export type UserUncheckedUpdateInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -523,6 +539,7 @@ export type UserCreateManyInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -539,6 +556,7 @@ export type UserUpdateManyMutationInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -555,6 +573,7 @@ export type UserUncheckedUpdateManyInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -571,6 +590,7 @@ export type UserCountOrderByAggregateInput = {
   emailVerifiedAt?: Prisma.SortOrder
   phoneVerifiedAt?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
+  emailNotifications?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -587,6 +607,7 @@ export type UserMaxOrderByAggregateInput = {
   emailVerifiedAt?: Prisma.SortOrder
   phoneVerifiedAt?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
+  emailNotifications?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -603,6 +624,7 @@ export type UserMinOrderByAggregateInput = {
   emailVerifiedAt?: Prisma.SortOrder
   phoneVerifiedAt?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
+  emailNotifications?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -635,6 +657,10 @@ export type EnumUserStatusFieldUpdateOperationsInput = {
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -911,6 +937,7 @@ export type UserCreateWithoutSessionsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.CompanyMemberCreateNestedManyWithoutUserInput
@@ -944,6 +971,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutUserInput
@@ -993,6 +1021,7 @@ export type UserUpdateWithoutSessionsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.CompanyMemberUpdateManyWithoutUserNestedInput
@@ -1026,6 +1055,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.CompanyMemberUncheckedUpdateManyWithoutUserNestedInput
@@ -1059,6 +1089,7 @@ export type UserCreateWithoutCreatedCompaniesInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1092,6 +1123,7 @@ export type UserUncheckedCreateWithoutCreatedCompaniesInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1141,6 +1173,7 @@ export type UserUpdateWithoutCreatedCompaniesInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1174,6 +1207,7 @@ export type UserUncheckedUpdateWithoutCreatedCompaniesInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1207,6 +1241,7 @@ export type UserCreateWithoutMembershipsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1240,6 +1275,7 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1289,6 +1325,7 @@ export type UserUpdateWithoutMembershipsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1322,6 +1359,7 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1355,6 +1393,7 @@ export type UserCreateWithoutInvitationsSentInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1388,6 +1427,7 @@ export type UserUncheckedCreateWithoutInvitationsSentInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1437,6 +1477,7 @@ export type UserUpdateWithoutInvitationsSentInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1470,6 +1511,7 @@ export type UserUncheckedUpdateWithoutInvitationsSentInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1503,6 +1545,7 @@ export type UserCreateWithoutVerificationDocumentsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1536,6 +1579,7 @@ export type UserUncheckedCreateWithoutVerificationDocumentsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1585,6 +1629,7 @@ export type UserUpdateWithoutVerificationDocumentsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1618,6 +1663,7 @@ export type UserUncheckedUpdateWithoutVerificationDocumentsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1651,6 +1697,7 @@ export type UserCreateWithoutVerificationDecisionsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1684,6 +1731,7 @@ export type UserUncheckedCreateWithoutVerificationDecisionsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1733,6 +1781,7 @@ export type UserUpdateWithoutVerificationDecisionsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1766,6 +1815,7 @@ export type UserUncheckedUpdateWithoutVerificationDecisionsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1799,6 +1849,7 @@ export type UserCreateWithoutOffersInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1832,6 +1883,7 @@ export type UserUncheckedCreateWithoutOffersInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1881,6 +1933,7 @@ export type UserUpdateWithoutOffersInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1914,6 +1967,7 @@ export type UserUncheckedUpdateWithoutOffersInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1947,6 +2001,7 @@ export type UserCreateWithoutResponsesInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1980,6 +2035,7 @@ export type UserUncheckedCreateWithoutResponsesInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -2029,6 +2085,7 @@ export type UserUpdateWithoutResponsesInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -2062,6 +2119,7 @@ export type UserUncheckedUpdateWithoutResponsesInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -2095,6 +2153,7 @@ export type UserCreateWithoutParticipationsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -2128,6 +2187,7 @@ export type UserUncheckedCreateWithoutParticipationsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -2177,6 +2237,7 @@ export type UserUpdateWithoutParticipationsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -2210,6 +2271,7 @@ export type UserUncheckedUpdateWithoutParticipationsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -2243,6 +2305,7 @@ export type UserCreateWithoutMessagesInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -2276,6 +2339,7 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -2325,6 +2389,7 @@ export type UserUpdateWithoutMessagesInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -2358,6 +2423,7 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -2391,6 +2457,7 @@ export type UserCreateWithoutDealVersionsCreatedInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -2424,6 +2491,7 @@ export type UserUncheckedCreateWithoutDealVersionsCreatedInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -2473,6 +2541,7 @@ export type UserUpdateWithoutDealVersionsCreatedInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -2506,6 +2575,7 @@ export type UserUncheckedUpdateWithoutDealVersionsCreatedInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -2539,6 +2609,7 @@ export type UserCreateWithoutDealApprovalsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -2572,6 +2643,7 @@ export type UserUncheckedCreateWithoutDealApprovalsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -2621,6 +2693,7 @@ export type UserUpdateWithoutDealApprovalsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -2654,6 +2727,7 @@ export type UserUncheckedUpdateWithoutDealApprovalsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -2687,6 +2761,7 @@ export type UserCreateWithoutInvoiceStatusChangesInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -2720,6 +2795,7 @@ export type UserUncheckedCreateWithoutInvoiceStatusChangesInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -2769,6 +2845,7 @@ export type UserUpdateWithoutInvoiceStatusChangesInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -2802,6 +2879,7 @@ export type UserUncheckedUpdateWithoutInvoiceStatusChangesInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -2835,6 +2913,7 @@ export type UserCreateWithoutPaymentRecordsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -2868,6 +2947,7 @@ export type UserUncheckedCreateWithoutPaymentRecordsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -2917,6 +2997,7 @@ export type UserUpdateWithoutPaymentRecordsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -2950,6 +3031,7 @@ export type UserUncheckedUpdateWithoutPaymentRecordsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -2983,6 +3065,7 @@ export type UserCreateWithoutNotificationsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -3016,6 +3099,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -3065,6 +3149,7 @@ export type UserUpdateWithoutNotificationsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -3098,6 +3183,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -3131,6 +3217,7 @@ export type UserCreateWithoutReportsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -3164,6 +3251,7 @@ export type UserUncheckedCreateWithoutReportsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -3202,6 +3290,7 @@ export type UserCreateWithoutReportsHandledInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -3235,6 +3324,7 @@ export type UserUncheckedCreateWithoutReportsHandledInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -3284,6 +3374,7 @@ export type UserUpdateWithoutReportsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -3317,6 +3408,7 @@ export type UserUncheckedUpdateWithoutReportsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -3361,6 +3453,7 @@ export type UserUpdateWithoutReportsHandledInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -3394,6 +3487,7 @@ export type UserUncheckedUpdateWithoutReportsHandledInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -3427,6 +3521,7 @@ export type UserCreateWithoutAuditLogsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -3460,6 +3555,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   emailVerifiedAt?: Date | string | null
   phoneVerifiedAt?: Date | string | null
   lastLoginAt?: Date | string | null
+  emailNotifications?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -3509,6 +3605,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -3542,6 +3639,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailNotifications?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -3759,6 +3857,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   emailVerifiedAt?: boolean
   phoneVerifiedAt?: boolean
   lastLoginAt?: boolean
+  emailNotifications?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -3794,6 +3893,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   emailVerifiedAt?: boolean
   phoneVerifiedAt?: boolean
   lastLoginAt?: boolean
+  emailNotifications?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -3810,6 +3910,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   emailVerifiedAt?: boolean
   phoneVerifiedAt?: boolean
   lastLoginAt?: boolean
+  emailNotifications?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -3826,11 +3927,12 @@ export type UserSelectScalar = {
   emailVerifiedAt?: boolean
   phoneVerifiedAt?: boolean
   lastLoginAt?: boolean
+  emailNotifications?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "phone" | "passwordHash" | "platformRole" | "status" | "emailVerifiedAt" | "phoneVerifiedAt" | "lastLoginAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "phone" | "passwordHash" | "platformRole" | "status" | "emailVerifiedAt" | "phoneVerifiedAt" | "lastLoginAt" | "emailNotifications" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   memberships?: boolean | Prisma.User$membershipsArgs<ExtArgs>
@@ -3889,6 +3991,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     emailVerifiedAt: Date | null
     phoneVerifiedAt: Date | null
     lastLoginAt: Date | null
+    emailNotifications: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -4343,6 +4446,7 @@ export interface UserFieldRefs {
   readonly emailVerifiedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly phoneVerifiedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly lastLoginAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly emailNotifications: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }

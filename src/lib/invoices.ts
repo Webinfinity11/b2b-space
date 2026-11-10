@@ -98,3 +98,22 @@ export function effectiveStatus<T extends { status: string; dueDate: Date | null
   const open = ["ISSUED", "SENT", "VIEWED", "PARTIALLY_PAID"].includes(inv.status);
   return open && inv.dueDate && inv.dueDate < new Date() ? ("OVERDUE" as const) : (inv.status as T["status"]);
 }
+
+/** Unpaid, active invoices can be replaced by a correction (a new invoice; the original is cancelled). */
+export const CORRECTABLE: string[] = ["ISSUED", "SENT", "VIEWED"];
+
+export const OPEN_STATUSES = ["ISSUED", "SENT", "VIEWED", "PARTIALLY_PAID"] as const;
+
+/** DB filter matching the *displayed* status (overdue is computed from the due date). */
+export function displayStatusWhere(s: string, now = new Date()): Prisma.InvoiceWhereInput {
+  if (s === "OVERDUE") return { status: { in: [...OPEN_STATUSES] }, dueDate: { lt: now } };
+  if ((OPEN_STATUSES as readonly string[]).includes(s)) return { status: s as (typeof OPEN_STATUSES)[number], OR: [{ dueDate: null }, { dueDate: { gte: now } }] };
+  return { status: s as Prisma.InvoiceWhereInput["status"] & string };
+}
+
+/** Users who see an invoice on one side: the personal party, or company members with invoices.view. */
+export async function invoiceSideUserIds(companyId: string | null, userId: string) {
+  if (!companyId) return [userId];
+  const members = await db.companyMember.findMany({ where: { companyId, status: "ACTIVE" }, select: { userId: true, role: true, permissions: true } });
+  return members.filter((m) => hasPermission(m, "invoices.view")).map((m) => m.userId);
+}

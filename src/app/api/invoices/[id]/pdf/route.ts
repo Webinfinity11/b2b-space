@@ -15,12 +15,12 @@ export async function GET(req: Request, ctx: RouteContext<"/api/invoices/[id]/pd
   const m = await getActiveMembership(user.id);
   const inv = await db.invoice.findFirst({
     where: isAdmin ? { id } : { AND: [{ id }, visibleInvoices(user.id, m)] },
-    include: { items: { orderBy: { sortOrder: "asc" } } },
+    include: { items: { orderBy: { sortOrder: "asc" } }, correctsInvoice: { select: { number: true } } },
   });
   if (!inv) return new Response("Not found", { status: 404 });
   if (isAdmin) await audit({ actorId: user.id, action: "invoice.pdf_viewed", entityType: "Invoice", entityId: inv.id });
 
-  const pdf = await renderInvoicePdf({ ...inv, snapshot: inv.snapshot as unknown as InvoiceSnapshot });
+  const pdf = await renderInvoicePdf({ ...inv, snapshot: inv.snapshot as unknown as InvoiceSnapshot, correctsNumber: inv.correctsInvoice?.number });
   const download = new URL(req.url).searchParams.has("download");
   return new Response(new Uint8Array(pdf), {
     headers: {

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardBody, CardHeader } from "@/components/ui/Card";
 import { ActionForm, Field, Input, SubmitButton, Textarea, useFormState } from "@/components/ui/Form";
 import { controlClass } from "@/components/ui/styles";
+import { formatAmount } from "@/lib/money";
 
 type Row = { name: string; description: string; quantity: string; unit: string; unitPrice: string };
 export type TermsDefaults = {
@@ -26,13 +27,7 @@ const num = (s: string) => {
   const n = Number(String(s).replace(",", ".").replace(/\s/g, ""));
   return Number.isFinite(n) ? n : 0;
 };
-const fmt = (n: number, cur: string) => {
-  try {
-    return new Intl.NumberFormat("ka-GE", { style: "currency", currency: cur, minimumFractionDigits: 2 }).format(n);
-  } catch {
-    return n.toFixed(2);
-  }
-};
+const fmt = (n: number, cur: string) => formatAmount(n, cur);
 
 export function TermsForm({
   conversationId,

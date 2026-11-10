@@ -30,6 +30,8 @@ export type PdfInvoice = {
   notes: string | null;
   status: string;
   snapshot: InvoiceSnapshot;
+  /** Number of the invoice this one corrects, if any. */
+  correctsNumber?: string | null;
   items: { name: string; description: string | null; quantity: Dec; unit: string; unitPrice: Dec; lineTotal: Dec }[];
 };
 
@@ -69,6 +71,7 @@ export function renderInvoicePdf(inv: PdfInvoice): Promise<Buffer> {
     [i.dueDate, inv.dueDate ? formatDate(inv.dueDate) : "—"],
     [i.dealRef, `${t.version(inv.snapshot.deal.versionNumber)} · ${inv.snapshot.deal.dealTermsId}`],
   ];
+  if (inv.correctsNumber) meta.push([i.correctsLabelPdf, inv.correctsNumber]);
   for (const [label, value] of meta) {
     doc.fillColor(MUTED).text(label, L, y, { continued: true }).fillColor(NAVY).text(`:  ${value}`);
     y += 14;

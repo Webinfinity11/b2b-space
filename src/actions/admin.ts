@@ -11,6 +11,8 @@ import { fail, invalid, zCheckbox, zText, type FormState } from "@/lib/forms";
 import { notify } from "@/lib/notify";
 import { slugify } from "@/lib/slug";
 import { loadDemoData, removeDemoData } from "@/lib/demo-data";
+import { invoiceSideUserIds } from "@/lib/invoices";
+import { CHAT_ACCESS_ACTION } from "@/lib/admin-access";
 
 // ─────────────────────────────── Company verification ───────────────────────────────
 
@@ -176,4 +178,58 @@ export async function removeDemoDataAction(): Promise<FormState> {
   await audit({ actorId: admin.id, action: "demo.removed", entityType: "Platform", metadata: { users: n } });
   revalidatePath("/", "layout");
   return { ok: true, message: ka.demo.removed };
+}
+
+// ─────────────────────────────── Invoices ───────────────────────────────
+
+/** Admin transitions (no provider yet): cancel an unpaid invoice, or mark a paid one as refunded. Reason required, audited. */
+const ADMIN_INVOICE_TRANSITIONS: Record<string, string[]> = {
+  CANCELLED: ["ISSUED", "SENT", "VIEWED"],
+  REFUNDED: ["PAID", "PARTIALLY_PAID"],
+};
+
+export async function adminInvoiceStatusAction(_: FormState, formData: FormData): Promise<FormState> {
+  const admin = await assertAdmin();
+  const parsed = z
+    .object({
+      invoiceId: z.string().min(1),
+      status: z.enum(["CANCELLED", "REFUNDED"], { error: ka.validation.required }),
+      comment: z.string().trim().min(5, { error: ka.admin.reasonRequired }).max(1000),
+    })
+    .safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const { invoiceId, status, comment } = parsed.data;
+  const inv = await db.invoice.findUnique({ where: { id: invoiceId } });
+  if (!inv) return fail(ka.errors.generic);
+  if (!ADMIN_INVOICE_TRANSITIONS[status].includes(inv.status)) return fail(ka.admin.transitionNotAllowed, formData);
+
+  const updated = await db.$transaction(async (tx) => {
+    const r = await tx.invoice.updateMany({ where: { id: inv.id, status: inv.status }, data: { status } });
+    if (r.count !== 1) return false;
+    await tx.invoiceStatusChange.create({ data: { invoiceId: inv.id, fromStatus: inv.status, toStatus: status, changedById: admin.id, comment: `${ka.admin.byPlatform}: ${comment}` } });
+    return true;
+  });
+  if (!updated) return fail(ka.errors.generic);
+
+  const users = [...(await invoiceSideUserIds(inv.sellerCompanyId, inv.sellerUserId)), ...(await invoiceSideUserIds(inv.buyerCompanyId, inv.buyerUserId))];
+  await notify(users, { type: "INVOICE_CREATED", title: ka.admin.invoiceStatusNotify(inv.number, ka.enums.invoiceStatus[status]), body: comment, link: `/app/invoices/${inv.id}` });
+  await audit({ actorId: admin.id, action: "invoice.admin_status_changed", entityType: "Invoice", entityId: inv.id, metadata: { number: inv.number, from: inv.status, to: status, comment } });
+  revalidatePath(`/admin/invoices/${inv.id}`);
+  revalidatePath("/admin/invoices");
+  return { ok: true, message: ka.common.saved };
+}
+
+// ─────────────────────────────── Private chat access ───────────────────────────────
+
+/** Admin access to a private conversation: requires a written reason; every grant is audited and expires. */
+export async function grantConversationAccessAction(_: FormState, formData: FormData): Promise<FormState> {
+  const admin = await assertAdmin();
+  const conversationId = String(formData.get("conversationId") ?? "");
+  const reason = String(formData.get("reason") ?? "").trim().slice(0, 1000);
+  if (reason.length < 10) return fail(ka.validation.formErrors, formData, { reason: ka.admin.chatReasonShort });
+  const exists = await db.conversation.findUnique({ where: { id: conversationId }, select: { id: true, subject: true } });
+  if (!exists) return fail(ka.errors.generic);
+  await audit({ actorId: admin.id, action: CHAT_ACCESS_ACTION, entityType: "Conversation", entityId: exists.id, metadata: { reason, subject: exists.subject } });
+  revalidatePath(`/admin/conversations/${exists.id}`);
+  return { ok: true, message: ka.admin.chatAccessGranted };
 }
