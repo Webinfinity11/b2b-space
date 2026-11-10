@@ -92,11 +92,6 @@ enum CompanySize {
   LARGE
 }
 
-enum OfferTag {
-  MAIN_PARTNER
-  WOMEN_BUSINESS
-}
-
 enum DealStage {
   INTEREST
   OFFER
@@ -365,8 +360,8 @@ model Offer {
   perk          String?
   /// Who the offer is for.
   audience      String?
-  /// Set by platform admins.
-  tag           OfferTag?
+  /// Badge set by platform admins (მთავარი პარტნიორი, …).
+  badgeId       String?
   /// Platform commission for deals from this offer (percent) and its display text.
   commissionPct  Decimal?       @db.Decimal(5, 2)
   commissionText String?
@@ -377,6 +372,7 @@ model Offer {
   updatedAt     DateTime        @updatedAt
 
   category    Category?         @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  badge       OfferBadge?       @relation(fields: [badgeId], references: [id], onDelete: SetNull)
   author      User              @relation(fields: [authorUserId], references: [id], onDelete: Restrict)
   company     Company?          @relation(fields: [companyId], references: [id], onDelete: Restrict)
   attachments OfferAttachment[]
@@ -387,6 +383,7 @@ model Offer {
   @@index([categoryId])
   @@index([companyId])
   @@index([authorUserId])
+  @@index([badgeId])
 }
 
 model OfferAttachment {
@@ -912,4 +909,18 @@ model CampaignRecipient {
 
   @@unique([requestId, companyId])
   @@index([companyId])
+}
+
+/// Admin-managed offer badges (e.g. "მთავარი პარტნიორი"). showBanner = featured on the dashboard banner.
+model OfferBadge {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  color       String   @default("blue")
+  showBanner  Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  offers Offer[]
 }

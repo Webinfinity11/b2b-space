@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import type { Prisma } from "@/generated/prisma/client";
 import { ka } from "@/i18n/ka";
-import { controlClass } from "@/components/ui/styles";
-import { adminArchiveOfferAction, adminSetOfferTagAction, setOfferCommissionAction } from "@/actions/admin";
+import { adminArchiveOfferAction } from "@/actions/admin";
+import { BADGE_STYLE } from "@/components/panel/badge-style";
 import { requireAdmin } from "@/lib/authz";
 import { db } from "@/lib/db";
 import { formatDate } from "@/lib/format";
@@ -38,6 +38,7 @@ export default async function AdminOffersPage({ searchParams }: PageProps<"/admi
         author: { select: { firstName: true, lastName: true, email: true } },
         company: { select: { legalName: true, tradeName: true } },
         _count: { select: { responses: true } },
+        badge: { select: { name: true, color: true } },
       },
     }),
   ]);
@@ -75,21 +76,11 @@ export default async function AdminOffersPage({ searchParams }: PageProps<"/admi
               <Td className="tabular-nums">{o._count.responses}</Td>
               <Td className="whitespace-nowrap text-muted">{formatDate(o.createdAt)}</Td>
               <Td>
-                <form action={setOfferCommissionAction} className="mb-2 flex items-center gap-1.5">
-                  <input type="hidden" name="offerId" value={o.id} />
-                  <input name="commissionPct" defaultValue={o.commissionPct?.toString() ?? ""} placeholder="%" aria-label={ka.sgba.offerCommission} className={`${controlClass} h-8 w-16 text-xs`} />
-                  <input name="commissionText" defaultValue={o.commissionText ?? ""} placeholder={ka.sgba.offerCommissionText} aria-label={ka.sgba.offerCommissionText} className={`${controlClass} h-8 w-36 text-xs`} />
-                  <Button type="submit" size="sm" variant="secondary">%</Button>
-                </form>
-                <form action={adminSetOfferTagAction} className="mb-2 flex items-center gap-1.5">
-                  <input type="hidden" name="offerId" value={o.id} />
-                  <select name="tag" defaultValue={o.tag ?? ""} aria-label="tag" className={`${controlClass} h-8 w-auto text-xs`}>
-                    <option value="">—</option>
-                    <option value="MAIN_PARTNER">{ka.sgba.tags.MAIN_PARTNER}</option>
-                    <option value="WOMEN_BUSINESS">{ka.sgba.tags.WOMEN_BUSINESS}</option>
-                  </select>
-                  <Button type="submit" size="sm" variant="secondary">{ka.common.save}</Button>
-                </form>
+                <div className="mb-2 flex flex-wrap items-center gap-1.5 text-xs">
+                  {o.badge && <span className={`rounded-full px-2 py-0.5 ${BADGE_STYLE[o.badge.color] ?? BADGE_STYLE.blue}`}>{o.badge.name}</span>}
+                  {o.commissionPct && <span className="rounded-full bg-chip px-2 py-0.5 font-semibold">{o.commissionPct.toString()}%</span>}
+                </div>
+                <Link href={`/admin/offers/${o.id}`} className="mb-2 inline-flex text-sm font-bold text-accent hover:underline">{ka.sgba.offerManage} →</Link>
                 {o.status !== "ARCHIVED" && (
                   <form action={adminArchiveOfferAction}>
                     <input type="hidden" name="offerId" value={o.id} />

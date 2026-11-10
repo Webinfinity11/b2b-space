@@ -62,7 +62,7 @@ export type OfferMinAggregateOutputType = {
   isAnonymous: boolean | null
   perk: string | null
   audience: string | null
-  tag: $Enums.OfferTag | null
+  badgeId: string | null
   commissionPct: runtime.Decimal | null
   commissionText: string | null
   visibility: $Enums.OfferVisibility | null
@@ -94,7 +94,7 @@ export type OfferMaxAggregateOutputType = {
   isAnonymous: boolean | null
   perk: string | null
   audience: string | null
-  tag: $Enums.OfferTag | null
+  badgeId: string | null
   commissionPct: runtime.Decimal | null
   commissionText: string | null
   visibility: $Enums.OfferVisibility | null
@@ -126,7 +126,7 @@ export type OfferCountAggregateOutputType = {
   isAnonymous: number
   perk: number
   audience: number
-  tag: number
+  badgeId: number
   commissionPct: number
   commissionText: number
   visibility: number
@@ -174,7 +174,7 @@ export type OfferMinAggregateInputType = {
   isAnonymous?: true
   perk?: true
   audience?: true
-  tag?: true
+  badgeId?: true
   commissionPct?: true
   commissionText?: true
   visibility?: true
@@ -206,7 +206,7 @@ export type OfferMaxAggregateInputType = {
   isAnonymous?: true
   perk?: true
   audience?: true
-  tag?: true
+  badgeId?: true
   commissionPct?: true
   commissionText?: true
   visibility?: true
@@ -238,7 +238,7 @@ export type OfferCountAggregateInputType = {
   isAnonymous?: true
   perk?: true
   audience?: true
-  tag?: true
+  badgeId?: true
   commissionPct?: true
   commissionText?: true
   visibility?: true
@@ -357,7 +357,7 @@ export type OfferGroupByOutputType = {
   isAnonymous: boolean
   perk: string | null
   audience: string | null
-  tag: $Enums.OfferTag | null
+  badgeId: string | null
   commissionPct: runtime.Decimal | null
   commissionText: string | null
   visibility: $Enums.OfferVisibility
@@ -412,7 +412,7 @@ export type OfferWhereInput = {
   isAnonymous?: Prisma.BoolFilter<"Offer"> | boolean
   perk?: Prisma.StringNullableFilter<"Offer"> | string | null
   audience?: Prisma.StringNullableFilter<"Offer"> | string | null
-  tag?: Prisma.EnumOfferTagNullableFilter<"Offer"> | $Enums.OfferTag | null
+  badgeId?: Prisma.StringNullableFilter<"Offer"> | string | null
   commissionPct?: Prisma.DecimalNullableFilter<"Offer"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.StringNullableFilter<"Offer"> | string | null
   visibility?: Prisma.EnumOfferVisibilityFilter<"Offer"> | $Enums.OfferVisibility
@@ -421,6 +421,7 @@ export type OfferWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   category?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null
+  badge?: Prisma.XOR<Prisma.OfferBadgeNullableScalarRelationFilter, Prisma.OfferBadgeWhereInput> | null
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
   attachments?: Prisma.OfferAttachmentListRelationFilter
@@ -450,7 +451,7 @@ export type OfferOrderByWithRelationInput = {
   isAnonymous?: Prisma.SortOrder
   perk?: Prisma.SortOrderInput | Prisma.SortOrder
   audience?: Prisma.SortOrderInput | Prisma.SortOrder
-  tag?: Prisma.SortOrderInput | Prisma.SortOrder
+  badgeId?: Prisma.SortOrderInput | Prisma.SortOrder
   commissionPct?: Prisma.SortOrderInput | Prisma.SortOrder
   commissionText?: Prisma.SortOrderInput | Prisma.SortOrder
   visibility?: Prisma.SortOrder
@@ -459,6 +460,7 @@ export type OfferOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   category?: Prisma.CategoryOrderByWithRelationInput
+  badge?: Prisma.OfferBadgeOrderByWithRelationInput
   author?: Prisma.UserOrderByWithRelationInput
   company?: Prisma.CompanyOrderByWithRelationInput
   attachments?: Prisma.OfferAttachmentOrderByRelationAggregateInput
@@ -491,7 +493,7 @@ export type OfferWhereUniqueInput = Prisma.AtLeast<{
   isAnonymous?: Prisma.BoolFilter<"Offer"> | boolean
   perk?: Prisma.StringNullableFilter<"Offer"> | string | null
   audience?: Prisma.StringNullableFilter<"Offer"> | string | null
-  tag?: Prisma.EnumOfferTagNullableFilter<"Offer"> | $Enums.OfferTag | null
+  badgeId?: Prisma.StringNullableFilter<"Offer"> | string | null
   commissionPct?: Prisma.DecimalNullableFilter<"Offer"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.StringNullableFilter<"Offer"> | string | null
   visibility?: Prisma.EnumOfferVisibilityFilter<"Offer"> | $Enums.OfferVisibility
@@ -500,6 +502,7 @@ export type OfferWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   category?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null
+  badge?: Prisma.XOR<Prisma.OfferBadgeNullableScalarRelationFilter, Prisma.OfferBadgeWhereInput> | null
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
   attachments?: Prisma.OfferAttachmentListRelationFilter
@@ -529,7 +532,7 @@ export type OfferOrderByWithAggregationInput = {
   isAnonymous?: Prisma.SortOrder
   perk?: Prisma.SortOrderInput | Prisma.SortOrder
   audience?: Prisma.SortOrderInput | Prisma.SortOrder
-  tag?: Prisma.SortOrderInput | Prisma.SortOrder
+  badgeId?: Prisma.SortOrderInput | Prisma.SortOrder
   commissionPct?: Prisma.SortOrderInput | Prisma.SortOrder
   commissionText?: Prisma.SortOrderInput | Prisma.SortOrder
   visibility?: Prisma.SortOrder
@@ -569,7 +572,7 @@ export type OfferScalarWhereWithAggregatesInput = {
   isAnonymous?: Prisma.BoolWithAggregatesFilter<"Offer"> | boolean
   perk?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
   audience?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
-  tag?: Prisma.EnumOfferTagNullableWithAggregatesFilter<"Offer"> | $Enums.OfferTag | null
+  badgeId?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
   commissionPct?: Prisma.DecimalNullableWithAggregatesFilter<"Offer"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
   visibility?: Prisma.EnumOfferVisibilityWithAggregatesFilter<"Offer"> | $Enums.OfferVisibility
@@ -598,7 +601,6 @@ export type OfferCreateInput = {
   isAnonymous?: boolean
   perk?: string | null
   audience?: string | null
-  tag?: $Enums.OfferTag | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
@@ -607,6 +609,7 @@ export type OfferCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   category?: Prisma.CategoryCreateNestedOneWithoutOffersInput
+  badge?: Prisma.OfferBadgeCreateNestedOneWithoutOffersInput
   author: Prisma.UserCreateNestedOneWithoutOffersInput
   company?: Prisma.CompanyCreateNestedOneWithoutOffersInput
   attachments?: Prisma.OfferAttachmentCreateNestedManyWithoutOfferInput
@@ -636,7 +639,7 @@ export type OfferUncheckedCreateInput = {
   isAnonymous?: boolean
   perk?: string | null
   audience?: string | null
-  tag?: $Enums.OfferTag | null
+  badgeId?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
@@ -668,7 +671,6 @@ export type OfferUpdateInput = {
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
@@ -677,6 +679,7 @@ export type OfferUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneWithoutOffersNestedInput
+  badge?: Prisma.OfferBadgeUpdateOneWithoutOffersNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutOffersNestedInput
   company?: Prisma.CompanyUpdateOneWithoutOffersNestedInput
   attachments?: Prisma.OfferAttachmentUpdateManyWithoutOfferNestedInput
@@ -706,7 +709,7 @@ export type OfferUncheckedUpdateInput = {
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
@@ -741,7 +744,7 @@ export type OfferCreateManyInput = {
   isAnonymous?: boolean
   perk?: string | null
   audience?: string | null
-  tag?: $Enums.OfferTag | null
+  badgeId?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
@@ -770,7 +773,6 @@ export type OfferUpdateManyMutationInput = {
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
@@ -802,7 +804,7 @@ export type OfferUncheckedUpdateManyInput = {
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
@@ -844,7 +846,7 @@ export type OfferCountOrderByAggregateInput = {
   isAnonymous?: Prisma.SortOrder
   perk?: Prisma.SortOrder
   audience?: Prisma.SortOrder
-  tag?: Prisma.SortOrder
+  badgeId?: Prisma.SortOrder
   commissionPct?: Prisma.SortOrder
   commissionText?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
@@ -883,7 +885,7 @@ export type OfferMaxOrderByAggregateInput = {
   isAnonymous?: Prisma.SortOrder
   perk?: Prisma.SortOrder
   audience?: Prisma.SortOrder
-  tag?: Prisma.SortOrder
+  badgeId?: Prisma.SortOrder
   commissionPct?: Prisma.SortOrder
   commissionText?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
@@ -915,7 +917,7 @@ export type OfferMinOrderByAggregateInput = {
   isAnonymous?: Prisma.SortOrder
   perk?: Prisma.SortOrder
   audience?: Prisma.SortOrder
-  tag?: Prisma.SortOrder
+  badgeId?: Prisma.SortOrder
   commissionPct?: Prisma.SortOrder
   commissionText?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
@@ -1088,10 +1090,6 @@ export type NullableDecimalFieldUpdateOperationsInput = {
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
-export type NullableEnumOfferTagFieldUpdateOperationsInput = {
-  set?: $Enums.OfferTag | null
-}
-
 export type EnumOfferVisibilityFieldUpdateOperationsInput = {
   set?: $Enums.OfferVisibility
 }
@@ -1144,6 +1142,48 @@ export type OfferUpdateOneWithoutConversationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OfferUpdateToOneWithWhereWithoutConversationsInput, Prisma.OfferUpdateWithoutConversationsInput>, Prisma.OfferUncheckedUpdateWithoutConversationsInput>
 }
 
+export type OfferCreateNestedManyWithoutBadgeInput = {
+  create?: Prisma.XOR<Prisma.OfferCreateWithoutBadgeInput, Prisma.OfferUncheckedCreateWithoutBadgeInput> | Prisma.OfferCreateWithoutBadgeInput[] | Prisma.OfferUncheckedCreateWithoutBadgeInput[]
+  connectOrCreate?: Prisma.OfferCreateOrConnectWithoutBadgeInput | Prisma.OfferCreateOrConnectWithoutBadgeInput[]
+  createMany?: Prisma.OfferCreateManyBadgeInputEnvelope
+  connect?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+}
+
+export type OfferUncheckedCreateNestedManyWithoutBadgeInput = {
+  create?: Prisma.XOR<Prisma.OfferCreateWithoutBadgeInput, Prisma.OfferUncheckedCreateWithoutBadgeInput> | Prisma.OfferCreateWithoutBadgeInput[] | Prisma.OfferUncheckedCreateWithoutBadgeInput[]
+  connectOrCreate?: Prisma.OfferCreateOrConnectWithoutBadgeInput | Prisma.OfferCreateOrConnectWithoutBadgeInput[]
+  createMany?: Prisma.OfferCreateManyBadgeInputEnvelope
+  connect?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+}
+
+export type OfferUpdateManyWithoutBadgeNestedInput = {
+  create?: Prisma.XOR<Prisma.OfferCreateWithoutBadgeInput, Prisma.OfferUncheckedCreateWithoutBadgeInput> | Prisma.OfferCreateWithoutBadgeInput[] | Prisma.OfferUncheckedCreateWithoutBadgeInput[]
+  connectOrCreate?: Prisma.OfferCreateOrConnectWithoutBadgeInput | Prisma.OfferCreateOrConnectWithoutBadgeInput[]
+  upsert?: Prisma.OfferUpsertWithWhereUniqueWithoutBadgeInput | Prisma.OfferUpsertWithWhereUniqueWithoutBadgeInput[]
+  createMany?: Prisma.OfferCreateManyBadgeInputEnvelope
+  set?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+  disconnect?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+  delete?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+  connect?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+  update?: Prisma.OfferUpdateWithWhereUniqueWithoutBadgeInput | Prisma.OfferUpdateWithWhereUniqueWithoutBadgeInput[]
+  updateMany?: Prisma.OfferUpdateManyWithWhereWithoutBadgeInput | Prisma.OfferUpdateManyWithWhereWithoutBadgeInput[]
+  deleteMany?: Prisma.OfferScalarWhereInput | Prisma.OfferScalarWhereInput[]
+}
+
+export type OfferUncheckedUpdateManyWithoutBadgeNestedInput = {
+  create?: Prisma.XOR<Prisma.OfferCreateWithoutBadgeInput, Prisma.OfferUncheckedCreateWithoutBadgeInput> | Prisma.OfferCreateWithoutBadgeInput[] | Prisma.OfferUncheckedCreateWithoutBadgeInput[]
+  connectOrCreate?: Prisma.OfferCreateOrConnectWithoutBadgeInput | Prisma.OfferCreateOrConnectWithoutBadgeInput[]
+  upsert?: Prisma.OfferUpsertWithWhereUniqueWithoutBadgeInput | Prisma.OfferUpsertWithWhereUniqueWithoutBadgeInput[]
+  createMany?: Prisma.OfferCreateManyBadgeInputEnvelope
+  set?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+  disconnect?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+  delete?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+  connect?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+  update?: Prisma.OfferUpdateWithWhereUniqueWithoutBadgeInput | Prisma.OfferUpdateWithWhereUniqueWithoutBadgeInput[]
+  updateMany?: Prisma.OfferUpdateManyWithWhereWithoutBadgeInput | Prisma.OfferUpdateManyWithWhereWithoutBadgeInput[]
+  deleteMany?: Prisma.OfferScalarWhereInput | Prisma.OfferScalarWhereInput[]
+}
+
 export type OfferCreateWithoutAuthorInput = {
   id?: string
   type: $Enums.OfferType
@@ -1163,7 +1203,6 @@ export type OfferCreateWithoutAuthorInput = {
   isAnonymous?: boolean
   perk?: string | null
   audience?: string | null
-  tag?: $Enums.OfferTag | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
@@ -1172,6 +1211,7 @@ export type OfferCreateWithoutAuthorInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   category?: Prisma.CategoryCreateNestedOneWithoutOffersInput
+  badge?: Prisma.OfferBadgeCreateNestedOneWithoutOffersInput
   company?: Prisma.CompanyCreateNestedOneWithoutOffersInput
   attachments?: Prisma.OfferAttachmentCreateNestedManyWithoutOfferInput
   responses?: Prisma.OfferResponseCreateNestedManyWithoutOfferInput
@@ -1199,7 +1239,7 @@ export type OfferUncheckedCreateWithoutAuthorInput = {
   isAnonymous?: boolean
   perk?: string | null
   audience?: string | null
-  tag?: $Enums.OfferTag | null
+  badgeId?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
@@ -1263,7 +1303,7 @@ export type OfferScalarWhereInput = {
   isAnonymous?: Prisma.BoolFilter<"Offer"> | boolean
   perk?: Prisma.StringNullableFilter<"Offer"> | string | null
   audience?: Prisma.StringNullableFilter<"Offer"> | string | null
-  tag?: Prisma.EnumOfferTagNullableFilter<"Offer"> | $Enums.OfferTag | null
+  badgeId?: Prisma.StringNullableFilter<"Offer"> | string | null
   commissionPct?: Prisma.DecimalNullableFilter<"Offer"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.StringNullableFilter<"Offer"> | string | null
   visibility?: Prisma.EnumOfferVisibilityFilter<"Offer"> | $Enums.OfferVisibility
@@ -1292,7 +1332,6 @@ export type OfferCreateWithoutCategoryInput = {
   isAnonymous?: boolean
   perk?: string | null
   audience?: string | null
-  tag?: $Enums.OfferTag | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
@@ -1300,6 +1339,7 @@ export type OfferCreateWithoutCategoryInput = {
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  badge?: Prisma.OfferBadgeCreateNestedOneWithoutOffersInput
   author: Prisma.UserCreateNestedOneWithoutOffersInput
   company?: Prisma.CompanyCreateNestedOneWithoutOffersInput
   attachments?: Prisma.OfferAttachmentCreateNestedManyWithoutOfferInput
@@ -1328,7 +1368,7 @@ export type OfferUncheckedCreateWithoutCategoryInput = {
   isAnonymous?: boolean
   perk?: string | null
   audience?: string | null
-  tag?: $Enums.OfferTag | null
+  badgeId?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
@@ -1386,7 +1426,6 @@ export type OfferCreateWithoutCompanyInput = {
   isAnonymous?: boolean
   perk?: string | null
   audience?: string | null
-  tag?: $Enums.OfferTag | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
@@ -1395,6 +1434,7 @@ export type OfferCreateWithoutCompanyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   category?: Prisma.CategoryCreateNestedOneWithoutOffersInput
+  badge?: Prisma.OfferBadgeCreateNestedOneWithoutOffersInput
   author: Prisma.UserCreateNestedOneWithoutOffersInput
   attachments?: Prisma.OfferAttachmentCreateNestedManyWithoutOfferInput
   responses?: Prisma.OfferResponseCreateNestedManyWithoutOfferInput
@@ -1422,7 +1462,7 @@ export type OfferUncheckedCreateWithoutCompanyInput = {
   isAnonymous?: boolean
   perk?: string | null
   audience?: string | null
-  tag?: $Enums.OfferTag | null
+  badgeId?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
@@ -1480,7 +1520,6 @@ export type OfferCreateWithoutAttachmentsInput = {
   isAnonymous?: boolean
   perk?: string | null
   audience?: string | null
-  tag?: $Enums.OfferTag | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
@@ -1489,6 +1528,7 @@ export type OfferCreateWithoutAttachmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   category?: Prisma.CategoryCreateNestedOneWithoutOffersInput
+  badge?: Prisma.OfferBadgeCreateNestedOneWithoutOffersInput
   author: Prisma.UserCreateNestedOneWithoutOffersInput
   company?: Prisma.CompanyCreateNestedOneWithoutOffersInput
   responses?: Prisma.OfferResponseCreateNestedManyWithoutOfferInput
@@ -1517,7 +1557,7 @@ export type OfferUncheckedCreateWithoutAttachmentsInput = {
   isAnonymous?: boolean
   perk?: string | null
   audience?: string | null
-  tag?: $Enums.OfferTag | null
+  badgeId?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
@@ -1564,7 +1604,6 @@ export type OfferUpdateWithoutAttachmentsInput = {
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
@@ -1573,6 +1612,7 @@ export type OfferUpdateWithoutAttachmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneWithoutOffersNestedInput
+  badge?: Prisma.OfferBadgeUpdateOneWithoutOffersNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutOffersNestedInput
   company?: Prisma.CompanyUpdateOneWithoutOffersNestedInput
   responses?: Prisma.OfferResponseUpdateManyWithoutOfferNestedInput
@@ -1601,7 +1641,7 @@ export type OfferUncheckedUpdateWithoutAttachmentsInput = {
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
@@ -1632,7 +1672,6 @@ export type OfferCreateWithoutResponsesInput = {
   isAnonymous?: boolean
   perk?: string | null
   audience?: string | null
-  tag?: $Enums.OfferTag | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
@@ -1641,6 +1680,7 @@ export type OfferCreateWithoutResponsesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   category?: Prisma.CategoryCreateNestedOneWithoutOffersInput
+  badge?: Prisma.OfferBadgeCreateNestedOneWithoutOffersInput
   author: Prisma.UserCreateNestedOneWithoutOffersInput
   company?: Prisma.CompanyCreateNestedOneWithoutOffersInput
   attachments?: Prisma.OfferAttachmentCreateNestedManyWithoutOfferInput
@@ -1669,7 +1709,7 @@ export type OfferUncheckedCreateWithoutResponsesInput = {
   isAnonymous?: boolean
   perk?: string | null
   audience?: string | null
-  tag?: $Enums.OfferTag | null
+  badgeId?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
@@ -1716,7 +1756,6 @@ export type OfferUpdateWithoutResponsesInput = {
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
@@ -1725,6 +1764,7 @@ export type OfferUpdateWithoutResponsesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneWithoutOffersNestedInput
+  badge?: Prisma.OfferBadgeUpdateOneWithoutOffersNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutOffersNestedInput
   company?: Prisma.CompanyUpdateOneWithoutOffersNestedInput
   attachments?: Prisma.OfferAttachmentUpdateManyWithoutOfferNestedInput
@@ -1753,7 +1793,7 @@ export type OfferUncheckedUpdateWithoutResponsesInput = {
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
@@ -1784,7 +1824,6 @@ export type OfferCreateWithoutConversationsInput = {
   isAnonymous?: boolean
   perk?: string | null
   audience?: string | null
-  tag?: $Enums.OfferTag | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
@@ -1793,6 +1832,7 @@ export type OfferCreateWithoutConversationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   category?: Prisma.CategoryCreateNestedOneWithoutOffersInput
+  badge?: Prisma.OfferBadgeCreateNestedOneWithoutOffersInput
   author: Prisma.UserCreateNestedOneWithoutOffersInput
   company?: Prisma.CompanyCreateNestedOneWithoutOffersInput
   attachments?: Prisma.OfferAttachmentCreateNestedManyWithoutOfferInput
@@ -1821,7 +1861,7 @@ export type OfferUncheckedCreateWithoutConversationsInput = {
   isAnonymous?: boolean
   perk?: string | null
   audience?: string | null
-  tag?: $Enums.OfferTag | null
+  badgeId?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
@@ -1868,7 +1908,6 @@ export type OfferUpdateWithoutConversationsInput = {
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
@@ -1877,6 +1916,7 @@ export type OfferUpdateWithoutConversationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneWithoutOffersNestedInput
+  badge?: Prisma.OfferBadgeUpdateOneWithoutOffersNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutOffersNestedInput
   company?: Prisma.CompanyUpdateOneWithoutOffersNestedInput
   attachments?: Prisma.OfferAttachmentUpdateManyWithoutOfferNestedInput
@@ -1905,7 +1945,7 @@ export type OfferUncheckedUpdateWithoutConversationsInput = {
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
@@ -1915,6 +1955,100 @@ export type OfferUncheckedUpdateWithoutConversationsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attachments?: Prisma.OfferAttachmentUncheckedUpdateManyWithoutOfferNestedInput
   responses?: Prisma.OfferResponseUncheckedUpdateManyWithoutOfferNestedInput
+}
+
+export type OfferCreateWithoutBadgeInput = {
+  id?: string
+  type: $Enums.OfferType
+  title: string
+  description: string
+  itemKind?: $Enums.ItemKind
+  priceType?: $Enums.PriceType
+  priceMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  priceMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currency?: string | null
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  unit?: string | null
+  deliveryTerms?: string | null
+  country?: string | null
+  city?: string | null
+  validUntil?: Date | string | null
+  isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
+  visibility?: $Enums.OfferVisibility
+  status?: $Enums.OfferStatus
+  publishedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  category?: Prisma.CategoryCreateNestedOneWithoutOffersInput
+  author: Prisma.UserCreateNestedOneWithoutOffersInput
+  company?: Prisma.CompanyCreateNestedOneWithoutOffersInput
+  attachments?: Prisma.OfferAttachmentCreateNestedManyWithoutOfferInput
+  responses?: Prisma.OfferResponseCreateNestedManyWithoutOfferInput
+  conversations?: Prisma.ConversationCreateNestedManyWithoutOfferInput
+}
+
+export type OfferUncheckedCreateWithoutBadgeInput = {
+  id?: string
+  type: $Enums.OfferType
+  title: string
+  description: string
+  categoryId?: string | null
+  itemKind?: $Enums.ItemKind
+  priceType?: $Enums.PriceType
+  priceMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  priceMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currency?: string | null
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  unit?: string | null
+  deliveryTerms?: string | null
+  country?: string | null
+  city?: string | null
+  validUntil?: Date | string | null
+  authorUserId: string
+  companyId?: string | null
+  isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
+  visibility?: $Enums.OfferVisibility
+  status?: $Enums.OfferStatus
+  publishedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attachments?: Prisma.OfferAttachmentUncheckedCreateNestedManyWithoutOfferInput
+  responses?: Prisma.OfferResponseUncheckedCreateNestedManyWithoutOfferInput
+  conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutOfferInput
+}
+
+export type OfferCreateOrConnectWithoutBadgeInput = {
+  where: Prisma.OfferWhereUniqueInput
+  create: Prisma.XOR<Prisma.OfferCreateWithoutBadgeInput, Prisma.OfferUncheckedCreateWithoutBadgeInput>
+}
+
+export type OfferCreateManyBadgeInputEnvelope = {
+  data: Prisma.OfferCreateManyBadgeInput | Prisma.OfferCreateManyBadgeInput[]
+  skipDuplicates?: boolean
+}
+
+export type OfferUpsertWithWhereUniqueWithoutBadgeInput = {
+  where: Prisma.OfferWhereUniqueInput
+  update: Prisma.XOR<Prisma.OfferUpdateWithoutBadgeInput, Prisma.OfferUncheckedUpdateWithoutBadgeInput>
+  create: Prisma.XOR<Prisma.OfferCreateWithoutBadgeInput, Prisma.OfferUncheckedCreateWithoutBadgeInput>
+}
+
+export type OfferUpdateWithWhereUniqueWithoutBadgeInput = {
+  where: Prisma.OfferWhereUniqueInput
+  data: Prisma.XOR<Prisma.OfferUpdateWithoutBadgeInput, Prisma.OfferUncheckedUpdateWithoutBadgeInput>
+}
+
+export type OfferUpdateManyWithWhereWithoutBadgeInput = {
+  where: Prisma.OfferScalarWhereInput
+  data: Prisma.XOR<Prisma.OfferUpdateManyMutationInput, Prisma.OfferUncheckedUpdateManyWithoutBadgeInput>
 }
 
 export type OfferCreateManyAuthorInput = {
@@ -1938,7 +2072,7 @@ export type OfferCreateManyAuthorInput = {
   isAnonymous?: boolean
   perk?: string | null
   audience?: string | null
-  tag?: $Enums.OfferTag | null
+  badgeId?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
@@ -1967,7 +2101,6 @@ export type OfferUpdateWithoutAuthorInput = {
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
@@ -1976,6 +2109,7 @@ export type OfferUpdateWithoutAuthorInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneWithoutOffersNestedInput
+  badge?: Prisma.OfferBadgeUpdateOneWithoutOffersNestedInput
   company?: Prisma.CompanyUpdateOneWithoutOffersNestedInput
   attachments?: Prisma.OfferAttachmentUpdateManyWithoutOfferNestedInput
   responses?: Prisma.OfferResponseUpdateManyWithoutOfferNestedInput
@@ -2003,7 +2137,7 @@ export type OfferUncheckedUpdateWithoutAuthorInput = {
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
@@ -2037,7 +2171,7 @@ export type OfferUncheckedUpdateManyWithoutAuthorInput = {
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
@@ -2068,7 +2202,7 @@ export type OfferCreateManyCategoryInput = {
   isAnonymous?: boolean
   perk?: string | null
   audience?: string | null
-  tag?: $Enums.OfferTag | null
+  badgeId?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
@@ -2097,7 +2231,6 @@ export type OfferUpdateWithoutCategoryInput = {
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
@@ -2105,6 +2238,7 @@ export type OfferUpdateWithoutCategoryInput = {
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  badge?: Prisma.OfferBadgeUpdateOneWithoutOffersNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutOffersNestedInput
   company?: Prisma.CompanyUpdateOneWithoutOffersNestedInput
   attachments?: Prisma.OfferAttachmentUpdateManyWithoutOfferNestedInput
@@ -2133,7 +2267,7 @@ export type OfferUncheckedUpdateWithoutCategoryInput = {
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
@@ -2167,7 +2301,7 @@ export type OfferUncheckedUpdateManyWithoutCategoryInput = {
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
@@ -2198,7 +2332,7 @@ export type OfferCreateManyCompanyInput = {
   isAnonymous?: boolean
   perk?: string | null
   audience?: string | null
-  tag?: $Enums.OfferTag | null
+  badgeId?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
@@ -2227,7 +2361,6 @@ export type OfferUpdateWithoutCompanyInput = {
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
@@ -2236,6 +2369,7 @@ export type OfferUpdateWithoutCompanyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneWithoutOffersNestedInput
+  badge?: Prisma.OfferBadgeUpdateOneWithoutOffersNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutOffersNestedInput
   attachments?: Prisma.OfferAttachmentUpdateManyWithoutOfferNestedInput
   responses?: Prisma.OfferResponseUpdateManyWithoutOfferNestedInput
@@ -2263,7 +2397,7 @@ export type OfferUncheckedUpdateWithoutCompanyInput = {
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
@@ -2297,7 +2431,137 @@ export type OfferUncheckedUpdateManyWithoutCompanyInput = {
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
+  status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type OfferCreateManyBadgeInput = {
+  id?: string
+  type: $Enums.OfferType
+  title: string
+  description: string
+  categoryId?: string | null
+  itemKind?: $Enums.ItemKind
+  priceType?: $Enums.PriceType
+  priceMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  priceMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currency?: string | null
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  unit?: string | null
+  deliveryTerms?: string | null
+  country?: string | null
+  city?: string | null
+  validUntil?: Date | string | null
+  authorUserId: string
+  companyId?: string | null
+  isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
+  visibility?: $Enums.OfferVisibility
+  status?: $Enums.OfferStatus
+  publishedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type OfferUpdateWithoutBadgeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumOfferTypeFieldUpdateOperationsInput | $Enums.OfferType
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  itemKind?: Prisma.EnumItemKindFieldUpdateOperationsInput | $Enums.ItemKind
+  priceType?: Prisma.EnumPriceTypeFieldUpdateOperationsInput | $Enums.PriceType
+  priceMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  priceMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantity?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
+  status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.CategoryUpdateOneWithoutOffersNestedInput
+  author?: Prisma.UserUpdateOneRequiredWithoutOffersNestedInput
+  company?: Prisma.CompanyUpdateOneWithoutOffersNestedInput
+  attachments?: Prisma.OfferAttachmentUpdateManyWithoutOfferNestedInput
+  responses?: Prisma.OfferResponseUpdateManyWithoutOfferNestedInput
+  conversations?: Prisma.ConversationUpdateManyWithoutOfferNestedInput
+}
+
+export type OfferUncheckedUpdateWithoutBadgeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumOfferTypeFieldUpdateOperationsInput | $Enums.OfferType
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemKind?: Prisma.EnumItemKindFieldUpdateOperationsInput | $Enums.ItemKind
+  priceType?: Prisma.EnumPriceTypeFieldUpdateOperationsInput | $Enums.PriceType
+  priceMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  priceMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantity?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
+  status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attachments?: Prisma.OfferAttachmentUncheckedUpdateManyWithoutOfferNestedInput
+  responses?: Prisma.OfferResponseUncheckedUpdateManyWithoutOfferNestedInput
+  conversations?: Prisma.ConversationUncheckedUpdateManyWithoutOfferNestedInput
+}
+
+export type OfferUncheckedUpdateManyWithoutBadgeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumOfferTypeFieldUpdateOperationsInput | $Enums.OfferType
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemKind?: Prisma.EnumItemKindFieldUpdateOperationsInput | $Enums.ItemKind
+  priceType?: Prisma.EnumPriceTypeFieldUpdateOperationsInput | $Enums.PriceType
+  priceMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  priceMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantity?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
@@ -2378,7 +2642,7 @@ export type OfferSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   isAnonymous?: boolean
   perk?: boolean
   audience?: boolean
-  tag?: boolean
+  badgeId?: boolean
   commissionPct?: boolean
   commissionText?: boolean
   visibility?: boolean
@@ -2387,6 +2651,7 @@ export type OfferSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   createdAt?: boolean
   updatedAt?: boolean
   category?: boolean | Prisma.Offer$categoryArgs<ExtArgs>
+  badge?: boolean | Prisma.Offer$badgeArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   company?: boolean | Prisma.Offer$companyArgs<ExtArgs>
   attachments?: boolean | Prisma.Offer$attachmentsArgs<ExtArgs>
@@ -2417,7 +2682,7 @@ export type OfferSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   isAnonymous?: boolean
   perk?: boolean
   audience?: boolean
-  tag?: boolean
+  badgeId?: boolean
   commissionPct?: boolean
   commissionText?: boolean
   visibility?: boolean
@@ -2426,6 +2691,7 @@ export type OfferSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   createdAt?: boolean
   updatedAt?: boolean
   category?: boolean | Prisma.Offer$categoryArgs<ExtArgs>
+  badge?: boolean | Prisma.Offer$badgeArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   company?: boolean | Prisma.Offer$companyArgs<ExtArgs>
 }, ExtArgs["result"]["offer"]>
@@ -2452,7 +2718,7 @@ export type OfferSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   isAnonymous?: boolean
   perk?: boolean
   audience?: boolean
-  tag?: boolean
+  badgeId?: boolean
   commissionPct?: boolean
   commissionText?: boolean
   visibility?: boolean
@@ -2461,6 +2727,7 @@ export type OfferSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   createdAt?: boolean
   updatedAt?: boolean
   category?: boolean | Prisma.Offer$categoryArgs<ExtArgs>
+  badge?: boolean | Prisma.Offer$badgeArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   company?: boolean | Prisma.Offer$companyArgs<ExtArgs>
 }, ExtArgs["result"]["offer"]>
@@ -2487,7 +2754,7 @@ export type OfferSelectScalar = {
   isAnonymous?: boolean
   perk?: boolean
   audience?: boolean
-  tag?: boolean
+  badgeId?: boolean
   commissionPct?: boolean
   commissionText?: boolean
   visibility?: boolean
@@ -2497,9 +2764,10 @@ export type OfferSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "title" | "description" | "categoryId" | "itemKind" | "priceType" | "priceMin" | "priceMax" | "currency" | "quantity" | "unit" | "deliveryTerms" | "country" | "city" | "validUntil" | "authorUserId" | "companyId" | "isAnonymous" | "perk" | "audience" | "tag" | "commissionPct" | "commissionText" | "visibility" | "status" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
+export type OfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "title" | "description" | "categoryId" | "itemKind" | "priceType" | "priceMin" | "priceMax" | "currency" | "quantity" | "unit" | "deliveryTerms" | "country" | "city" | "validUntil" | "authorUserId" | "companyId" | "isAnonymous" | "perk" | "audience" | "badgeId" | "commissionPct" | "commissionText" | "visibility" | "status" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
 export type OfferInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.Offer$categoryArgs<ExtArgs>
+  badge?: boolean | Prisma.Offer$badgeArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   company?: boolean | Prisma.Offer$companyArgs<ExtArgs>
   attachments?: boolean | Prisma.Offer$attachmentsArgs<ExtArgs>
@@ -2509,11 +2777,13 @@ export type OfferInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 }
 export type OfferIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.Offer$categoryArgs<ExtArgs>
+  badge?: boolean | Prisma.Offer$badgeArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   company?: boolean | Prisma.Offer$companyArgs<ExtArgs>
 }
 export type OfferIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.Offer$categoryArgs<ExtArgs>
+  badge?: boolean | Prisma.Offer$badgeArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   company?: boolean | Prisma.Offer$companyArgs<ExtArgs>
 }
@@ -2522,6 +2792,7 @@ export type $OfferPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name: "Offer"
   objects: {
     category: Prisma.$CategoryPayload<ExtArgs> | null
+    badge: Prisma.$OfferBadgePayload<ExtArgs> | null
     author: Prisma.$UserPayload<ExtArgs>
     company: Prisma.$CompanyPayload<ExtArgs> | null
     attachments: Prisma.$OfferAttachmentPayload<ExtArgs>[]
@@ -2560,9 +2831,9 @@ export type $OfferPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
      */
     audience: string | null
     /**
-     * Set by platform admins.
+     * Badge set by platform admins (მთავარი პარტნიორი, …).
      */
-    tag: $Enums.OfferTag | null
+    badgeId: string | null
     /**
      * Platform commission for deals from this offer (percent) and its display text.
      */
@@ -2968,6 +3239,7 @@ readonly fields: OfferFieldRefs;
 export interface Prisma__OfferClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   category<T extends Prisma.Offer$categoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Offer$categoryArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  badge<T extends Prisma.Offer$badgeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Offer$badgeArgs<ExtArgs>>): Prisma.Prisma__OfferBadgeClient<runtime.Types.Result.GetResult<Prisma.$OfferBadgePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   author<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   company<T extends Prisma.Offer$companyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Offer$companyArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   attachments<T extends Prisma.Offer$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Offer$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OfferAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3023,7 +3295,7 @@ export interface OfferFieldRefs {
   readonly isAnonymous: Prisma.FieldRef<"Offer", 'Boolean'>
   readonly perk: Prisma.FieldRef<"Offer", 'String'>
   readonly audience: Prisma.FieldRef<"Offer", 'String'>
-  readonly tag: Prisma.FieldRef<"Offer", 'OfferTag'>
+  readonly badgeId: Prisma.FieldRef<"Offer", 'String'>
   readonly commissionPct: Prisma.FieldRef<"Offer", 'Decimal'>
   readonly commissionText: Prisma.FieldRef<"Offer", 'String'>
   readonly visibility: Prisma.FieldRef<"Offer", 'OfferVisibility'>
@@ -3448,6 +3720,25 @@ export type Offer$categoryArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   include?: Prisma.CategoryInclude<ExtArgs> | null
   where?: Prisma.CategoryWhereInput
+}
+
+/**
+ * Offer.badge
+ */
+export type Offer$badgeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OfferBadge
+   */
+  select?: Prisma.OfferBadgeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OfferBadge
+   */
+  omit?: Prisma.OfferBadgeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OfferBadgeInclude<ExtArgs> | null
+  where?: Prisma.OfferBadgeWhereInput
 }
 
 /**

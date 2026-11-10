@@ -343,13 +343,6 @@ export type DecimalNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedDecimalNullableFilter<$PrismaModel> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
-export type EnumOfferTagNullableFilter<$PrismaModel = never> = {
-  equals?: $Enums.OfferTag | Prisma.EnumOfferTagFieldRefInput<$PrismaModel> | null
-  in?: $Enums.OfferTag[] | Prisma.ListEnumOfferTagFieldRefInput<$PrismaModel> | null
-  notIn?: $Enums.OfferTag[] | Prisma.ListEnumOfferTagFieldRefInput<$PrismaModel> | null
-  not?: Prisma.NestedEnumOfferTagNullableFilter<$PrismaModel> | $Enums.OfferTag | null
-}
-
 export type EnumOfferVisibilityFilter<$PrismaModel = never> = {
   equals?: $Enums.OfferVisibility | Prisma.EnumOfferVisibilityFieldRefInput<$PrismaModel>
   in?: $Enums.OfferVisibility[] | Prisma.ListEnumOfferVisibilityFieldRefInput<$PrismaModel>
@@ -408,16 +401,6 @@ export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
   _min?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
   _max?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
-}
-
-export type EnumOfferTagNullableWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.OfferTag | Prisma.EnumOfferTagFieldRefInput<$PrismaModel> | null
-  in?: $Enums.OfferTag[] | Prisma.ListEnumOfferTagFieldRefInput<$PrismaModel> | null
-  notIn?: $Enums.OfferTag[] | Prisma.ListEnumOfferTagFieldRefInput<$PrismaModel> | null
-  not?: Prisma.NestedEnumOfferTagNullableWithAggregatesFilter<$PrismaModel> | $Enums.OfferTag | null
-  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumOfferTagNullableFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumOfferTagNullableFilter<$PrismaModel>
 }
 
 export type EnumOfferVisibilityWithAggregatesFilter<$PrismaModel = never> = {
@@ -1159,13 +1142,6 @@ export type NestedDecimalNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedDecimalNullableFilter<$PrismaModel> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
-export type NestedEnumOfferTagNullableFilter<$PrismaModel = never> = {
-  equals?: $Enums.OfferTag | Prisma.EnumOfferTagFieldRefInput<$PrismaModel> | null
-  in?: $Enums.OfferTag[] | Prisma.ListEnumOfferTagFieldRefInput<$PrismaModel> | null
-  notIn?: $Enums.OfferTag[] | Prisma.ListEnumOfferTagFieldRefInput<$PrismaModel> | null
-  not?: Prisma.NestedEnumOfferTagNullableFilter<$PrismaModel> | $Enums.OfferTag | null
-}
-
 export type NestedEnumOfferVisibilityFilter<$PrismaModel = never> = {
   equals?: $Enums.OfferVisibility | Prisma.EnumOfferVisibilityFieldRefInput<$PrismaModel>
   in?: $Enums.OfferVisibility[] | Prisma.ListEnumOfferVisibilityFieldRefInput<$PrismaModel>
@@ -1224,16 +1200,6 @@ export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
   _min?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
   _max?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
-}
-
-export type NestedEnumOfferTagNullableWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.OfferTag | Prisma.EnumOfferTagFieldRefInput<$PrismaModel> | null
-  in?: $Enums.OfferTag[] | Prisma.ListEnumOfferTagFieldRefInput<$PrismaModel> | null
-  notIn?: $Enums.OfferTag[] | Prisma.ListEnumOfferTagFieldRefInput<$PrismaModel> | null
-  not?: Prisma.NestedEnumOfferTagNullableWithAggregatesFilter<$PrismaModel> | $Enums.OfferTag | null
-  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumOfferTagNullableFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumOfferTagNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumOfferVisibilityWithAggregatesFilter<$PrismaModel = never> = {

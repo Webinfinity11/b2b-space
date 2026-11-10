@@ -169,29 +169,53 @@ export async function saveCategoryAction(_: FormState, formData: FormData): Prom
 export async function deleteCategoryAction(_: FormState, formData: FormData): Promise<FormState> {
   const admin = await assertAdmin();
   const id = String(formData.get("id"));
+  const moveTo = String(formData.get("moveTo") ?? "") || null;
   const cat = await db.category.findUnique({ where: { id }, include: { _count: { select: { children: true, companies: true, offers: true } } } });
   if (!cat) return fail(ka.errors.generic);
   if (cat._count.children > 0) return fail(ka.admin.categoryHasChildren);
-  if (cat._count.companies > 0 || cat._count.offers > 0) return fail(ka.admin.categoryInUse);
-  await db.category.delete({ where: { id } });
-  await audit({ actorId: admin.id, action: "category.deleted", entityType: "Category", entityId: id, metadata: { name: cat.name } });
+  const used = cat._count.companies + cat._count.offers;
+  if (used > 0 && !moveTo) return fail(ka.sgba.catMoveRequired(used));
+  if (moveTo) {
+    const target = await db.category.findFirst({ where: { id: moveTo, kind: cat.kind, NOT: { id } }, select: { id: true } });
+    if (!target) return fail(ka.errors.generic);
+  }
+  await db.$transaction(async (tx) => {
+    if (moveTo) {
+      await tx.offer.updateMany({ where: { categoryId: id }, data: { categoryId: moveTo } });
+      // Companies: move links, skipping ones already linked to the target.
+      const links = await tx.companyCategory.findMany({ where: { categoryId: id }, select: { companyId: true } });
+      const already = new Set((await tx.companyCategory.findMany({ where: { categoryId: moveTo, companyId: { in: links.map((l) => l.companyId) } }, select: { companyId: true } })).map((l) => l.companyId));
+      await tx.companyCategory.deleteMany({ where: { categoryId: id } });
+      const add = links.filter((l) => !already.has(l.companyId)).map((l) => ({ companyId: l.companyId, categoryId: moveTo }));
+      if (add.length) await tx.companyCategory.createMany({ data: add });
+    }
+    await tx.category.delete({ where: { id } });
+  });
+  await audit({ actorId: admin.id, action: "category.deleted", entityType: "Category", entityId: id, metadata: { name: cat.name, moveTo, moved: used } });
   revalidatePath("/admin/categories");
-  return { ok: true, message: ka.common.saved };
+  return { ok: true, message: ka.sgba.catDeleted };
+}
+
+/** Drag-and-drop order: ids in their new order (same kind). */
+export async function reorderCategoriesAction(ids: string[]) {
+  const admin = await assertAdmin();
+  const list = z.array(z.string().min(1)).max(500).parse(ids);
+  await db.$transaction(list.map((id, i) => db.category.update({ where: { id }, data: { sortOrder: i * 10 } })));
+  await audit({ actorId: admin.id, action: "category.reordered", entityType: "Category", entityId: list[0] ?? "-", metadata: { count: list.length } });
+  revalidatePath("/admin/categories");
+}
+
+/** Quick on/off without opening the form. */
+export async function toggleCategoryAction(id: string) {
+  await assertAdmin();
+  const cat = await db.category.findUnique({ where: { id }, select: { isActive: true } });
+  if (!cat) return;
+  await db.category.update({ where: { id }, data: { isActive: !cat.isActive } });
+  revalidatePath("/admin/categories");
 }
 
 // ─────────────────────────────── Offers ───────────────────────────────
 
-/** Marks an offer as a main-partner / women-in-business offer (or clears the tag). */
-export async function adminSetOfferTagAction(formData: FormData) {
-  const admin = await assertAdmin();
-  const offerId = String(formData.get("offerId"));
-  const raw = String(formData.get("tag") ?? "");
-  const tag = raw === "MAIN_PARTNER" || raw === "WOMEN_BUSINESS" ? raw : null;
-  await db.offer.update({ where: { id: offerId }, data: { tag } });
-  await audit({ actorId: admin.id, action: "offer.tag_changed", entityType: "Offer", entityId: offerId, metadata: { tag } });
-  revalidatePath("/admin/offers");
-  revalidatePath("/offers");
-}
 
 export async function adminArchiveOfferAction(formData: FormData) {
   const admin = await assertAdmin();
@@ -288,17 +312,6 @@ const zPct = z
   .refine((s) => s === "" || (Number.isFinite(Number(s)) && Number(s) >= 0 && Number(s) <= 100), { error: ka.validation.number })
   .transform((s) => (s === "" ? null : new Prisma.Decimal(s)));
 
-/** Commission % and display text of an offer (used for deals started from it). */
-export async function setOfferCommissionAction(formData: FormData) {
-  const admin = await assertAdmin();
-  const offerId = String(formData.get("offerId"));
-  const pct = zPct.safeParse(formData.get("commissionPct") ?? "");
-  if (!pct.success) return;
-  const commissionText = String(formData.get("commissionText") ?? "").trim().slice(0, 80) || null;
-  await db.offer.update({ where: { id: offerId }, data: { commissionPct: pct.data, commissionText } });
-  await audit({ actorId: admin.id, action: "offer.commission_changed", entityType: "Offer", entityId: offerId, metadata: { pct: pct.data?.toString() ?? null, commissionText } });
-  revalidatePath("/admin/offers");
-}
 
 /** Overrides the commission % of one deal. */
 export async function setDealCommissionAction(formData: FormData) {
@@ -405,4 +418,72 @@ export async function saveCampaignPackageAction(_: FormState, formData: FormData
   revalidatePath("/admin/campaigns");
   revalidatePath("/app/campaigns");
   return { ok: true, message: ka.common.saved };
+}
+
+// ─────────────────────────────── Offer management ───────────────────────────────
+
+/** One form for an offer: badge, commission % and its text. */
+export async function adminUpdateOfferAction(_: FormState, formData: FormData): Promise<FormState> {
+  const admin = await assertAdmin();
+  const offerId = String(formData.get("offerId"));
+  const badgeId = String(formData.get("badgeId") ?? "") || null;
+  if (badgeId && !(await db.offerBadge.findUnique({ where: { id: badgeId }, select: { id: true } }))) return fail(ka.errors.generic);
+  const pct = zPct.safeParse(String(formData.get("commissionPct") ?? ""));
+  if (!pct.success) return fail(ka.validation.formErrors, formData, { commissionPct: ka.validation.number });
+  const commissionText = String(formData.get("commissionText") ?? "").trim().slice(0, 80) || null;
+  await db.offer.update({ where: { id: offerId }, data: { badgeId, commissionPct: pct.data, commissionText } });
+  await audit({ actorId: admin.id, action: "offer.admin_updated", entityType: "Offer", entityId: offerId, metadata: { badgeId, pct: pct.data?.toString() ?? null, commissionText } });
+  revalidatePath("/admin/offers");
+  revalidatePath("/offers");
+  return { ok: true, message: ka.common.saved };
+}
+
+// ─────────────────────────────── Badges ───────────────────────────────
+
+const badgeSchema = z.object({
+  name: zText(2, 60),
+  description: z.string().trim().max(300).optional().transform((v) => v || null),
+  color: z.enum(["blue", "violet", "green", "gold", "red", "gray"]).default("blue"),
+  showBanner: zCheckbox,
+  isActive: zCheckbox,
+});
+
+export async function saveBadgeAction(_: FormState, formData: FormData): Promise<FormState> {
+  const admin = await assertAdmin();
+  const id = String(formData.get("id") ?? "") || null;
+  const parsed = badgeSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const d = parsed.data;
+  if (d.showBanner && !d.description) return fail(ka.validation.formErrors, formData, { description: ka.sgba.badgeBannerNeedsText });
+  const saved = await db.$transaction(async (tx) => {
+    // Only one badge can be the dashboard banner.
+    if (d.showBanner) await tx.offerBadge.updateMany({ where: id ? { NOT: { id } } : {}, data: { showBanner: false } });
+    if (id) return tx.offerBadge.update({ where: { id }, data: d });
+    const last = await tx.offerBadge.aggregate({ _max: { sortOrder: true } });
+    return tx.offerBadge.create({ data: { ...d, sortOrder: (last._max.sortOrder ?? 0) + 10 } });
+  });
+  await audit({ actorId: admin.id, action: id ? "badge.updated" : "badge.created", entityType: "OfferBadge", entityId: saved.id, metadata: d });
+  revalidatePath("/admin/badges");
+  revalidatePath("/app");
+  return { ok: true, message: ka.common.saved };
+}
+
+/** Deleting a badge removes it from offers (they keep everything else). */
+export async function deleteBadgeAction(_: FormState, formData: FormData): Promise<FormState> {
+  const admin = await assertAdmin();
+  const id = String(formData.get("id"));
+  const b = await db.offerBadge.findUnique({ where: { id }, select: { name: true } });
+  if (!b) return fail(ka.errors.generic);
+  await db.offerBadge.delete({ where: { id } });
+  await audit({ actorId: admin.id, action: "badge.deleted", entityType: "OfferBadge", entityId: id, metadata: { name: b.name } });
+  revalidatePath("/admin/badges");
+  revalidatePath("/app");
+  return { ok: true, message: ka.sgba.badgeDeleted };
+}
+
+export async function reorderBadgesAction(ids: string[]) {
+  await assertAdmin();
+  const list = z.array(z.string().min(1)).max(200).parse(ids);
+  await db.$transaction(list.map((id, i) => db.offerBadge.update({ where: { id }, data: { sortOrder: i * 10 } })));
+  revalidatePath("/admin/badges");
 }

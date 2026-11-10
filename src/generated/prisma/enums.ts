@@ -46,14 +46,6 @@ export const CompanySize = {
 export type CompanySize = (typeof CompanySize)[keyof typeof CompanySize]
 
 
-export const OfferTag = {
-  MAIN_PARTNER: 'MAIN_PARTNER',
-  WOMEN_BUSINESS: 'WOMEN_BUSINESS'
-} as const
-
-export type OfferTag = (typeof OfferTag)[keyof typeof OfferTag]
-
-
 export const DealStage = {
   INTEREST: 'INTEREST',
   OFFER: 'OFFER',

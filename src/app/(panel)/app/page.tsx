@@ -36,6 +36,7 @@ export default async function DashboardPage() {
     }),
     searchOffers({ loggedIn: true, type: "OFFER", page: 1, pageSize: 4 }),
   ]);
+  const banner = await db.offerBadge.findFirst({ where: { showBanner: true, isActive: true }, orderBy: { sortOrder: "asc" } });
   const activeDeals = await db.conversation.count({ where: { AND: [convScope, { stage: { not: "CONTRACT" } }] } });
   const forecast = await db.conversation.aggregate({ where: { AND: [convScope, { stage: { not: "CONTRACT" } }] }, _sum: { amount: true } });
   const unread = notifications.filter((n) => !n.readAt).length;
@@ -73,13 +74,14 @@ export default async function DashboardPage() {
         <KpiCard label={ka.sgba.kpiReceivable} value={formatAmount(receivable, "GEL")} hint={ka.sgba.kpiReceivableHint} icon={<Icon name="file" size={18} />} tone="yellow" />
       </div>
 
-      {/* Project banner */}
+      {/* Featured badge banner (admin: ნიშნები → "ბანერად") */}
+      {banner && (
       <section className="relative isolate mt-6 flex min-h-[214px] items-center overflow-hidden rounded-[16px] bg-gradient-to-r from-blue-soft to-blue-soft-2">
         <div className="relative z-10 w-full px-6 py-6 sm:w-[78%] sm:px-8">
           <div className="mb-2 text-xs font-bold text-muted">{ka.brandShort} {ka.sgba.promoEyebrow}</div>
-          <h2 className="text-[26px] font-bold leading-snug tracking-[-0.5px] text-ink sm:text-[30px]">{ka.sgba.promoTitle}</h2>
-          <p className="mb-5 mt-1.5 max-w-xl text-sm leading-relaxed text-secondary">{ka.sgba.promoText}</p>
-          <ButtonLink href="/offers?tag=WOMEN_BUSINESS" className="h-[42px] px-4 text-[13px]">
+          <h2 className="text-[26px] font-bold leading-snug tracking-[-0.5px] text-ink sm:text-[30px]">{banner.name}</h2>
+          <p className="mb-5 mt-1.5 max-w-xl text-sm leading-relaxed text-secondary">{banner.description}</p>
+          <ButtonLink href={`/offers?badge=${banner.id}`} className="h-[42px] px-4 text-[13px]">
             {ka.sgba.promoButton} <Icon name="arrow" size={19} />
           </ButtonLink>
         </div>
@@ -91,6 +93,7 @@ export default async function DashboardPage() {
           className="pointer-events-none absolute inset-y-0 right-0 z-0 h-full w-[45%] object-cover object-right [mask-image:linear-gradient(to_right,transparent_0%,#000_30%)] max-sm:opacity-40"
         />
       </section>
+      )}
 
       {/* Special offers */}
       <section className="mt-8">

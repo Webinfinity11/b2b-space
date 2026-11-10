@@ -429,7 +429,8 @@ export const ModelName = {
   CommissionRule: 'CommissionRule',
   CampaignPackage: 'CampaignPackage',
   CampaignRequest: 'CampaignRequest',
-  CampaignRecipient: 'CampaignRecipient'
+  CampaignRecipient: 'CampaignRecipient',
+  OfferBadge: 'OfferBadge'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -445,7 +446,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "category" | "company" | "companyCategory" | "companyMember" | "companyInvitation" | "companyMedia" | "verificationDocument" | "verificationDecision" | "offer" | "offerAttachment" | "offerResponse" | "conversation" | "conversationParticipant" | "message" | "dealTerms" | "dealTermsVersion" | "dealTermsItem" | "dealApproval" | "invoice" | "invoiceItem" | "invoiceStatusChange" | "paymentRecord" | "notification" | "report" | "auditLog" | "platformSetting" | "commission" | "commissionRule" | "campaignPackage" | "campaignRequest" | "campaignRecipient"
+    modelProps: "user" | "session" | "category" | "company" | "companyCategory" | "companyMember" | "companyInvitation" | "companyMedia" | "verificationDocument" | "verificationDecision" | "offer" | "offerAttachment" | "offerResponse" | "conversation" | "conversationParticipant" | "message" | "dealTerms" | "dealTermsVersion" | "dealTermsItem" | "dealApproval" | "invoice" | "invoiceItem" | "invoiceStatusChange" | "paymentRecord" | "notification" | "report" | "auditLog" | "platformSetting" | "commission" | "commissionRule" | "campaignPackage" | "campaignRequest" | "campaignRecipient" | "offerBadge"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2891,6 +2892,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    OfferBadge: {
+      payload: Prisma.$OfferBadgePayload<ExtArgs>
+      fields: Prisma.OfferBadgeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OfferBadgeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferBadgePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OfferBadgeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferBadgePayload>
+        }
+        findFirst: {
+          args: Prisma.OfferBadgeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferBadgePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OfferBadgeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferBadgePayload>
+        }
+        findMany: {
+          args: Prisma.OfferBadgeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferBadgePayload>[]
+        }
+        create: {
+          args: Prisma.OfferBadgeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferBadgePayload>
+        }
+        createMany: {
+          args: Prisma.OfferBadgeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OfferBadgeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferBadgePayload>[]
+        }
+        delete: {
+          args: Prisma.OfferBadgeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferBadgePayload>
+        }
+        update: {
+          args: Prisma.OfferBadgeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferBadgePayload>
+        }
+        deleteMany: {
+          args: Prisma.OfferBadgeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OfferBadgeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OfferBadgeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferBadgePayload>[]
+        }
+        upsert: {
+          args: Prisma.OfferBadgeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferBadgePayload>
+        }
+        aggregate: {
+          args: Prisma.OfferBadgeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOfferBadge>
+        }
+        groupBy: {
+          args: Prisma.OfferBadgeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OfferBadgeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OfferBadgeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OfferBadgeCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -3117,7 +3192,7 @@ export const OfferScalarFieldEnum = {
   isAnonymous: 'isAnonymous',
   perk: 'perk',
   audience: 'audience',
-  tag: 'tag',
+  badgeId: 'badgeId',
   commissionPct: 'commissionPct',
   commissionText: 'commissionText',
   visibility: 'visibility',
@@ -3483,6 +3558,20 @@ export const CampaignRecipientScalarFieldEnum = {
 export type CampaignRecipientScalarFieldEnum = (typeof CampaignRecipientScalarFieldEnum)[keyof typeof CampaignRecipientScalarFieldEnum]
 
 
+export const OfferBadgeScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  color: 'color',
+  showBanner: 'showBanner',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt'
+} as const
+
+export type OfferBadgeScalarFieldEnum = (typeof OfferBadgeScalarFieldEnum)[keyof typeof OfferBadgeScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -3751,20 +3840,6 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Decimal[]'
  */
 export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
-    
-
-
-/**
- * Reference to a field of type 'OfferTag'
- */
-export type EnumOfferTagFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OfferTag'>
-    
-
-
-/**
- * Reference to a field of type 'OfferTag[]'
- */
-export type ListEnumOfferTagFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OfferTag[]'>
     
 
 
@@ -4175,6 +4250,7 @@ export type GlobalOmitConfig = {
   campaignPackage?: Prisma.CampaignPackageOmit
   campaignRequest?: Prisma.CampaignRequestOmit
   campaignRecipient?: Prisma.CampaignRecipientOmit
+  offerBadge?: Prisma.OfferBadgeOmit
 }
 
 /* Types for Logging */

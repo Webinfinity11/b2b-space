@@ -83,7 +83,8 @@ export const ModelName = {
   CommissionRule: 'CommissionRule',
   CampaignPackage: 'CampaignPackage',
   CampaignRequest: 'CampaignRequest',
-  CampaignRecipient: 'CampaignRecipient'
+  CampaignRecipient: 'CampaignRecipient',
+  OfferBadge: 'OfferBadge'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -289,7 +290,7 @@ export const OfferScalarFieldEnum = {
   isAnonymous: 'isAnonymous',
   perk: 'perk',
   audience: 'audience',
-  tag: 'tag',
+  badgeId: 'badgeId',
   commissionPct: 'commissionPct',
   commissionText: 'commissionText',
   visibility: 'visibility',
@@ -653,6 +654,20 @@ export const CampaignRecipientScalarFieldEnum = {
 } as const
 
 export type CampaignRecipientScalarFieldEnum = (typeof CampaignRecipientScalarFieldEnum)[keyof typeof CampaignRecipientScalarFieldEnum]
+
+
+export const OfferBadgeScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  color: 'color',
+  showBanner: 'showBanner',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt'
+} as const
+
+export type OfferBadgeScalarFieldEnum = (typeof OfferBadgeScalarFieldEnum)[keyof typeof OfferBadgeScalarFieldEnum]
 
 
 export const SortOrder = {

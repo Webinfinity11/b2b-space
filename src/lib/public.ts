@@ -179,7 +179,7 @@ const offerInternalSelect = {
   isAnonymous: true,
   perk: true,
   audience: true,
-  tag: true,
+  badge: { select: { id: true, name: true, color: true, isActive: true } },
   commissionPct: true,
   commissionText: true,
   authorUserId: true,
@@ -237,7 +237,8 @@ export type OfferFilters = {
   sort?: "newest" | "validUntil";
   page?: number;
   companyId?: string;
-  tag?: "MAIN_PARTNER" | "WOMEN_BUSINESS";
+  /** Offer badge id. */
+  badge?: string;
   pageSize?: number;
   loggedIn: boolean;
 };
@@ -263,7 +264,7 @@ export async function searchOffers(f: OfferFilters) {
     });
   }
   if (f.type) and.push({ type: f.type });
-  if (f.tag) and.push({ tag: f.tag });
+  if (f.badge) and.push({ badgeId: f.badge });
   if (f.city) and.push({ city: { equals: f.city, mode: "insensitive" } });
   if (f.companyId) and.push({ companyId: f.companyId, isAnonymous: false });
   if (f.category) {

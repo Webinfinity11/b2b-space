@@ -34,6 +34,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
         { href: "/admin/companies", label: ka.admin.companies, badge: pending, icon: "building" },
         { href: "/admin/users", label: ka.admin.users, icon: "users" },
         { href: "/admin/categories", label: ka.admin.categories, icon: "folder" },
+        { href: "/admin/badges", label: ka.sgba.badgesTitle, icon: "star" },
       ],
     },
     {

@@ -154,7 +154,7 @@ export async function loadDemoData(db: PrismaClient, password: string) {
         audience,
         commissionPct: pct,
         commissionText: pctText,
-        tag,
+        badgeId: tag === "MAIN_PARTNER" ? "badge_main_partner" : tag === "WOMEN_BUSINESS" ? "badge_women_business" : null,
         city: "თბილისი",
         authorUserId: owner[abbr],
         companyId: company[abbr],

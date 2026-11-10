@@ -10,10 +10,7 @@ import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { ActionForm, Field, SubmitButton, Textarea } from "@/components/ui/Form";
 
-const TAG_STYLE: Record<string, string> = {
-  MAIN_PARTNER: "bg-blue-soft text-accent",
-  WOMEN_BUSINESS: "bg-[#f0eaff] text-[#6644ad]",
-};
+import { BADGE_STYLE } from "./badge-style";
 
 /** Category → line icon (dashboard design). */
 const CAT_ICON: Record<string, "car" | "bank" | "calendar" | "users" | "shield" | "box"> = {
@@ -62,8 +59,8 @@ export function OfferGrid({ offers, respondAs, ownSlug, cols = 4 }: { offers: Pu
                   {CAT_ICON[o.category?.name ?? ""] ? <Icon name={CAT_ICON[o.category!.name]} size={22} /> : initials(publisherName(o))}
                 </span>
                 <span className="whitespace-nowrap text-xs text-muted">{o.category?.name ?? (o.type === "REQUEST" ? ka.offer.typeRequest : ka.offer.typeOffer)}</span>
-                {o.tag && <span className={`ml-auto max-w-[156px] truncate rounded-full px-2.5 py-1 text-[10px] ${TAG_STYLE[o.tag]}`}>{ka.sgba.tags[o.tag]}</span>}
-                {o.type === "REQUEST" && !o.tag && <span className="ml-auto rounded-full bg-[#fff4dc] px-2.5 py-1 text-[10px] text-[#a06a12]">{ka.offer.typeRequest}</span>}
+                {o.badge?.isActive && <span className={`ml-auto max-w-[156px] truncate rounded-full px-2.5 py-1 text-[10px] ${BADGE_STYLE[o.badge.color] ?? BADGE_STYLE.blue}`}>{o.badge.name}</span>}
+                {o.type === "REQUEST" && !o.badge?.isActive && <span className="ml-auto rounded-full bg-[#fff4dc] px-2.5 py-1 text-[10px] text-[#a06a12]">{ka.offer.typeRequest}</span>}
               </div>
               <h3 className="mb-1 text-base font-bold leading-[1.55] tracking-[-0.2px] text-ink">{o.title}</h3>
               <p className="mb-1.5 text-[13px] text-secondary">{publisherName(o)}</p>

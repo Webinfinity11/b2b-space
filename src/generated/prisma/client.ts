@@ -206,3 +206,8 @@ export type CampaignRequest = Prisma.CampaignRequestModel
  * A company that received a launched campaign (delivery + results).
  */
 export type CampaignRecipient = Prisma.CampaignRecipientModel
+/**
+ * Model OfferBadge
+ * Admin-managed offer badges (e.g. "მთავარი პარტნიორი"). showBanner = featured on the dashboard banner.
+ */
+export type OfferBadge = Prisma.OfferBadgeModel
