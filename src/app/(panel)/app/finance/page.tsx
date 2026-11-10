@@ -91,7 +91,7 @@ export default async function FinancePage() {
 
   return (
     <>
-      <PageHeader eyebrow={`${ka.brand} ${ka.sgba.finEyebrow}`} title={ka.sgba.nav.finance} text={ka.sgba.finMoneyText} />
+      <PageHeader eyebrow={`${ka.brandShort} ${ka.sgba.finEyebrow}`} title={ka.sgba.nav.finance} text={ka.sgba.finMoneyText} />
 
       <SectionTitle eyebrow={ka.sgba.finMoneyEyebrow} title={ka.sgba.finMoneyTitle} />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

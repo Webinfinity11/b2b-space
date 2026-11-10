@@ -101,7 +101,7 @@ export function OfferGrid({ offers, respondAs, ownSlug, cols = 4 }: { offers: Pu
             </div>
 
             <div className="mt-5 flex items-center justify-between gap-3 rounded-[12px] bg-blue-soft px-4 py-3">
-              <span className="text-sm text-secondary">{ka.brand} {ka.sgba.specialCondition}</span>
+              <span className="text-sm text-secondary">{ka.brandShort} {ka.sgba.specialCondition}</span>
               <span className="text-right text-lg font-bold text-accent">{perkOf(open)}</span>
             </div>
 
@@ -113,7 +113,7 @@ export function OfferGrid({ offers, respondAs, ownSlug, cols = 4 }: { offers: Pu
                 <div className="mt-1 text-sm font-medium">{open.audience || ka.offer.notSpecified}</div>
               </div>
               <div className="rounded-[12px] border border-line p-3">
-                <div className="flex items-center gap-1.5 text-xs text-muted"><Icon name="invoice" size={14} /> {ka.brand} {ka.sgba.commission}</div>
+                <div className="flex items-center gap-1.5 text-xs text-muted"><Icon name="invoice" size={14} /> {ka.brandShort} {ka.sgba.commission}</div>
                 <div className="mt-1 text-sm font-medium">{open.commissionText || (open.commissionPct ? `${open.commissionPct}%` : ka.sgba.commissionFixed)}</div>
               </div>
             </div>

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { ka } from "@/i18n/ka";
 import { Icon, type IconName } from "@/components/ui/Icon";
+import { Wordmark } from "@/components/ui/Wordmark";
 import { BrandMarkSvg } from "@/components/ui/BrandMark";
 
 export type NavItem = { href: string; label: string; badge?: number; icon?: IconName };
@@ -86,7 +87,7 @@ export function Shell({
       <div className="flex h-[68px] items-center justify-between">
         <Link href={homeHref} className="flex items-center gap-2.5">
           <BrandMarkSvg className="h-[34px] w-[26px]" />
-          <span className="text-xl font-bold tracking-tight">{ka.brand}</span>
+          <Wordmark size="sm" />
         </Link>
         <button type="button" onClick={() => setOpen(false)} aria-label={ka.nav.close} className="grid size-9 place-items-center rounded-full text-secondary hover:bg-chip">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6" /></svg>

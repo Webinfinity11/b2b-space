@@ -51,7 +51,7 @@ export default async function DashboardPage() {
   return (
     <>
       <PageHeader
-        eyebrow={`${ka.brand} — ${ka.sgba.dashEyebrow}`}
+        eyebrow={`${ka.brandShort} — ${ka.sgba.dashEyebrow}`}
         title={ka.sgba.greeting(user.firstName)}
         text={ka.sgba.dashText}
         action={
@@ -76,7 +76,7 @@ export default async function DashboardPage() {
       {/* Project banner */}
       <section className="relative isolate mt-6 flex min-h-[214px] items-center overflow-hidden rounded-[16px] bg-gradient-to-r from-blue-soft to-blue-soft-2">
         <div className="relative z-10 w-full px-6 py-6 sm:w-[78%] sm:px-8">
-          <div className="mb-2 text-xs font-bold text-muted">{ka.brand} {ka.sgba.promoEyebrow}</div>
+          <div className="mb-2 text-xs font-bold text-muted">{ka.brandShort} {ka.sgba.promoEyebrow}</div>
           <h2 className="text-[26px] font-bold leading-snug tracking-[-0.5px] text-ink sm:text-[30px]">{ka.sgba.promoTitle}</h2>
           <p className="mb-5 mt-1.5 max-w-xl text-sm leading-relaxed text-secondary">{ka.sgba.promoText}</p>
           <ButtonLink href="/offers?tag=WOMEN_BUSINESS" className="h-[42px] px-4 text-[13px]">

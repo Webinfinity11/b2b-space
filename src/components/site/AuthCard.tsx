@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { ka } from "@/i18n/ka";
 import { Icon } from "@/components/ui/Icon";
 import { BrandMarkSvg } from "@/components/ui/BrandMark";
+import { Wordmark } from "@/components/ui/Wordmark";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 /** Brand mark used on guest pages. */
@@ -41,7 +42,7 @@ export function AuthCard({
       <section className="relative hidden overflow-hidden bg-gradient-to-br from-blue-soft to-blue-soft-2 lg:sticky lg:top-0 lg:flex lg:h-dvh lg:flex-col lg:justify-between lg:px-14 lg:py-12 xl:px-20">
         <Link href="/" className="flex items-center gap-3 text-ink">
           <BrandMarkSvg />
-          <span className="text-[25px] font-bold tracking-[-1px]">{ka.brand}</span>
+          <Wordmark size="lg" />
         </Link>
         <div className="relative z-10 max-w-xl">
           <p className="text-xs font-bold tracking-[0.2em] text-accent">{hero.eyebrow}</p>
@@ -70,7 +71,7 @@ export function AuthCard({
         <div className="w-full max-w-[600px]">
           <Link href="/" className="mb-6 flex items-center justify-center gap-2.5 text-ink lg:hidden">
             <BrandMarkSvg className="h-[34px] w-[26px]" />
-            <span className="text-xl font-bold tracking-[-1px]">{ka.brand}</span>
+            <Wordmark />
           </Link>
           <div className="rounded-[20px] border border-line bg-surface p-6 shadow-[0_14px_40px_rgb(33_55_105/0.08)] sm:p-9">
             <div className="mb-7 flex items-center gap-3.5">

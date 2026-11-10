@@ -4,6 +4,7 @@ import { Icon } from "@/components/ui/Icon";
 import { HeaderSearch } from "@/components/ui/HeaderSearch";
 import { ProfileMenu } from "./ProfileMenu";
 import { CompanyMenu } from "./CompanyMenu";
+import { Wordmark } from "@/components/ui/Wordmark";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 /** Top bar: wordmark + company menu · centered search · notifications · profile. */
@@ -44,7 +45,7 @@ export async function Topbar({
   return (
     <>
       <div className="flex shrink-0 items-center gap-5">
-        <span className="text-[23px] font-bold leading-none tracking-[-1px] max-sm:text-xl">{ka.brand}</span>
+        <Wordmark />
         <span className="hidden h-[26px] w-px bg-line xl:block" />
         <div className="hidden xl:block">
           {label ? <span className="text-[15px] text-secondary">{label}</span> : companies ? <CompanyMenu companies={companies} activeId={activeCompanyId} links={companyLinks} /> : null}
