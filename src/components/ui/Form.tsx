@@ -21,22 +21,30 @@ export function ActionForm({
   className = "",
   resetOnSuccess = false,
   showSuccess = true,
+  toast = false,
 }: {
   action: Action;
   children: ReactNode;
   className?: string;
   resetOnSuccess?: boolean;
   showSuccess?: boolean;
+  /** Success message as a small navy toast (bottom-right, ~2.5s) instead of inline. */
+  toast?: boolean;
 }) {
   const [state, formAction] = useActionState(action, {});
   const ref = useRef<HTMLFormElement>(null);
   useEffect(() => {
     if (state.ok && resetOnSuccess) ref.current?.reset();
   }, [state, resetOnSuccess]);
+  // Every submission returns a new state object → show a fresh toast.
+  const [toastKey, setToastKey] = useState(0);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- re-key the toast per result
+  useEffect(() => setToastKey((k) => k + 1), [state]);
   return (
     <FormStateContext.Provider value={state}>
       <form ref={ref} action={formAction} className={className} noValidate>
-        {(state.message && (!state.ok || showSuccess)) ? <FormMessage state={state} /> : null}
+        {state.message && (!state.ok || (showSuccess && !toast)) ? <FormMessage state={state} /> : null}
+        {toast && state.ok && state.message ? <Toast key={toastKey} text={state.message} /> : null}
         {children}
       </form>
     </FormStateContext.Provider>
@@ -45,6 +53,21 @@ export function ActionForm({
 
 export function useFormState() {
   return useContext(FormStateContext);
+}
+
+/** Fixed toast that disappears after ~2.5 seconds. */
+export function Toast({ text }: { text: string }) {
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(false), 2600);
+    return () => clearTimeout(t);
+  }, []);
+  if (!visible) return null;
+  return (
+    <div role="status" className="fixed bottom-5 right-5 z-[60] max-w-sm rounded-[12px] bg-accent px-4 py-3 text-sm font-medium text-white shadow-2xl">
+      {text}
+    </div>
+  );
 }
 
 function FormMessage({ state }: { state: FormState }) {

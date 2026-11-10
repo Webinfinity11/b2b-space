@@ -37,7 +37,7 @@ export function FilterLinks({ base, param, current, options }: { base: string; p
           <a
             key={o.value}
             href={href}
-            className={`rounded-lg border px-3 py-1.5 text-sm ${active ? "border-accent bg-accent text-deep" : "border-line bg-surface text-ink hover:border-accent/40"}`}
+            className={`rounded-lg border px-3 py-1.5 text-sm ${active ? "border-accent bg-accent text-on-accent" : "border-line bg-surface text-ink hover:border-accent/40"}`}
           >
             {o.label}
           </a>

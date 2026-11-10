@@ -17,7 +17,7 @@ export function CompanySwitcher({ companies, activeId }: { companies: { id: stri
           fd.set("companyId", e.target.value);
           start(() => switchCompanyAction(fd));
         }}
-        className="h-10 w-full rounded-[10px] border border-line bg-field px-3 text-sm text-ink focus:border-accent/60 focus:outline-none [&>option]:bg-navy-2"
+        className="h-10 w-full rounded-[10px] border border-white/15 bg-white/5 px-3 text-sm text-white focus:outline-none [&>option]:bg-white [&>option]:text-ink"
       >
         {companies.map((c) => (
           <option key={c.id} value={c.id}>{c.name}</option>

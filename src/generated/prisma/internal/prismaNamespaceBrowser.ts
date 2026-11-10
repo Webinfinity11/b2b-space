@@ -78,7 +78,12 @@ export const ModelName = {
   Notification: 'Notification',
   Report: 'Report',
   AuditLog: 'AuditLog',
-  PlatformSetting: 'PlatformSetting'
+  PlatformSetting: 'PlatformSetting',
+  Commission: 'Commission',
+  CommissionRule: 'CommissionRule',
+  CampaignPackage: 'CampaignPackage',
+  CampaignRequest: 'CampaignRequest',
+  CampaignRecipient: 'CampaignRecipient'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -135,6 +140,7 @@ export const CategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
   slug: 'slug',
+  kind: 'kind',
   parentId: 'parentId',
   sortOrder: 'sortOrder',
   isActive: 'isActive',
@@ -171,6 +177,9 @@ export const CompanyScalarFieldEnum = {
   coverUrl: 'coverUrl',
   verificationStatus: 'verificationStatus',
   verifiedAt: 'verifiedAt',
+  businessRole: 'businessRole',
+  size: 'size',
+  direction: 'direction',
   createdById: 'createdById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -278,6 +287,11 @@ export const OfferScalarFieldEnum = {
   authorUserId: 'authorUserId',
   companyId: 'companyId',
   isAnonymous: 'isAnonymous',
+  perk: 'perk',
+  audience: 'audience',
+  tag: 'tag',
+  commissionPct: 'commissionPct',
+  commissionText: 'commissionText',
   visibility: 'visibility',
   status: 'status',
   publishedAt: 'publishedAt',
@@ -322,6 +336,9 @@ export const ConversationScalarFieldEnum = {
   offerId: 'offerId',
   responseId: 'responseId',
   subject: 'subject',
+  stage: 'stage',
+  amount: 'amount',
+  commissionPct: 'commissionPct',
   lastMessageAt: 'lastMessageAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -551,6 +568,91 @@ export const PlatformSettingScalarFieldEnum = {
 } as const
 
 export type PlatformSettingScalarFieldEnum = (typeof PlatformSettingScalarFieldEnum)[keyof typeof PlatformSettingScalarFieldEnum]
+
+
+export const CommissionScalarFieldEnum = {
+  id: 'id',
+  invoiceId: 'invoiceId',
+  conversationId: 'conversationId',
+  companyId: 'companyId',
+  currency: 'currency',
+  baseAmount: 'baseAmount',
+  pct: 'pct',
+  amount: 'amount',
+  status: 'status',
+  settledAt: 'settledAt',
+  createdAt: 'createdAt'
+} as const
+
+export type CommissionScalarFieldEnum = (typeof CommissionScalarFieldEnum)[keyof typeof CommissionScalarFieldEnum]
+
+
+export const CommissionRuleScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  rate: 'rate',
+  sortOrder: 'sortOrder'
+} as const
+
+export type CommissionRuleScalarFieldEnum = (typeof CommissionRuleScalarFieldEnum)[keyof typeof CommissionRuleScalarFieldEnum]
+
+
+export const CampaignPackageScalarFieldEnum = {
+  id: 'id',
+  kind: 'kind',
+  title: 'title',
+  audience: 'audience',
+  channels: 'channels',
+  priceFrom: 'priceFrom',
+  accent: 'accent',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt'
+} as const
+
+export type CampaignPackageScalarFieldEnum = (typeof CampaignPackageScalarFieldEnum)[keyof typeof CampaignPackageScalarFieldEnum]
+
+
+export const CampaignRequestScalarFieldEnum = {
+  id: 'id',
+  packageId: 'packageId',
+  companyId: 'companyId',
+  userId: 'userId',
+  title: 'title',
+  message: 'message',
+  status: 'status',
+  adminNote: 'adminNote',
+  industryIds: 'industryIds',
+  cities: 'cities',
+  sizes: 'sizes',
+  roles: 'roles',
+  positions: 'positions',
+  perk: 'perk',
+  ctaUrl: 'ctaUrl',
+  fileUrl: 'fileUrl',
+  fileName: 'fileName',
+  startDate: 'startDate',
+  price: 'price',
+  paidAt: 'paidAt',
+  launchedAt: 'launchedAt',
+  finishedAt: 'finishedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CampaignRequestScalarFieldEnum = (typeof CampaignRequestScalarFieldEnum)[keyof typeof CampaignRequestScalarFieldEnum]
+
+
+export const CampaignRecipientScalarFieldEnum = {
+  id: 'id',
+  requestId: 'requestId',
+  companyId: 'companyId',
+  viewedAt: 'viewedAt',
+  repliedAt: 'repliedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type CampaignRecipientScalarFieldEnum = (typeof CampaignRecipientScalarFieldEnum)[keyof typeof CampaignRecipientScalarFieldEnum]
 
 
 export const SortOrder = {

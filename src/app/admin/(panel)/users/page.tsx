@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import type { Prisma } from "@/generated/prisma/client";
 import { ka } from "@/i18n/ka";
 import { setUserRoleAction, setUserStatusAction } from "@/actions/admin";
@@ -23,7 +24,9 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
   const sp = await searchParams;
   const q = param(sp.q);
   const page = pageParam(sp.page);
-  const where: Prisma.UserWhereInput = q
+  const st = param(sp.status);
+  const status = st === "PENDING" || st === "ACTIVE" || st === "SUSPENDED" || st === "REJECTED" ? st : undefined;
+  const search: Prisma.UserWhereInput = q
     ? {
         OR: [
           { email: { contains: q, mode: "insensitive" } },
@@ -33,7 +36,8 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
         ],
       }
     : {};
-  const [total, users] = await Promise.all([
+  const where: Prisma.UserWhereInput = status ? { AND: [search, { status }] } : search;
+  const [total, users, pendingCount] = await Promise.all([
     db.user.count({ where }),
     db.user.findMany({
       where,
@@ -42,12 +46,39 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
       take: PER_PAGE,
       include: { memberships: { where: { status: "ACTIVE" }, include: { company: { select: { legalName: true, tradeName: true } } } } },
     }),
+    db.user.count({ where: { status: "PENDING" } }),
   ]);
+  const tabs = [
+    { value: undefined, label: ka.approval.all },
+    { value: "PENDING", label: `${ka.enums.userStatus.PENDING}${pendingCount ? ` (${pendingCount})` : ""}` },
+    { value: "ACTIVE", label: ka.enums.userStatus.ACTIVE },
+    { value: "SUSPENDED", label: ka.enums.userStatus.SUSPENDED },
+    { value: "REJECTED", label: ka.enums.userStatus.REJECTED },
+  ] as const;
+  const tone = (s: string) => (s === "ACTIVE" ? "success" : s === "PENDING" ? "warning" : "danger") as "success" | "warning" | "danger";
 
   return (
     <>
-      <PageHeader title={ka.admin.users} text={ka.catalog.results(total)} />
+      <PageHeader title={ka.admin.users} text={pendingCount ? ka.approval.pendingText(pendingCount) : ka.catalog.results(total)} />
+      <div className="mb-4 flex flex-wrap gap-2">
+        {tabs.map((t) => {
+          const active = t.value === status;
+          const p = new URLSearchParams();
+          if (t.value) p.set("status", t.value);
+          if (q) p.set("q", q);
+          return (
+            <Link
+              key={t.label}
+              href={`/admin/users${p.size ? `?${p}` : ""}`}
+              className={`rounded-full border px-3.5 py-1.5 text-sm ${active ? "border-accent bg-accent/10 font-semibold text-accent-strong" : "border-line bg-surface text-secondary hover:text-ink"}`}
+            >
+              {t.label}
+            </Link>
+          );
+        })}
+      </div>
       <form className="mb-4 flex max-w-md gap-2">
+        {status && <input type="hidden" name="status" value={status} />}
         <input name="q" type="search" defaultValue={q} placeholder={ka.catalog.searchPlaceholder} className={`${controlClass} h-10`} />
       </form>
       {users.length === 0 ? (
@@ -87,8 +118,21 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                 </Td>
                 <Td>
                   <div className="flex flex-col items-start gap-2">
-                    <Badge tone={u.status === "ACTIVE" ? "success" : "danger"}>{ka.enums.userStatus[u.status]}</Badge>
-                    {!self && (
+                    <Badge tone={tone(u.status)}>{ka.enums.userStatus[u.status]}</Badge>
+                    {!self && u.status === "PENDING" ? (
+                      <div className="flex flex-wrap gap-2">
+                        <form action={setUserStatusAction}>
+                          <input type="hidden" name="userId" value={u.id} />
+                          <input type="hidden" name="status" value="ACTIVE" />
+                          <Button type="submit" size="sm">{ka.approval.approve}</Button>
+                        </form>
+                        <form action={setUserStatusAction}>
+                          <input type="hidden" name="userId" value={u.id} />
+                          <input type="hidden" name="status" value="REJECTED" />
+                          <Button type="submit" size="sm" variant="ghost" className="text-danger">{ka.approval.reject}</Button>
+                        </form>
+                      </div>
+                    ) : !self && (
                       <form action={setUserStatusAction}>
                         <input type="hidden" name="userId" value={u.id} />
                         <input type="hidden" name="status" value={u.status === "ACTIVE" ? "SUSPENDED" : "ACTIVE"} />
@@ -105,7 +149,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
           })}
         </Table>
       )}
-      <Pagination page={page} pages={Math.max(1, Math.ceil(total / PER_PAGE))} basePath="/admin/users" params={{ q }} />
+      <Pagination page={page} pages={Math.max(1, Math.ceil(total / PER_PAGE))} basePath="/admin/users" params={{ q, status }} />
     </>
   );
 }

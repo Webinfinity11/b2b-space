@@ -10,7 +10,9 @@ export async function GET(req: Request) {
   const ip = (await clientIp()) ?? "unknown";
   if (!rateLimit(`search:${ip}`, 120, 60_000)) return Response.json({ companies: [], offers: [], categories: [] }, { status: 429 });
   const user = await getCurrentUser();
-  const r = await globalSearch(q, Boolean(user));
+  // Closed network: members only.
+  if (!user) return Response.json({ companies: [], offers: [], categories: [] }, { status: 401 });
+  const r = await globalSearch(q, true);
   return Response.json({
     companies: r.companies.map((c) => ({
       slug: c.slug,

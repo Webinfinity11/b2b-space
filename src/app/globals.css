@@ -1,77 +1,49 @@
 @import "tailwindcss";
 
-/* Manrope (Latin, digits) — Georgian glyphs fall back to Noto Sans Georgian */
-@font-face {
-  font-family: "Manrope";
-  src: url("/fonts/Manrope-Latin.woff2") format("woff2");
-  font-weight: 200 800;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+20BE, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
 
 @theme {
-  --font-sans: "Manrope", "Noto Sans Georgian Variable", "Noto Sans Georgian", system-ui, sans-serif;
+  --font-sans: "Noto Sans Variable", "Noto Sans Georgian Variable", "Noto Sans Georgian", system-ui, sans-serif;
 
-  /* Dealio navy palette */
-  --color-navy: #071426;
-  --color-navy-2: #0b1a2e;
-  --color-navy-3: #0e2036;
-  --color-canvas: #071426;
-  --color-surface: #0b1a2e;
-  --color-surface-2: #0e2036;
-  --color-accent: #8ec5ed;
-  --color-accent-strong: #8ec5ed;
-  --color-accent-hover: #a9d4f3;
-  --color-ink: #ffffff;
-  --color-secondary: #b5c1d0;
-  --color-muted: #8493a7;
-  --color-line: #17283d;
-  --color-success: #3ccf8e;
-  --color-warning: #e8b04b;
-  --color-danger: #f07878;
-  /* fixed (theme-independent) deep navy: text on the light-blue accent, the white floating card */
-  --color-deep: #071426;
-  /* translucent layers on the dark canvas (themed) */
-  --color-card: rgb(255 255 255 / 0.012);
-  --color-field: rgb(255 255 255 / 0.015);
-  --color-chip: rgb(255 255 255 / 0.06);
+  /* Light, white-first palette */
+  --color-navy: #ffffff;
+  --color-navy-2: #ffffff;
+  --color-navy-3: #f1f5ff;
+  --color-canvas: #fbfcff;
+  --color-surface: #ffffff;
+  --color-surface-2: #f5f7fc;
+  --color-accent: #1d45d1;
+  --color-accent-strong: #1d45d1;
+  --color-accent-hover: #1638b0;
+  --color-on-accent: #ffffff;
+  --color-brand-soft: #8ec5ed;
+  --color-blue: #1d45d1;
+  --color-blue-soft: #eaf0ff;
+  --color-blue-soft-2: #e9f0fd;
+  --color-line-strong: #cfdaed;
+  --color-violet: #6b46a3;
+  --color-gold: #b7791f;
+  --color-ink: #0b1225;
+  --color-secondary: #46516b;
+  --color-muted: #79839a;
+  --color-line: #dce4f2;
+  --color-success: #20815d;
+  --color-warning: #b26f12;
+  --color-danger: #e5484d;
+  /* fixed deep navy for contrast blocks */
+  --color-deep: #0b1225;
+  --color-card: #ffffff;
+  --color-field: #ffffff;
+  --color-chip: #f1f5ff;
 
-  --radius-card: 14px;
-  --shadow-card: 0 10px 30px -18px rgb(0 0 0 / 0.55);
+  --radius-card: 15px;
+  --shadow-card: 0 14px 40px rgb(33 55 105 / 0.06);
   --container-site: 1240px;
 }
 
 html {
   -webkit-text-size-adjust: 100%;
-  color-scheme: dark;
-}
-
-/* ───────────── Light theme (toggle) — same structure, light surfaces ───────────── */
-:root[data-theme="light"] {
   color-scheme: light;
-  --color-navy: #ffffff;
-  --color-navy-2: #ffffff;
-  --color-navy-3: #eef3f9;
-  --color-canvas: #f3f6fa;
-  --color-surface: #ffffff;
-  --color-surface-2: #f1f5f9;
-  --color-ink: #10223a;
-  --color-secondary: #475569;
-  --color-muted: #64748b;
-  --color-line: #e2e8f0;
-  --color-accent-strong: #2a78b0;
-  --color-accent-hover: #7cb7e3;
-  --color-success: #13915e;
-  --color-warning: #b7791f;
-  --color-danger: #d14646;
-  --color-card: #ffffff;
-  --color-field: #ffffff;
-  --color-chip: #eef3f8;
-  --shadow-card: 0 1px 2px rgb(16 34 58 / 0.05), 0 10px 26px -18px rgb(16 34 58 / 0.22);
 }
-/* accent as TEXT needs more contrast on white; fills (bg-accent) keep the brand blue */
-:root[data-theme="light"] .text-accent { color: #2a78b0; }
 
 body {
   background: var(--color-canvas);
@@ -88,8 +60,8 @@ h1, h2, h3, h4 {
 }
 
 ::selection {
-  background: var(--color-accent);
-  color: var(--color-navy);
+  background: rgb(35 80 230 / 0.16);
+  color: var(--color-ink);
 }
 
 :focus-visible {
@@ -103,23 +75,14 @@ input[type="radio"] {
 }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-thumb { background: rgb(142 197 237 / 0.18); border-radius: 9px; }
+::-webkit-scrollbar-thumb { background: var(--color-line-strong); border-radius: 9px; }
 ::-webkit-scrollbar-track { background: transparent; }
 
-/* Soft glass card used across the app (Dealio card style) */
+/* Soft tinted card */
 .card-glass {
-  background: linear-gradient(150deg, rgb(142 197 237 / 0.09), rgb(142 197 237 / 0.012) 75%);
-  border: 1px solid rgb(142 197 237 / 0.08);
-  border-bottom-color: rgb(142 197 237 / 0.16);
+  background: linear-gradient(150deg, var(--color-blue-soft), var(--color-surface) 70%);
+  border: 1px solid var(--color-line);
 }
-:root[data-theme="light"] .card-glass {
-  background: linear-gradient(150deg, rgb(142 197 237 / 0.22), #ffffff 72%);
-  border-color: #dbe7f3;
-}
-
-/* Price block on the home workspace */
-.price-card { background: linear-gradient(135deg, #13304d, #0b1a2e); }
-:root[data-theme="light"] .price-card { background: linear-gradient(135deg, #e3f0fb, #ffffff); }
 
 /* Tables become stacked cards on phones (labels come from data-label, see ResponsiveTable) */
 @media (max-width: 767px) {
@@ -130,7 +93,7 @@ input[type="radio"] {
     margin-bottom: 10px;
     border: 1px solid var(--color-line) !important;
     border-radius: var(--radius-card);
-    background: rgb(255 255 255 / 0.012);
+    background: var(--color-surface);
     padding: 6px 4px;
   }
   .rtable td { padding: 6px 12px !important; }
@@ -142,3 +105,50 @@ input[type="radio"] {
     color: var(--color-muted);
   }
 }
+
+
+/* ───────────── Dark theme (toggle in the top bar; stored in the b2b_theme cookie) ───────────── */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-navy: #111a2e;
+  --color-navy-2: #111a2e;
+  --color-navy-3: #18233c;
+  --color-canvas: #0a1120;
+  --color-surface: #111a2e;
+  --color-surface-2: #18233c;
+  --color-accent: #3d65ee;
+  --color-accent-strong: #7d9bff;
+  --color-accent-hover: #3157dc;
+  --color-blue: #3d65ee;
+  --color-blue-soft: #18264a;
+  --color-blue-soft-2: #15213f;
+  --color-line: #233050;
+  --color-line-strong: #2f3d61;
+  --color-ink: #e8edf7;
+  --color-secondary: #aab4c8;
+  --color-muted: #7f8aa3;
+  --color-success: #3ccf8e;
+  --color-warning: #e8b04b;
+  --color-danger: #f07878;
+  --color-card: #111a2e;
+  --color-field: #0f1729;
+  --color-chip: #1a2643;
+  --shadow-card: 0 14px 40px rgb(0 0 0 / 0.35);
+}
+/* Accent as text needs more contrast on dark surfaces */
+:root[data-theme="dark"] .text-accent { color: #7d9bff; }
+:root[data-theme="dark"] .bg-accent.text-accent,
+:root[data-theme="dark"] .bg-accent .text-accent { color: #fff; }
+/* Pastel status pills → translucent tints */
+:root[data-theme="dark"] .bg-\[\#e3f4ec\] { background-color: rgb(60 207 142 / 0.14); }
+:root[data-theme="dark"] .bg-\[\#fdf3dc\], :root[data-theme="dark"] .bg-\[\#fff4dc\] { background-color: rgb(232 176 75 / 0.14); }
+:root[data-theme="dark"] .bg-\[\#efe9f8\], :root[data-theme="dark"] .bg-\[\#f0eaff\] { background-color: rgb(150 120 220 / 0.16); }
+:root[data-theme="dark"] .bg-\[\#fde8e8\] { background-color: rgb(240 120 120 / 0.14); }
+:root[data-theme="dark"] .bg-\[\#dbe7f5\] { background-color: #24345a; }
+:root[data-theme="dark"] .text-\[\#20815d\], :root[data-theme="dark"] .text-\[\#1b6a4c\] { color: #3ccf8e; }
+:root[data-theme="dark"] .text-\[\#b7791f\], :root[data-theme="dark"] .text-\[\#8a5a10\], :root[data-theme="dark"] .text-\[\#a06a12\] { color: #e8b04b; }
+:root[data-theme="dark"] .text-\[\#6b46a3\], :root[data-theme="dark"] .text-\[\#6644ad\] { color: #b9a2ec; }
+:root[data-theme="dark"] .text-\[\#c53030\] { color: #f07878; }
+:root[data-theme="dark"] .border-\[\#f3d48a\] { border-color: rgb(232 176 75 / 0.35); }
+/* Decorative banner art blends into the dark card */
+:root[data-theme="dark"] img[src="/images/banner-art.webp"] { opacity: 0.55; }

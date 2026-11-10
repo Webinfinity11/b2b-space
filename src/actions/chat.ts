@@ -1,11 +1,15 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { ka } from "@/i18n/ka";
 import { ForbiddenError, assertUser, getActiveMembership } from "@/lib/authz";
 import { db } from "@/lib/db";
 import { fail, type FormState } from "@/lib/forms";
 import { notify } from "@/lib/notify";
+import { audit } from "@/lib/audit";
+import { openDirectConversation } from "@/lib/direct-chat";
+import { hasPermission } from "@/lib/permissions";
 import { rateLimit } from "@/lib/rate-limit";
 import { visibleConversations } from "@/lib/scope";
 import { DOCUMENT_TYPES, UploadError, filesFrom, storeFile } from "@/lib/storage";
@@ -96,4 +100,35 @@ export async function markConversationReadAction(conversationId: string) {
     where: { userId: user.id, readAt: null, link: `/app/conversations/${conversationId}` },
     data: { readAt: new Date() },
   });
+}
+
+/**
+ * "მიწერა" on a business card: opens (or reuses) a direct negotiation between the active
+ * company and another approved company. The other company's owner receives it.
+ */
+export async function startCompanyChatAction(formData: FormData) {
+  const user = await assertUser();
+  const m = await getActiveMembership(user.id);
+  if (!m || !hasPermission(m, "responses.manage")) throw new ForbiddenError();
+  if (!rateLimit(`direct:${user.id}`, 30, 60 * 60_000)) throw new ForbiddenError();
+  const id = await openDirectConversation(user.id, m, String(formData.get("companyId") ?? ""));
+  if (!id) throw new ForbiddenError();
+  redirect(`/app/conversations/${id}`);
+}
+
+/** Either side updates the deal stage and amount (shown in the negotiations table). */
+export async function updateDealInfoAction(_: FormState, formData: FormData): Promise<FormState> {
+  const { user, conversation } = await assertConversationAccess(String(formData.get("conversationId")));
+  const stages = ["INTEREST", "OFFER", "NEGOTIATION", "MEETING", "CONTRACT"] as const;
+  const stage = stages.find((s) => s === formData.get("stage"));
+  const rawAmount = String(formData.get("amount") ?? "").replace(/\s/g, "").replace(",", ".");
+  const amount = rawAmount === "" ? null : Number(rawAmount);
+  if (!stage || (amount !== null && (!Number.isFinite(amount) || amount < 0 || amount > 1e12))) {
+    return fail(ka.validation.formErrors, formData, amount !== null && !Number.isFinite(amount) ? { amount: ka.validation.number } : {});
+  }
+  await db.conversation.update({ where: { id: conversation.id }, data: { stage, amount } });
+  await audit({ actorId: user.id, action: "conversation.deal_updated", entityType: "Conversation", entityId: conversation.id, metadata: { stage, amount } });
+  revalidatePath(`/app/conversations/${conversation.id}`);
+  revalidatePath("/app/conversations");
+  return { ok: true, message: ka.sgba.dealSaved };
 }

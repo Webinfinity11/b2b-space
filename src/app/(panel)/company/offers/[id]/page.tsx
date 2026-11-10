@@ -35,7 +35,7 @@ export default async function EditOfferPage({ params }: PageProps<"/company/offe
     },
   });
   if (!offer) notFound();
-  const categories = await getCategoryTree();
+  const categories = await getCategoryTree("OFFER");
 
   return (
     <>
@@ -82,6 +82,8 @@ export default async function EditOfferPage({ params }: PageProps<"/company/offe
               quantity: offer.quantity?.toString() ?? null,
               unit: offer.unit,
               deliveryTerms: offer.deliveryTerms,
+              perk: offer.perk,
+              audience: offer.audience,
               city: offer.city,
               validUntil: offer.validUntil ? offer.validUntil.toISOString().slice(0, 10) : null,
               visibility: offer.visibility,

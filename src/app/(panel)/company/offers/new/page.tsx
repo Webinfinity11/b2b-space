@@ -12,7 +12,7 @@ export const metadata: Metadata = { title: ka.offerForm.newOffer };
 export default async function NewOfferPage({ searchParams }: PageProps<"/company/offers/new">) {
   const type = param((await searchParams).type) === "REQUEST" ? "REQUEST" : "OFFER";
   const user = await requireUser("/company/offers/new");
-  const [categories, publishAs] = await Promise.all([getCategoryTree(), actingIdentities(user.id, "offers.manage")]);
+  const [categories, publishAs] = await Promise.all([getCategoryTree("OFFER"), actingIdentities(user.id, "offers.manage")]);
   return (
     <>
       <PageHeader

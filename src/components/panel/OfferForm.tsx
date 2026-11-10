@@ -19,6 +19,8 @@ export type OfferDefaults = {
   quantity?: string | null;
   unit?: string | null;
   deliveryTerms?: string | null;
+  perk?: string | null;
+  audience?: string | null;
   city?: string | null;
   validUntil?: string | null;
   visibility?: string;
@@ -95,6 +97,12 @@ export function OfferForm({
 
       <Card>
         <CardBody className="grid gap-4 md:grid-cols-2">
+          <Field label={ka.sgba.specialCondition} name="perk" optional hint={ka.sgba.perkHint}>
+            <Input name="perk" defaultValue={defaults.perk} maxLength={80} placeholder="−20%" />
+          </Field>
+          <Field label={ka.sgba.forWhom} name="audience" optional>
+            <Input name="audience" defaultValue={defaults.audience} maxLength={160} placeholder={ka.sgba.audienceHint} />
+          </Field>
           <Field label={f.deliveryTerms} name="deliveryTerms" optional className="md:col-span-2">
             <Textarea name="deliveryTerms" defaultValue={defaults.deliveryTerms} rows={3} maxLength={1000} />
           </Field>

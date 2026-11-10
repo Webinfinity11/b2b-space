@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ka } from "@/i18n/ka";
-import { grantConversationAccessAction } from "@/actions/admin";
+import { grantConversationAccessAction, setDealCommissionAction } from "@/actions/admin";
+import { controlClass } from "@/components/ui/styles";
+import { Button } from "@/components/ui/Button";
 import { CHAT_ACCESS_ACTION, CHAT_ACCESS_MINUTES, activeChatGrant } from "@/lib/admin-access";
 import { requireAdmin } from "@/lib/authz";
 import { db } from "@/lib/db";
@@ -25,7 +27,7 @@ export default async function AdminConversationPage({ params }: PageProps<"/admi
         orderBy: { createdAt: "asc" },
         select: { userId: true, side: true, identityRevealed: true, user: { select: { firstName: true, lastName: true, email: true } }, company: { select: { id: true, legalName: true, tradeName: true } } },
       },
-      offer: { select: { id: true, title: true, type: true, isAnonymous: true } },
+      offer: { select: { id: true, title: true, type: true, isAnonymous: true, commissionPct: true } },
       dealTerms: { select: { versions: { select: { invoice: { select: { id: true, number: true } } } } } },
       _count: { select: { messages: true } },
     },
@@ -117,6 +119,12 @@ export default async function AdminConversationPage({ params }: PageProps<"/admi
                   <span className="text-xs text-muted"> · {ka.enums.offerType[c.offer.type]}</span>
                 </p>
               )}
+              <form action={setDealCommissionAction} className="mt-3 flex items-center gap-2 border-t border-line pt-3 text-sm">
+                <input type="hidden" name="conversationId" value={c.id} />
+                <span className="text-muted">{ka.sgba.dealCommission} %</span>
+                <input name="commissionPct" defaultValue={c.commissionPct?.toString() ?? ""} placeholder={c.offer?.commissionPct?.toString() ?? "—"} className={`${controlClass} h-8 w-20 text-xs`} />
+                <Button type="submit" size="sm" variant="secondary">{ka.common.save}</Button>
+              </form>
               {invoices.length > 0 && (
                 <ul className="mt-3 space-y-1 border-t border-line pt-3 text-sm">
                   {invoices.map((inv) => (

@@ -20,10 +20,49 @@ export type PlatformRole = (typeof PlatformRole)[keyof typeof PlatformRole]
 
 export const UserStatus = {
   ACTIVE: 'ACTIVE',
-  SUSPENDED: 'SUSPENDED'
+  SUSPENDED: 'SUSPENDED',
+  PENDING: 'PENDING',
+  REJECTED: 'REJECTED'
 } as const
 
 export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
+
+
+export const BusinessRole = {
+  BUYER: 'BUYER',
+  SELLER: 'SELLER',
+  BOTH: 'BOTH'
+} as const
+
+export type BusinessRole = (typeof BusinessRole)[keyof typeof BusinessRole]
+
+
+export const CompanySize = {
+  SMALL: 'SMALL',
+  MEDIUM: 'MEDIUM',
+  LARGE: 'LARGE'
+} as const
+
+export type CompanySize = (typeof CompanySize)[keyof typeof CompanySize]
+
+
+export const OfferTag = {
+  MAIN_PARTNER: 'MAIN_PARTNER',
+  WOMEN_BUSINESS: 'WOMEN_BUSINESS'
+} as const
+
+export type OfferTag = (typeof OfferTag)[keyof typeof OfferTag]
+
+
+export const DealStage = {
+  INTEREST: 'INTEREST',
+  OFFER: 'OFFER',
+  NEGOTIATION: 'NEGOTIATION',
+  MEETING: 'MEETING',
+  CONTRACT: 'CONTRACT'
+} as const
+
+export type DealStage = (typeof DealStage)[keyof typeof DealStage]
 
 
 export const VerificationStatus = {
@@ -194,7 +233,8 @@ export const NotificationType = {
   PAYMENT_DUE_SOON: 'PAYMENT_DUE_SOON',
   INVOICE_OVERDUE: 'INVOICE_OVERDUE',
   COMPANY_STATUS_CHANGED: 'COMPANY_STATUS_CHANGED',
-  MEMBER_INVITED: 'MEMBER_INVITED'
+  MEMBER_INVITED: 'MEMBER_INVITED',
+  CAMPAIGN: 'CAMPAIGN'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
@@ -208,3 +248,24 @@ export const ReportStatus = {
 } as const
 
 export type ReportStatus = (typeof ReportStatus)[keyof typeof ReportStatus]
+
+
+export const CommissionStatus = {
+  CONFIRMED: 'CONFIRMED',
+  SETTLED: 'SETTLED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type CommissionStatus = (typeof CommissionStatus)[keyof typeof CommissionStatus]
+
+
+export const CampaignRequestStatus = {
+  NEW: 'NEW',
+  IN_PROGRESS: 'IN_PROGRESS',
+  APPROVED: 'APPROVED',
+  RUNNING: 'RUNNING',
+  DONE: 'DONE',
+  REJECTED: 'REJECTED'
+} as const
+
+export type CampaignRequestStatus = (typeof CampaignRequestStatus)[keyof typeof CampaignRequestStatus]

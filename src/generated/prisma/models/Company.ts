@@ -50,6 +50,9 @@ export type CompanyMinAggregateOutputType = {
   coverUrl: string | null
   verificationStatus: $Enums.VerificationStatus | null
   verifiedAt: Date | null
+  businessRole: $Enums.BusinessRole | null
+  size: $Enums.CompanySize | null
+  direction: string | null
   createdById: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -81,6 +84,9 @@ export type CompanyMaxAggregateOutputType = {
   coverUrl: string | null
   verificationStatus: $Enums.VerificationStatus | null
   verifiedAt: Date | null
+  businessRole: $Enums.BusinessRole | null
+  size: $Enums.CompanySize | null
+  direction: string | null
   createdById: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -112,6 +118,9 @@ export type CompanyCountAggregateOutputType = {
   coverUrl: number
   verificationStatus: number
   verifiedAt: number
+  businessRole: number
+  size: number
+  direction: number
   createdById: number
   createdAt: number
   updatedAt: number
@@ -145,6 +154,9 @@ export type CompanyMinAggregateInputType = {
   coverUrl?: true
   verificationStatus?: true
   verifiedAt?: true
+  businessRole?: true
+  size?: true
+  direction?: true
   createdById?: true
   createdAt?: true
   updatedAt?: true
@@ -176,6 +188,9 @@ export type CompanyMaxAggregateInputType = {
   coverUrl?: true
   verificationStatus?: true
   verifiedAt?: true
+  businessRole?: true
+  size?: true
+  direction?: true
   createdById?: true
   createdAt?: true
   updatedAt?: true
@@ -207,6 +222,9 @@ export type CompanyCountAggregateInputType = {
   coverUrl?: true
   verificationStatus?: true
   verifiedAt?: true
+  businessRole?: true
+  size?: true
+  direction?: true
   createdById?: true
   createdAt?: true
   updatedAt?: true
@@ -311,6 +329,9 @@ export type CompanyGroupByOutputType = {
   coverUrl: string | null
   verificationStatus: $Enums.VerificationStatus
   verifiedAt: Date | null
+  businessRole: $Enums.BusinessRole
+  size: $Enums.CompanySize
+  direction: string | null
   createdById: string
   createdAt: Date
   updatedAt: Date
@@ -363,6 +384,9 @@ export type CompanyWhereInput = {
   coverUrl?: Prisma.StringNullableFilter<"Company"> | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFilter<"Company"> | $Enums.VerificationStatus
   verifiedAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFilter<"Company"> | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFilter<"Company"> | $Enums.CompanySize
+  direction?: Prisma.StringNullableFilter<"Company"> | string | null
   createdById?: Prisma.StringFilter<"Company"> | string
   createdAt?: Prisma.DateTimeFilter<"Company"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Company"> | Date | string
@@ -381,6 +405,9 @@ export type CompanyWhereInput = {
   approvals?: Prisma.DealApprovalListRelationFilter
   invoicesAsSeller?: Prisma.InvoiceListRelationFilter
   invoicesAsBuyer?: Prisma.InvoiceListRelationFilter
+  commissions?: Prisma.CommissionListRelationFilter
+  campaignRequests?: Prisma.CampaignRequestListRelationFilter
+  campaignInbox?: Prisma.CampaignRecipientListRelationFilter
 }
 
 export type CompanyOrderByWithRelationInput = {
@@ -409,6 +436,9 @@ export type CompanyOrderByWithRelationInput = {
   coverUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   verificationStatus?: Prisma.SortOrder
   verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  businessRole?: Prisma.SortOrder
+  size?: Prisma.SortOrder
+  direction?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -427,6 +457,9 @@ export type CompanyOrderByWithRelationInput = {
   approvals?: Prisma.DealApprovalOrderByRelationAggregateInput
   invoicesAsSeller?: Prisma.InvoiceOrderByRelationAggregateInput
   invoicesAsBuyer?: Prisma.InvoiceOrderByRelationAggregateInput
+  commissions?: Prisma.CommissionOrderByRelationAggregateInput
+  campaignRequests?: Prisma.CampaignRequestOrderByRelationAggregateInput
+  campaignInbox?: Prisma.CampaignRecipientOrderByRelationAggregateInput
 }
 
 export type CompanyWhereUniqueInput = Prisma.AtLeast<{
@@ -459,6 +492,9 @@ export type CompanyWhereUniqueInput = Prisma.AtLeast<{
   coverUrl?: Prisma.StringNullableFilter<"Company"> | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFilter<"Company"> | $Enums.VerificationStatus
   verifiedAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFilter<"Company"> | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFilter<"Company"> | $Enums.CompanySize
+  direction?: Prisma.StringNullableFilter<"Company"> | string | null
   createdById?: Prisma.StringFilter<"Company"> | string
   createdAt?: Prisma.DateTimeFilter<"Company"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Company"> | Date | string
@@ -477,6 +513,9 @@ export type CompanyWhereUniqueInput = Prisma.AtLeast<{
   approvals?: Prisma.DealApprovalListRelationFilter
   invoicesAsSeller?: Prisma.InvoiceListRelationFilter
   invoicesAsBuyer?: Prisma.InvoiceListRelationFilter
+  commissions?: Prisma.CommissionListRelationFilter
+  campaignRequests?: Prisma.CampaignRequestListRelationFilter
+  campaignInbox?: Prisma.CampaignRecipientListRelationFilter
 }, "id" | "slug" | "country_registrationNumber">
 
 export type CompanyOrderByWithAggregationInput = {
@@ -505,6 +544,9 @@ export type CompanyOrderByWithAggregationInput = {
   coverUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   verificationStatus?: Prisma.SortOrder
   verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  businessRole?: Prisma.SortOrder
+  size?: Prisma.SortOrder
+  direction?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -542,6 +584,9 @@ export type CompanyScalarWhereWithAggregatesInput = {
   coverUrl?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
   verificationStatus?: Prisma.EnumVerificationStatusWithAggregatesFilter<"Company"> | $Enums.VerificationStatus
   verifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Company"> | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleWithAggregatesFilter<"Company"> | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeWithAggregatesFilter<"Company"> | $Enums.CompanySize
+  direction?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
   createdById?: Prisma.StringWithAggregatesFilter<"Company"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Company"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Company"> | Date | string
@@ -573,6 +618,9 @@ export type CompanyCreateInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedCompaniesInput
@@ -590,6 +638,9 @@ export type CompanyCreateInput = {
   approvals?: Prisma.DealApprovalCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateInput = {
@@ -618,6 +669,9 @@ export type CompanyUncheckedCreateInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -635,6 +689,9 @@ export type CompanyUncheckedCreateInput = {
   approvals?: Prisma.DealApprovalUncheckedCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUpdateInput = {
@@ -663,6 +720,9 @@ export type CompanyUpdateInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCompaniesNestedInput
@@ -680,6 +740,9 @@ export type CompanyUpdateInput = {
   approvals?: Prisma.DealApprovalUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateInput = {
@@ -708,6 +771,9 @@ export type CompanyUncheckedUpdateInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -725,6 +791,9 @@ export type CompanyUncheckedUpdateInput = {
   approvals?: Prisma.DealApprovalUncheckedUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateManyInput = {
@@ -753,6 +822,9 @@ export type CompanyCreateManyInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -784,6 +856,9 @@ export type CompanyUpdateManyMutationInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -814,6 +889,9 @@ export type CompanyUncheckedUpdateManyInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -860,6 +938,9 @@ export type CompanyCountOrderByAggregateInput = {
   coverUrl?: Prisma.SortOrder
   verificationStatus?: Prisma.SortOrder
   verifiedAt?: Prisma.SortOrder
+  businessRole?: Prisma.SortOrder
+  size?: Prisma.SortOrder
+  direction?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -891,6 +972,9 @@ export type CompanyMaxOrderByAggregateInput = {
   coverUrl?: Prisma.SortOrder
   verificationStatus?: Prisma.SortOrder
   verifiedAt?: Prisma.SortOrder
+  businessRole?: Prisma.SortOrder
+  size?: Prisma.SortOrder
+  direction?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -922,6 +1006,9 @@ export type CompanyMinOrderByAggregateInput = {
   coverUrl?: Prisma.SortOrder
   verificationStatus?: Prisma.SortOrder
   verifiedAt?: Prisma.SortOrder
+  businessRole?: Prisma.SortOrder
+  size?: Prisma.SortOrder
+  direction?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -981,6 +1068,14 @@ export type CompanyUncheckedUpdateManyWithoutCreatedByNestedInput = {
 
 export type EnumVerificationStatusFieldUpdateOperationsInput = {
   set?: $Enums.VerificationStatus
+}
+
+export type EnumBusinessRoleFieldUpdateOperationsInput = {
+  set?: $Enums.BusinessRole
+}
+
+export type EnumCompanySizeFieldUpdateOperationsInput = {
+  set?: $Enums.CompanySize
 }
 
 export type CompanyCreateNestedOneWithoutCategoriesInput = {
@@ -1195,6 +1290,50 @@ export type CompanyUpdateOneWithoutInvoicesAsBuyerNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutInvoicesAsBuyerInput, Prisma.CompanyUpdateWithoutInvoicesAsBuyerInput>, Prisma.CompanyUncheckedUpdateWithoutInvoicesAsBuyerInput>
 }
 
+export type CompanyCreateNestedOneWithoutCommissionsInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutCommissionsInput, Prisma.CompanyUncheckedCreateWithoutCommissionsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutCommissionsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+}
+
+export type CompanyUpdateOneWithoutCommissionsNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutCommissionsInput, Prisma.CompanyUncheckedCreateWithoutCommissionsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutCommissionsInput
+  upsert?: Prisma.CompanyUpsertWithoutCommissionsInput
+  disconnect?: Prisma.CompanyWhereInput | boolean
+  delete?: Prisma.CompanyWhereInput | boolean
+  connect?: Prisma.CompanyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutCommissionsInput, Prisma.CompanyUpdateWithoutCommissionsInput>, Prisma.CompanyUncheckedUpdateWithoutCommissionsInput>
+}
+
+export type CompanyCreateNestedOneWithoutCampaignRequestsInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutCampaignRequestsInput, Prisma.CompanyUncheckedCreateWithoutCampaignRequestsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutCampaignRequestsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+}
+
+export type CompanyUpdateOneRequiredWithoutCampaignRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutCampaignRequestsInput, Prisma.CompanyUncheckedCreateWithoutCampaignRequestsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutCampaignRequestsInput
+  upsert?: Prisma.CompanyUpsertWithoutCampaignRequestsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutCampaignRequestsInput, Prisma.CompanyUpdateWithoutCampaignRequestsInput>, Prisma.CompanyUncheckedUpdateWithoutCampaignRequestsInput>
+}
+
+export type CompanyCreateNestedOneWithoutCampaignInboxInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutCampaignInboxInput, Prisma.CompanyUncheckedCreateWithoutCampaignInboxInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutCampaignInboxInput
+  connect?: Prisma.CompanyWhereUniqueInput
+}
+
+export type CompanyUpdateOneRequiredWithoutCampaignInboxNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutCampaignInboxInput, Prisma.CompanyUncheckedCreateWithoutCampaignInboxInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutCampaignInboxInput
+  upsert?: Prisma.CompanyUpsertWithoutCampaignInboxInput
+  connect?: Prisma.CompanyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutCampaignInboxInput, Prisma.CompanyUpdateWithoutCampaignInboxInput>, Prisma.CompanyUncheckedUpdateWithoutCampaignInboxInput>
+}
+
 export type CompanyCreateWithoutCreatedByInput = {
   id?: string
   slug: string
@@ -1221,6 +1360,9 @@ export type CompanyCreateWithoutCreatedByInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   categories?: Prisma.CompanyCategoryCreateNestedManyWithoutCompanyInput
@@ -1237,6 +1379,9 @@ export type CompanyCreateWithoutCreatedByInput = {
   approvals?: Prisma.DealApprovalCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutCreatedByInput = {
@@ -1265,6 +1410,9 @@ export type CompanyUncheckedCreateWithoutCreatedByInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   categories?: Prisma.CompanyCategoryUncheckedCreateNestedManyWithoutCompanyInput
@@ -1281,6 +1429,9 @@ export type CompanyUncheckedCreateWithoutCreatedByInput = {
   approvals?: Prisma.DealApprovalUncheckedCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutCreatedByInput = {
@@ -1338,6 +1489,9 @@ export type CompanyScalarWhereInput = {
   coverUrl?: Prisma.StringNullableFilter<"Company"> | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFilter<"Company"> | $Enums.VerificationStatus
   verifiedAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFilter<"Company"> | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFilter<"Company"> | $Enums.CompanySize
+  direction?: Prisma.StringNullableFilter<"Company"> | string | null
   createdById?: Prisma.StringFilter<"Company"> | string
   createdAt?: Prisma.DateTimeFilter<"Company"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Company"> | Date | string
@@ -1369,6 +1523,9 @@ export type CompanyCreateWithoutCategoriesInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedCompaniesInput
@@ -1385,6 +1542,9 @@ export type CompanyCreateWithoutCategoriesInput = {
   approvals?: Prisma.DealApprovalCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutCategoriesInput = {
@@ -1413,6 +1573,9 @@ export type CompanyUncheckedCreateWithoutCategoriesInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1429,6 +1592,9 @@ export type CompanyUncheckedCreateWithoutCategoriesInput = {
   approvals?: Prisma.DealApprovalUncheckedCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutCategoriesInput = {
@@ -1473,6 +1639,9 @@ export type CompanyUpdateWithoutCategoriesInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCompaniesNestedInput
@@ -1489,6 +1658,9 @@ export type CompanyUpdateWithoutCategoriesInput = {
   approvals?: Prisma.DealApprovalUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutCategoriesInput = {
@@ -1517,6 +1689,9 @@ export type CompanyUncheckedUpdateWithoutCategoriesInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1533,6 +1708,9 @@ export type CompanyUncheckedUpdateWithoutCategoriesInput = {
   approvals?: Prisma.DealApprovalUncheckedUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutMembersInput = {
@@ -1561,6 +1739,9 @@ export type CompanyCreateWithoutMembersInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedCompaniesInput
@@ -1577,6 +1758,9 @@ export type CompanyCreateWithoutMembersInput = {
   approvals?: Prisma.DealApprovalCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutMembersInput = {
@@ -1605,6 +1789,9 @@ export type CompanyUncheckedCreateWithoutMembersInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1621,6 +1808,9 @@ export type CompanyUncheckedCreateWithoutMembersInput = {
   approvals?: Prisma.DealApprovalUncheckedCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutMembersInput = {
@@ -1665,6 +1855,9 @@ export type CompanyUpdateWithoutMembersInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCompaniesNestedInput
@@ -1681,6 +1874,9 @@ export type CompanyUpdateWithoutMembersInput = {
   approvals?: Prisma.DealApprovalUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutMembersInput = {
@@ -1709,6 +1905,9 @@ export type CompanyUncheckedUpdateWithoutMembersInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1725,6 +1924,9 @@ export type CompanyUncheckedUpdateWithoutMembersInput = {
   approvals?: Prisma.DealApprovalUncheckedUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutInvitationsInput = {
@@ -1753,6 +1955,9 @@ export type CompanyCreateWithoutInvitationsInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedCompaniesInput
@@ -1769,6 +1974,9 @@ export type CompanyCreateWithoutInvitationsInput = {
   approvals?: Prisma.DealApprovalCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutInvitationsInput = {
@@ -1797,6 +2005,9 @@ export type CompanyUncheckedCreateWithoutInvitationsInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1813,6 +2024,9 @@ export type CompanyUncheckedCreateWithoutInvitationsInput = {
   approvals?: Prisma.DealApprovalUncheckedCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutInvitationsInput = {
@@ -1857,6 +2071,9 @@ export type CompanyUpdateWithoutInvitationsInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCompaniesNestedInput
@@ -1873,6 +2090,9 @@ export type CompanyUpdateWithoutInvitationsInput = {
   approvals?: Prisma.DealApprovalUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutInvitationsInput = {
@@ -1901,6 +2121,9 @@ export type CompanyUncheckedUpdateWithoutInvitationsInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1917,6 +2140,9 @@ export type CompanyUncheckedUpdateWithoutInvitationsInput = {
   approvals?: Prisma.DealApprovalUncheckedUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutMediaInput = {
@@ -1945,6 +2171,9 @@ export type CompanyCreateWithoutMediaInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedCompaniesInput
@@ -1961,6 +2190,9 @@ export type CompanyCreateWithoutMediaInput = {
   approvals?: Prisma.DealApprovalCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutMediaInput = {
@@ -1989,6 +2221,9 @@ export type CompanyUncheckedCreateWithoutMediaInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2005,6 +2240,9 @@ export type CompanyUncheckedCreateWithoutMediaInput = {
   approvals?: Prisma.DealApprovalUncheckedCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutMediaInput = {
@@ -2049,6 +2287,9 @@ export type CompanyUpdateWithoutMediaInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCompaniesNestedInput
@@ -2065,6 +2306,9 @@ export type CompanyUpdateWithoutMediaInput = {
   approvals?: Prisma.DealApprovalUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutMediaInput = {
@@ -2093,6 +2337,9 @@ export type CompanyUncheckedUpdateWithoutMediaInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2109,6 +2356,9 @@ export type CompanyUncheckedUpdateWithoutMediaInput = {
   approvals?: Prisma.DealApprovalUncheckedUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutVerificationDocumentsInput = {
@@ -2137,6 +2387,9 @@ export type CompanyCreateWithoutVerificationDocumentsInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedCompaniesInput
@@ -2153,6 +2406,9 @@ export type CompanyCreateWithoutVerificationDocumentsInput = {
   approvals?: Prisma.DealApprovalCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutVerificationDocumentsInput = {
@@ -2181,6 +2437,9 @@ export type CompanyUncheckedCreateWithoutVerificationDocumentsInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2197,6 +2456,9 @@ export type CompanyUncheckedCreateWithoutVerificationDocumentsInput = {
   approvals?: Prisma.DealApprovalUncheckedCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutVerificationDocumentsInput = {
@@ -2241,6 +2503,9 @@ export type CompanyUpdateWithoutVerificationDocumentsInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCompaniesNestedInput
@@ -2257,6 +2522,9 @@ export type CompanyUpdateWithoutVerificationDocumentsInput = {
   approvals?: Prisma.DealApprovalUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutVerificationDocumentsInput = {
@@ -2285,6 +2553,9 @@ export type CompanyUncheckedUpdateWithoutVerificationDocumentsInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2301,6 +2572,9 @@ export type CompanyUncheckedUpdateWithoutVerificationDocumentsInput = {
   approvals?: Prisma.DealApprovalUncheckedUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutVerificationDecisionsInput = {
@@ -2329,6 +2603,9 @@ export type CompanyCreateWithoutVerificationDecisionsInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedCompaniesInput
@@ -2345,6 +2622,9 @@ export type CompanyCreateWithoutVerificationDecisionsInput = {
   approvals?: Prisma.DealApprovalCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutVerificationDecisionsInput = {
@@ -2373,6 +2653,9 @@ export type CompanyUncheckedCreateWithoutVerificationDecisionsInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2389,6 +2672,9 @@ export type CompanyUncheckedCreateWithoutVerificationDecisionsInput = {
   approvals?: Prisma.DealApprovalUncheckedCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutVerificationDecisionsInput = {
@@ -2433,6 +2719,9 @@ export type CompanyUpdateWithoutVerificationDecisionsInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCompaniesNestedInput
@@ -2449,6 +2738,9 @@ export type CompanyUpdateWithoutVerificationDecisionsInput = {
   approvals?: Prisma.DealApprovalUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutVerificationDecisionsInput = {
@@ -2477,6 +2769,9 @@ export type CompanyUncheckedUpdateWithoutVerificationDecisionsInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2493,6 +2788,9 @@ export type CompanyUncheckedUpdateWithoutVerificationDecisionsInput = {
   approvals?: Prisma.DealApprovalUncheckedUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutOffersInput = {
@@ -2521,6 +2819,9 @@ export type CompanyCreateWithoutOffersInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedCompaniesInput
@@ -2537,6 +2838,9 @@ export type CompanyCreateWithoutOffersInput = {
   approvals?: Prisma.DealApprovalCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutOffersInput = {
@@ -2565,6 +2869,9 @@ export type CompanyUncheckedCreateWithoutOffersInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2581,6 +2888,9 @@ export type CompanyUncheckedCreateWithoutOffersInput = {
   approvals?: Prisma.DealApprovalUncheckedCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutOffersInput = {
@@ -2625,6 +2935,9 @@ export type CompanyUpdateWithoutOffersInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCompaniesNestedInput
@@ -2641,6 +2954,9 @@ export type CompanyUpdateWithoutOffersInput = {
   approvals?: Prisma.DealApprovalUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutOffersInput = {
@@ -2669,6 +2985,9 @@ export type CompanyUncheckedUpdateWithoutOffersInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2685,6 +3004,9 @@ export type CompanyUncheckedUpdateWithoutOffersInput = {
   approvals?: Prisma.DealApprovalUncheckedUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutResponsesInput = {
@@ -2713,6 +3035,9 @@ export type CompanyCreateWithoutResponsesInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedCompaniesInput
@@ -2729,6 +3054,9 @@ export type CompanyCreateWithoutResponsesInput = {
   approvals?: Prisma.DealApprovalCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutResponsesInput = {
@@ -2757,6 +3085,9 @@ export type CompanyUncheckedCreateWithoutResponsesInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2773,6 +3104,9 @@ export type CompanyUncheckedCreateWithoutResponsesInput = {
   approvals?: Prisma.DealApprovalUncheckedCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutResponsesInput = {
@@ -2817,6 +3151,9 @@ export type CompanyUpdateWithoutResponsesInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCompaniesNestedInput
@@ -2833,6 +3170,9 @@ export type CompanyUpdateWithoutResponsesInput = {
   approvals?: Prisma.DealApprovalUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutResponsesInput = {
@@ -2861,6 +3201,9 @@ export type CompanyUncheckedUpdateWithoutResponsesInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2877,6 +3220,9 @@ export type CompanyUncheckedUpdateWithoutResponsesInput = {
   approvals?: Prisma.DealApprovalUncheckedUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutParticipationsInput = {
@@ -2905,6 +3251,9 @@ export type CompanyCreateWithoutParticipationsInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedCompaniesInput
@@ -2921,6 +3270,9 @@ export type CompanyCreateWithoutParticipationsInput = {
   approvals?: Prisma.DealApprovalCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutParticipationsInput = {
@@ -2949,6 +3301,9 @@ export type CompanyUncheckedCreateWithoutParticipationsInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2965,6 +3320,9 @@ export type CompanyUncheckedCreateWithoutParticipationsInput = {
   approvals?: Prisma.DealApprovalUncheckedCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutParticipationsInput = {
@@ -3009,6 +3367,9 @@ export type CompanyUpdateWithoutParticipationsInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCompaniesNestedInput
@@ -3025,6 +3386,9 @@ export type CompanyUpdateWithoutParticipationsInput = {
   approvals?: Prisma.DealApprovalUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutParticipationsInput = {
@@ -3053,6 +3417,9 @@ export type CompanyUncheckedUpdateWithoutParticipationsInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3069,6 +3436,9 @@ export type CompanyUncheckedUpdateWithoutParticipationsInput = {
   approvals?: Prisma.DealApprovalUncheckedUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutDealsAsSellerInput = {
@@ -3097,6 +3467,9 @@ export type CompanyCreateWithoutDealsAsSellerInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedCompaniesInput
@@ -3113,6 +3486,9 @@ export type CompanyCreateWithoutDealsAsSellerInput = {
   approvals?: Prisma.DealApprovalCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutDealsAsSellerInput = {
@@ -3141,6 +3517,9 @@ export type CompanyUncheckedCreateWithoutDealsAsSellerInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3157,6 +3536,9 @@ export type CompanyUncheckedCreateWithoutDealsAsSellerInput = {
   approvals?: Prisma.DealApprovalUncheckedCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutDealsAsSellerInput = {
@@ -3190,6 +3572,9 @@ export type CompanyCreateWithoutDealsAsBuyerInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedCompaniesInput
@@ -3206,6 +3591,9 @@ export type CompanyCreateWithoutDealsAsBuyerInput = {
   approvals?: Prisma.DealApprovalCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutDealsAsBuyerInput = {
@@ -3234,6 +3622,9 @@ export type CompanyUncheckedCreateWithoutDealsAsBuyerInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3250,6 +3641,9 @@ export type CompanyUncheckedCreateWithoutDealsAsBuyerInput = {
   approvals?: Prisma.DealApprovalUncheckedCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutDealsAsBuyerInput = {
@@ -3294,6 +3688,9 @@ export type CompanyUpdateWithoutDealsAsSellerInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCompaniesNestedInput
@@ -3310,6 +3707,9 @@ export type CompanyUpdateWithoutDealsAsSellerInput = {
   approvals?: Prisma.DealApprovalUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutDealsAsSellerInput = {
@@ -3338,6 +3738,9 @@ export type CompanyUncheckedUpdateWithoutDealsAsSellerInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3354,6 +3757,9 @@ export type CompanyUncheckedUpdateWithoutDealsAsSellerInput = {
   approvals?: Prisma.DealApprovalUncheckedUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUpsertWithoutDealsAsBuyerInput = {
@@ -3393,6 +3799,9 @@ export type CompanyUpdateWithoutDealsAsBuyerInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCompaniesNestedInput
@@ -3409,6 +3818,9 @@ export type CompanyUpdateWithoutDealsAsBuyerInput = {
   approvals?: Prisma.DealApprovalUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutDealsAsBuyerInput = {
@@ -3437,6 +3849,9 @@ export type CompanyUncheckedUpdateWithoutDealsAsBuyerInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3453,6 +3868,9 @@ export type CompanyUncheckedUpdateWithoutDealsAsBuyerInput = {
   approvals?: Prisma.DealApprovalUncheckedUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutApprovalsInput = {
@@ -3481,6 +3899,9 @@ export type CompanyCreateWithoutApprovalsInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedCompaniesInput
@@ -3497,6 +3918,9 @@ export type CompanyCreateWithoutApprovalsInput = {
   dealsAsBuyer?: Prisma.DealTermsCreateNestedManyWithoutBuyerCompanyInput
   invoicesAsSeller?: Prisma.InvoiceCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutApprovalsInput = {
@@ -3525,6 +3949,9 @@ export type CompanyUncheckedCreateWithoutApprovalsInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3541,6 +3968,9 @@ export type CompanyUncheckedCreateWithoutApprovalsInput = {
   dealsAsBuyer?: Prisma.DealTermsUncheckedCreateNestedManyWithoutBuyerCompanyInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedCreateNestedManyWithoutSellerCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutApprovalsInput = {
@@ -3585,6 +4015,9 @@ export type CompanyUpdateWithoutApprovalsInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCompaniesNestedInput
@@ -3601,6 +4034,9 @@ export type CompanyUpdateWithoutApprovalsInput = {
   dealsAsBuyer?: Prisma.DealTermsUpdateManyWithoutBuyerCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutApprovalsInput = {
@@ -3629,6 +4065,9 @@ export type CompanyUncheckedUpdateWithoutApprovalsInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3645,6 +4084,9 @@ export type CompanyUncheckedUpdateWithoutApprovalsInput = {
   dealsAsBuyer?: Prisma.DealTermsUncheckedUpdateManyWithoutBuyerCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutInvoicesAsSellerInput = {
@@ -3673,6 +4115,9 @@ export type CompanyCreateWithoutInvoicesAsSellerInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedCompaniesInput
@@ -3689,6 +4134,9 @@ export type CompanyCreateWithoutInvoicesAsSellerInput = {
   dealsAsBuyer?: Prisma.DealTermsCreateNestedManyWithoutBuyerCompanyInput
   approvals?: Prisma.DealApprovalCreateNestedManyWithoutCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutInvoicesAsSellerInput = {
@@ -3717,6 +4165,9 @@ export type CompanyUncheckedCreateWithoutInvoicesAsSellerInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3733,6 +4184,9 @@ export type CompanyUncheckedCreateWithoutInvoicesAsSellerInput = {
   dealsAsBuyer?: Prisma.DealTermsUncheckedCreateNestedManyWithoutBuyerCompanyInput
   approvals?: Prisma.DealApprovalUncheckedCreateNestedManyWithoutCompanyInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutInvoicesAsSellerInput = {
@@ -3766,6 +4220,9 @@ export type CompanyCreateWithoutInvoicesAsBuyerInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedCompaniesInput
@@ -3782,6 +4239,9 @@ export type CompanyCreateWithoutInvoicesAsBuyerInput = {
   dealsAsBuyer?: Prisma.DealTermsCreateNestedManyWithoutBuyerCompanyInput
   approvals?: Prisma.DealApprovalCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceCreateNestedManyWithoutSellerCompanyInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutInvoicesAsBuyerInput = {
@@ -3810,6 +4270,9 @@ export type CompanyUncheckedCreateWithoutInvoicesAsBuyerInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3826,6 +4289,9 @@ export type CompanyUncheckedCreateWithoutInvoicesAsBuyerInput = {
   dealsAsBuyer?: Prisma.DealTermsUncheckedCreateNestedManyWithoutBuyerCompanyInput
   approvals?: Prisma.DealApprovalUncheckedCreateNestedManyWithoutCompanyInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedCreateNestedManyWithoutSellerCompanyInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutInvoicesAsBuyerInput = {
@@ -3870,6 +4336,9 @@ export type CompanyUpdateWithoutInvoicesAsSellerInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCompaniesNestedInput
@@ -3886,6 +4355,9 @@ export type CompanyUpdateWithoutInvoicesAsSellerInput = {
   dealsAsBuyer?: Prisma.DealTermsUpdateManyWithoutBuyerCompanyNestedInput
   approvals?: Prisma.DealApprovalUpdateManyWithoutCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutInvoicesAsSellerInput = {
@@ -3914,6 +4386,9 @@ export type CompanyUncheckedUpdateWithoutInvoicesAsSellerInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3930,6 +4405,9 @@ export type CompanyUncheckedUpdateWithoutInvoicesAsSellerInput = {
   dealsAsBuyer?: Prisma.DealTermsUncheckedUpdateManyWithoutBuyerCompanyNestedInput
   approvals?: Prisma.DealApprovalUncheckedUpdateManyWithoutCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUpsertWithoutInvoicesAsBuyerInput = {
@@ -3969,6 +4447,9 @@ export type CompanyUpdateWithoutInvoicesAsBuyerInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCompaniesNestedInput
@@ -3985,6 +4466,9 @@ export type CompanyUpdateWithoutInvoicesAsBuyerInput = {
   dealsAsBuyer?: Prisma.DealTermsUpdateManyWithoutBuyerCompanyNestedInput
   approvals?: Prisma.DealApprovalUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUpdateManyWithoutSellerCompanyNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutInvoicesAsBuyerInput = {
@@ -4013,6 +4497,9 @@ export type CompanyUncheckedUpdateWithoutInvoicesAsBuyerInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4029,6 +4516,657 @@ export type CompanyUncheckedUpdateWithoutInvoicesAsBuyerInput = {
   dealsAsBuyer?: Prisma.DealTermsUncheckedUpdateManyWithoutBuyerCompanyNestedInput
   approvals?: Prisma.DealApprovalUncheckedUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedUpdateManyWithoutSellerCompanyNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyCreateWithoutCommissionsInput = {
+  id?: string
+  slug: string
+  legalName: string
+  tradeName?: string | null
+  registrationNumber: string
+  taxNumber?: string | null
+  country?: string
+  city?: string | null
+  legalAddress: string
+  description?: string | null
+  activities?: string | null
+  customCategory?: string | null
+  website?: string | null
+  facebookUrl?: string | null
+  linkedinUrl?: string | null
+  instagramUrl?: string | null
+  contactPerson: string
+  contactEmail: string
+  contactPhone?: string | null
+  showEmailPublicly?: boolean
+  showPhonePublicly?: boolean
+  logoUrl?: string | null
+  coverUrl?: string | null
+  verificationStatus?: $Enums.VerificationStatus
+  verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedCompaniesInput
+  categories?: Prisma.CompanyCategoryCreateNestedManyWithoutCompanyInput
+  members?: Prisma.CompanyMemberCreateNestedManyWithoutCompanyInput
+  invitations?: Prisma.CompanyInvitationCreateNestedManyWithoutCompanyInput
+  media?: Prisma.CompanyMediaCreateNestedManyWithoutCompanyInput
+  verificationDocuments?: Prisma.VerificationDocumentCreateNestedManyWithoutCompanyInput
+  verificationDecisions?: Prisma.VerificationDecisionCreateNestedManyWithoutCompanyInput
+  offers?: Prisma.OfferCreateNestedManyWithoutCompanyInput
+  responses?: Prisma.OfferResponseCreateNestedManyWithoutResponderCompanyInput
+  participations?: Prisma.ConversationParticipantCreateNestedManyWithoutCompanyInput
+  dealsAsSeller?: Prisma.DealTermsCreateNestedManyWithoutSellerCompanyInput
+  dealsAsBuyer?: Prisma.DealTermsCreateNestedManyWithoutBuyerCompanyInput
+  approvals?: Prisma.DealApprovalCreateNestedManyWithoutCompanyInput
+  invoicesAsSeller?: Prisma.InvoiceCreateNestedManyWithoutSellerCompanyInput
+  invoicesAsBuyer?: Prisma.InvoiceCreateNestedManyWithoutBuyerCompanyInput
+  campaignRequests?: Prisma.CampaignRequestCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyUncheckedCreateWithoutCommissionsInput = {
+  id?: string
+  slug: string
+  legalName: string
+  tradeName?: string | null
+  registrationNumber: string
+  taxNumber?: string | null
+  country?: string
+  city?: string | null
+  legalAddress: string
+  description?: string | null
+  activities?: string | null
+  customCategory?: string | null
+  website?: string | null
+  facebookUrl?: string | null
+  linkedinUrl?: string | null
+  instagramUrl?: string | null
+  contactPerson: string
+  contactEmail: string
+  contactPhone?: string | null
+  showEmailPublicly?: boolean
+  showPhonePublicly?: boolean
+  logoUrl?: string | null
+  coverUrl?: string | null
+  verificationStatus?: $Enums.VerificationStatus
+  verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
+  createdById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  categories?: Prisma.CompanyCategoryUncheckedCreateNestedManyWithoutCompanyInput
+  members?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+  invitations?: Prisma.CompanyInvitationUncheckedCreateNestedManyWithoutCompanyInput
+  media?: Prisma.CompanyMediaUncheckedCreateNestedManyWithoutCompanyInput
+  verificationDocuments?: Prisma.VerificationDocumentUncheckedCreateNestedManyWithoutCompanyInput
+  verificationDecisions?: Prisma.VerificationDecisionUncheckedCreateNestedManyWithoutCompanyInput
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutCompanyInput
+  responses?: Prisma.OfferResponseUncheckedCreateNestedManyWithoutResponderCompanyInput
+  participations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutCompanyInput
+  dealsAsSeller?: Prisma.DealTermsUncheckedCreateNestedManyWithoutSellerCompanyInput
+  dealsAsBuyer?: Prisma.DealTermsUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  approvals?: Prisma.DealApprovalUncheckedCreateNestedManyWithoutCompanyInput
+  invoicesAsSeller?: Prisma.InvoiceUncheckedCreateNestedManyWithoutSellerCompanyInput
+  invoicesAsBuyer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyCreateOrConnectWithoutCommissionsInput = {
+  where: Prisma.CompanyWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutCommissionsInput, Prisma.CompanyUncheckedCreateWithoutCommissionsInput>
+}
+
+export type CompanyUpsertWithoutCommissionsInput = {
+  update: Prisma.XOR<Prisma.CompanyUpdateWithoutCommissionsInput, Prisma.CompanyUncheckedUpdateWithoutCommissionsInput>
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutCommissionsInput, Prisma.CompanyUncheckedCreateWithoutCommissionsInput>
+  where?: Prisma.CompanyWhereInput
+}
+
+export type CompanyUpdateToOneWithWhereWithoutCommissionsInput = {
+  where?: Prisma.CompanyWhereInput
+  data: Prisma.XOR<Prisma.CompanyUpdateWithoutCommissionsInput, Prisma.CompanyUncheckedUpdateWithoutCommissionsInput>
+}
+
+export type CompanyUpdateWithoutCommissionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  legalName?: Prisma.StringFieldUpdateOperationsInput | string
+  tradeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activities?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
+  contactEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  showEmailPublicly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPhonePublicly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCompaniesNestedInput
+  categories?: Prisma.CompanyCategoryUpdateManyWithoutCompanyNestedInput
+  members?: Prisma.CompanyMemberUpdateManyWithoutCompanyNestedInput
+  invitations?: Prisma.CompanyInvitationUpdateManyWithoutCompanyNestedInput
+  media?: Prisma.CompanyMediaUpdateManyWithoutCompanyNestedInput
+  verificationDocuments?: Prisma.VerificationDocumentUpdateManyWithoutCompanyNestedInput
+  verificationDecisions?: Prisma.VerificationDecisionUpdateManyWithoutCompanyNestedInput
+  offers?: Prisma.OfferUpdateManyWithoutCompanyNestedInput
+  responses?: Prisma.OfferResponseUpdateManyWithoutResponderCompanyNestedInput
+  participations?: Prisma.ConversationParticipantUpdateManyWithoutCompanyNestedInput
+  dealsAsSeller?: Prisma.DealTermsUpdateManyWithoutSellerCompanyNestedInput
+  dealsAsBuyer?: Prisma.DealTermsUpdateManyWithoutBuyerCompanyNestedInput
+  approvals?: Prisma.DealApprovalUpdateManyWithoutCompanyNestedInput
+  invoicesAsSeller?: Prisma.InvoiceUpdateManyWithoutSellerCompanyNestedInput
+  invoicesAsBuyer?: Prisma.InvoiceUpdateManyWithoutBuyerCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyUncheckedUpdateWithoutCommissionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  legalName?: Prisma.StringFieldUpdateOperationsInput | string
+  tradeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activities?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
+  contactEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  showEmailPublicly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPhonePublicly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  categories?: Prisma.CompanyCategoryUncheckedUpdateManyWithoutCompanyNestedInput
+  members?: Prisma.CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+  invitations?: Prisma.CompanyInvitationUncheckedUpdateManyWithoutCompanyNestedInput
+  media?: Prisma.CompanyMediaUncheckedUpdateManyWithoutCompanyNestedInput
+  verificationDocuments?: Prisma.VerificationDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+  verificationDecisions?: Prisma.VerificationDecisionUncheckedUpdateManyWithoutCompanyNestedInput
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutCompanyNestedInput
+  responses?: Prisma.OfferResponseUncheckedUpdateManyWithoutResponderCompanyNestedInput
+  participations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutCompanyNestedInput
+  dealsAsSeller?: Prisma.DealTermsUncheckedUpdateManyWithoutSellerCompanyNestedInput
+  dealsAsBuyer?: Prisma.DealTermsUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  approvals?: Prisma.DealApprovalUncheckedUpdateManyWithoutCompanyNestedInput
+  invoicesAsSeller?: Prisma.InvoiceUncheckedUpdateManyWithoutSellerCompanyNestedInput
+  invoicesAsBuyer?: Prisma.InvoiceUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyCreateWithoutCampaignRequestsInput = {
+  id?: string
+  slug: string
+  legalName: string
+  tradeName?: string | null
+  registrationNumber: string
+  taxNumber?: string | null
+  country?: string
+  city?: string | null
+  legalAddress: string
+  description?: string | null
+  activities?: string | null
+  customCategory?: string | null
+  website?: string | null
+  facebookUrl?: string | null
+  linkedinUrl?: string | null
+  instagramUrl?: string | null
+  contactPerson: string
+  contactEmail: string
+  contactPhone?: string | null
+  showEmailPublicly?: boolean
+  showPhonePublicly?: boolean
+  logoUrl?: string | null
+  coverUrl?: string | null
+  verificationStatus?: $Enums.VerificationStatus
+  verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedCompaniesInput
+  categories?: Prisma.CompanyCategoryCreateNestedManyWithoutCompanyInput
+  members?: Prisma.CompanyMemberCreateNestedManyWithoutCompanyInput
+  invitations?: Prisma.CompanyInvitationCreateNestedManyWithoutCompanyInput
+  media?: Prisma.CompanyMediaCreateNestedManyWithoutCompanyInput
+  verificationDocuments?: Prisma.VerificationDocumentCreateNestedManyWithoutCompanyInput
+  verificationDecisions?: Prisma.VerificationDecisionCreateNestedManyWithoutCompanyInput
+  offers?: Prisma.OfferCreateNestedManyWithoutCompanyInput
+  responses?: Prisma.OfferResponseCreateNestedManyWithoutResponderCompanyInput
+  participations?: Prisma.ConversationParticipantCreateNestedManyWithoutCompanyInput
+  dealsAsSeller?: Prisma.DealTermsCreateNestedManyWithoutSellerCompanyInput
+  dealsAsBuyer?: Prisma.DealTermsCreateNestedManyWithoutBuyerCompanyInput
+  approvals?: Prisma.DealApprovalCreateNestedManyWithoutCompanyInput
+  invoicesAsSeller?: Prisma.InvoiceCreateNestedManyWithoutSellerCompanyInput
+  invoicesAsBuyer?: Prisma.InvoiceCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyUncheckedCreateWithoutCampaignRequestsInput = {
+  id?: string
+  slug: string
+  legalName: string
+  tradeName?: string | null
+  registrationNumber: string
+  taxNumber?: string | null
+  country?: string
+  city?: string | null
+  legalAddress: string
+  description?: string | null
+  activities?: string | null
+  customCategory?: string | null
+  website?: string | null
+  facebookUrl?: string | null
+  linkedinUrl?: string | null
+  instagramUrl?: string | null
+  contactPerson: string
+  contactEmail: string
+  contactPhone?: string | null
+  showEmailPublicly?: boolean
+  showPhonePublicly?: boolean
+  logoUrl?: string | null
+  coverUrl?: string | null
+  verificationStatus?: $Enums.VerificationStatus
+  verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
+  createdById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  categories?: Prisma.CompanyCategoryUncheckedCreateNestedManyWithoutCompanyInput
+  members?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+  invitations?: Prisma.CompanyInvitationUncheckedCreateNestedManyWithoutCompanyInput
+  media?: Prisma.CompanyMediaUncheckedCreateNestedManyWithoutCompanyInput
+  verificationDocuments?: Prisma.VerificationDocumentUncheckedCreateNestedManyWithoutCompanyInput
+  verificationDecisions?: Prisma.VerificationDecisionUncheckedCreateNestedManyWithoutCompanyInput
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutCompanyInput
+  responses?: Prisma.OfferResponseUncheckedCreateNestedManyWithoutResponderCompanyInput
+  participations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutCompanyInput
+  dealsAsSeller?: Prisma.DealTermsUncheckedCreateNestedManyWithoutSellerCompanyInput
+  dealsAsBuyer?: Prisma.DealTermsUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  approvals?: Prisma.DealApprovalUncheckedCreateNestedManyWithoutCompanyInput
+  invoicesAsSeller?: Prisma.InvoiceUncheckedCreateNestedManyWithoutSellerCompanyInput
+  invoicesAsBuyer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutCompanyInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyCreateOrConnectWithoutCampaignRequestsInput = {
+  where: Prisma.CompanyWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutCampaignRequestsInput, Prisma.CompanyUncheckedCreateWithoutCampaignRequestsInput>
+}
+
+export type CompanyUpsertWithoutCampaignRequestsInput = {
+  update: Prisma.XOR<Prisma.CompanyUpdateWithoutCampaignRequestsInput, Prisma.CompanyUncheckedUpdateWithoutCampaignRequestsInput>
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutCampaignRequestsInput, Prisma.CompanyUncheckedCreateWithoutCampaignRequestsInput>
+  where?: Prisma.CompanyWhereInput
+}
+
+export type CompanyUpdateToOneWithWhereWithoutCampaignRequestsInput = {
+  where?: Prisma.CompanyWhereInput
+  data: Prisma.XOR<Prisma.CompanyUpdateWithoutCampaignRequestsInput, Prisma.CompanyUncheckedUpdateWithoutCampaignRequestsInput>
+}
+
+export type CompanyUpdateWithoutCampaignRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  legalName?: Prisma.StringFieldUpdateOperationsInput | string
+  tradeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activities?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
+  contactEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  showEmailPublicly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPhonePublicly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCompaniesNestedInput
+  categories?: Prisma.CompanyCategoryUpdateManyWithoutCompanyNestedInput
+  members?: Prisma.CompanyMemberUpdateManyWithoutCompanyNestedInput
+  invitations?: Prisma.CompanyInvitationUpdateManyWithoutCompanyNestedInput
+  media?: Prisma.CompanyMediaUpdateManyWithoutCompanyNestedInput
+  verificationDocuments?: Prisma.VerificationDocumentUpdateManyWithoutCompanyNestedInput
+  verificationDecisions?: Prisma.VerificationDecisionUpdateManyWithoutCompanyNestedInput
+  offers?: Prisma.OfferUpdateManyWithoutCompanyNestedInput
+  responses?: Prisma.OfferResponseUpdateManyWithoutResponderCompanyNestedInput
+  participations?: Prisma.ConversationParticipantUpdateManyWithoutCompanyNestedInput
+  dealsAsSeller?: Prisma.DealTermsUpdateManyWithoutSellerCompanyNestedInput
+  dealsAsBuyer?: Prisma.DealTermsUpdateManyWithoutBuyerCompanyNestedInput
+  approvals?: Prisma.DealApprovalUpdateManyWithoutCompanyNestedInput
+  invoicesAsSeller?: Prisma.InvoiceUpdateManyWithoutSellerCompanyNestedInput
+  invoicesAsBuyer?: Prisma.InvoiceUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyUncheckedUpdateWithoutCampaignRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  legalName?: Prisma.StringFieldUpdateOperationsInput | string
+  tradeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activities?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
+  contactEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  showEmailPublicly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPhonePublicly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  categories?: Prisma.CompanyCategoryUncheckedUpdateManyWithoutCompanyNestedInput
+  members?: Prisma.CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+  invitations?: Prisma.CompanyInvitationUncheckedUpdateManyWithoutCompanyNestedInput
+  media?: Prisma.CompanyMediaUncheckedUpdateManyWithoutCompanyNestedInput
+  verificationDocuments?: Prisma.VerificationDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+  verificationDecisions?: Prisma.VerificationDecisionUncheckedUpdateManyWithoutCompanyNestedInput
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutCompanyNestedInput
+  responses?: Prisma.OfferResponseUncheckedUpdateManyWithoutResponderCompanyNestedInput
+  participations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutCompanyNestedInput
+  dealsAsSeller?: Prisma.DealTermsUncheckedUpdateManyWithoutSellerCompanyNestedInput
+  dealsAsBuyer?: Prisma.DealTermsUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  approvals?: Prisma.DealApprovalUncheckedUpdateManyWithoutCompanyNestedInput
+  invoicesAsSeller?: Prisma.InvoiceUncheckedUpdateManyWithoutSellerCompanyNestedInput
+  invoicesAsBuyer?: Prisma.InvoiceUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyCreateWithoutCampaignInboxInput = {
+  id?: string
+  slug: string
+  legalName: string
+  tradeName?: string | null
+  registrationNumber: string
+  taxNumber?: string | null
+  country?: string
+  city?: string | null
+  legalAddress: string
+  description?: string | null
+  activities?: string | null
+  customCategory?: string | null
+  website?: string | null
+  facebookUrl?: string | null
+  linkedinUrl?: string | null
+  instagramUrl?: string | null
+  contactPerson: string
+  contactEmail: string
+  contactPhone?: string | null
+  showEmailPublicly?: boolean
+  showPhonePublicly?: boolean
+  logoUrl?: string | null
+  coverUrl?: string | null
+  verificationStatus?: $Enums.VerificationStatus
+  verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedCompaniesInput
+  categories?: Prisma.CompanyCategoryCreateNestedManyWithoutCompanyInput
+  members?: Prisma.CompanyMemberCreateNestedManyWithoutCompanyInput
+  invitations?: Prisma.CompanyInvitationCreateNestedManyWithoutCompanyInput
+  media?: Prisma.CompanyMediaCreateNestedManyWithoutCompanyInput
+  verificationDocuments?: Prisma.VerificationDocumentCreateNestedManyWithoutCompanyInput
+  verificationDecisions?: Prisma.VerificationDecisionCreateNestedManyWithoutCompanyInput
+  offers?: Prisma.OfferCreateNestedManyWithoutCompanyInput
+  responses?: Prisma.OfferResponseCreateNestedManyWithoutResponderCompanyInput
+  participations?: Prisma.ConversationParticipantCreateNestedManyWithoutCompanyInput
+  dealsAsSeller?: Prisma.DealTermsCreateNestedManyWithoutSellerCompanyInput
+  dealsAsBuyer?: Prisma.DealTermsCreateNestedManyWithoutBuyerCompanyInput
+  approvals?: Prisma.DealApprovalCreateNestedManyWithoutCompanyInput
+  invoicesAsSeller?: Prisma.InvoiceCreateNestedManyWithoutSellerCompanyInput
+  invoicesAsBuyer?: Prisma.InvoiceCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyUncheckedCreateWithoutCampaignInboxInput = {
+  id?: string
+  slug: string
+  legalName: string
+  tradeName?: string | null
+  registrationNumber: string
+  taxNumber?: string | null
+  country?: string
+  city?: string | null
+  legalAddress: string
+  description?: string | null
+  activities?: string | null
+  customCategory?: string | null
+  website?: string | null
+  facebookUrl?: string | null
+  linkedinUrl?: string | null
+  instagramUrl?: string | null
+  contactPerson: string
+  contactEmail: string
+  contactPhone?: string | null
+  showEmailPublicly?: boolean
+  showPhonePublicly?: boolean
+  logoUrl?: string | null
+  coverUrl?: string | null
+  verificationStatus?: $Enums.VerificationStatus
+  verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
+  createdById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  categories?: Prisma.CompanyCategoryUncheckedCreateNestedManyWithoutCompanyInput
+  members?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+  invitations?: Prisma.CompanyInvitationUncheckedCreateNestedManyWithoutCompanyInput
+  media?: Prisma.CompanyMediaUncheckedCreateNestedManyWithoutCompanyInput
+  verificationDocuments?: Prisma.VerificationDocumentUncheckedCreateNestedManyWithoutCompanyInput
+  verificationDecisions?: Prisma.VerificationDecisionUncheckedCreateNestedManyWithoutCompanyInput
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutCompanyInput
+  responses?: Prisma.OfferResponseUncheckedCreateNestedManyWithoutResponderCompanyInput
+  participations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutCompanyInput
+  dealsAsSeller?: Prisma.DealTermsUncheckedCreateNestedManyWithoutSellerCompanyInput
+  dealsAsBuyer?: Prisma.DealTermsUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  approvals?: Prisma.DealApprovalUncheckedCreateNestedManyWithoutCompanyInput
+  invoicesAsSeller?: Prisma.InvoiceUncheckedCreateNestedManyWithoutSellerCompanyInput
+  invoicesAsBuyer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutBuyerCompanyInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutCompanyInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyCreateOrConnectWithoutCampaignInboxInput = {
+  where: Prisma.CompanyWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutCampaignInboxInput, Prisma.CompanyUncheckedCreateWithoutCampaignInboxInput>
+}
+
+export type CompanyUpsertWithoutCampaignInboxInput = {
+  update: Prisma.XOR<Prisma.CompanyUpdateWithoutCampaignInboxInput, Prisma.CompanyUncheckedUpdateWithoutCampaignInboxInput>
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutCampaignInboxInput, Prisma.CompanyUncheckedCreateWithoutCampaignInboxInput>
+  where?: Prisma.CompanyWhereInput
+}
+
+export type CompanyUpdateToOneWithWhereWithoutCampaignInboxInput = {
+  where?: Prisma.CompanyWhereInput
+  data: Prisma.XOR<Prisma.CompanyUpdateWithoutCampaignInboxInput, Prisma.CompanyUncheckedUpdateWithoutCampaignInboxInput>
+}
+
+export type CompanyUpdateWithoutCampaignInboxInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  legalName?: Prisma.StringFieldUpdateOperationsInput | string
+  tradeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activities?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
+  contactEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  showEmailPublicly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPhonePublicly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCompaniesNestedInput
+  categories?: Prisma.CompanyCategoryUpdateManyWithoutCompanyNestedInput
+  members?: Prisma.CompanyMemberUpdateManyWithoutCompanyNestedInput
+  invitations?: Prisma.CompanyInvitationUpdateManyWithoutCompanyNestedInput
+  media?: Prisma.CompanyMediaUpdateManyWithoutCompanyNestedInput
+  verificationDocuments?: Prisma.VerificationDocumentUpdateManyWithoutCompanyNestedInput
+  verificationDecisions?: Prisma.VerificationDecisionUpdateManyWithoutCompanyNestedInput
+  offers?: Prisma.OfferUpdateManyWithoutCompanyNestedInput
+  responses?: Prisma.OfferResponseUpdateManyWithoutResponderCompanyNestedInput
+  participations?: Prisma.ConversationParticipantUpdateManyWithoutCompanyNestedInput
+  dealsAsSeller?: Prisma.DealTermsUpdateManyWithoutSellerCompanyNestedInput
+  dealsAsBuyer?: Prisma.DealTermsUpdateManyWithoutBuyerCompanyNestedInput
+  approvals?: Prisma.DealApprovalUpdateManyWithoutCompanyNestedInput
+  invoicesAsSeller?: Prisma.InvoiceUpdateManyWithoutSellerCompanyNestedInput
+  invoicesAsBuyer?: Prisma.InvoiceUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyUncheckedUpdateWithoutCampaignInboxInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  legalName?: Prisma.StringFieldUpdateOperationsInput | string
+  tradeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legalAddress?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activities?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
+  contactEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  showEmailPublicly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showPhonePublicly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  categories?: Prisma.CompanyCategoryUncheckedUpdateManyWithoutCompanyNestedInput
+  members?: Prisma.CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+  invitations?: Prisma.CompanyInvitationUncheckedUpdateManyWithoutCompanyNestedInput
+  media?: Prisma.CompanyMediaUncheckedUpdateManyWithoutCompanyNestedInput
+  verificationDocuments?: Prisma.VerificationDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+  verificationDecisions?: Prisma.VerificationDecisionUncheckedUpdateManyWithoutCompanyNestedInput
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutCompanyNestedInput
+  responses?: Prisma.OfferResponseUncheckedUpdateManyWithoutResponderCompanyNestedInput
+  participations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutCompanyNestedInput
+  dealsAsSeller?: Prisma.DealTermsUncheckedUpdateManyWithoutSellerCompanyNestedInput
+  dealsAsBuyer?: Prisma.DealTermsUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  approvals?: Prisma.DealApprovalUncheckedUpdateManyWithoutCompanyNestedInput
+  invoicesAsSeller?: Prisma.InvoiceUncheckedUpdateManyWithoutSellerCompanyNestedInput
+  invoicesAsBuyer?: Prisma.InvoiceUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateManyCreatedByInput = {
@@ -4057,6 +5195,9 @@ export type CompanyCreateManyCreatedByInput = {
   coverUrl?: string | null
   verificationStatus?: $Enums.VerificationStatus
   verifiedAt?: Date | string | null
+  businessRole?: $Enums.BusinessRole
+  size?: $Enums.CompanySize
+  direction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -4087,6 +5228,9 @@ export type CompanyUpdateWithoutCreatedByInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   categories?: Prisma.CompanyCategoryUpdateManyWithoutCompanyNestedInput
@@ -4103,6 +5247,9 @@ export type CompanyUpdateWithoutCreatedByInput = {
   approvals?: Prisma.DealApprovalUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutCreatedByInput = {
@@ -4131,6 +5278,9 @@ export type CompanyUncheckedUpdateWithoutCreatedByInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   categories?: Prisma.CompanyCategoryUncheckedUpdateManyWithoutCompanyNestedInput
@@ -4147,6 +5297,9 @@ export type CompanyUncheckedUpdateWithoutCreatedByInput = {
   approvals?: Prisma.DealApprovalUncheckedUpdateManyWithoutCompanyNestedInput
   invoicesAsSeller?: Prisma.InvoiceUncheckedUpdateManyWithoutSellerCompanyNestedInput
   invoicesAsBuyer?: Prisma.InvoiceUncheckedUpdateManyWithoutBuyerCompanyNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignRequests?: Prisma.CampaignRequestUncheckedUpdateManyWithoutCompanyNestedInput
+  campaignInbox?: Prisma.CampaignRecipientUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateManyWithoutCreatedByInput = {
@@ -4175,6 +5328,9 @@ export type CompanyUncheckedUpdateManyWithoutCreatedByInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  businessRole?: Prisma.EnumBusinessRoleFieldUpdateOperationsInput | $Enums.BusinessRole
+  size?: Prisma.EnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize
+  direction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -4199,6 +5355,9 @@ export type CompanyCountOutputType = {
   approvals: number
   invoicesAsSeller: number
   invoicesAsBuyer: number
+  commissions: number
+  campaignRequests: number
+  campaignInbox: number
 }
 
 export type CompanyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4216,6 +5375,9 @@ export type CompanyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   approvals?: boolean | CompanyCountOutputTypeCountApprovalsArgs
   invoicesAsSeller?: boolean | CompanyCountOutputTypeCountInvoicesAsSellerArgs
   invoicesAsBuyer?: boolean | CompanyCountOutputTypeCountInvoicesAsBuyerArgs
+  commissions?: boolean | CompanyCountOutputTypeCountCommissionsArgs
+  campaignRequests?: boolean | CompanyCountOutputTypeCountCampaignRequestsArgs
+  campaignInbox?: boolean | CompanyCountOutputTypeCountCampaignInboxArgs
 }
 
 /**
@@ -4326,6 +5488,27 @@ export type CompanyCountOutputTypeCountInvoicesAsBuyerArgs<ExtArgs extends runti
   where?: Prisma.InvoiceWhereInput
 }
 
+/**
+ * CompanyCountOutputType without action
+ */
+export type CompanyCountOutputTypeCountCommissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CommissionWhereInput
+}
+
+/**
+ * CompanyCountOutputType without action
+ */
+export type CompanyCountOutputTypeCountCampaignRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CampaignRequestWhereInput
+}
+
+/**
+ * CompanyCountOutputType without action
+ */
+export type CompanyCountOutputTypeCountCampaignInboxArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CampaignRecipientWhereInput
+}
+
 
 export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -4353,6 +5536,9 @@ export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   coverUrl?: boolean
   verificationStatus?: boolean
   verifiedAt?: boolean
+  businessRole?: boolean
+  size?: boolean
+  direction?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -4371,6 +5557,9 @@ export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   approvals?: boolean | Prisma.Company$approvalsArgs<ExtArgs>
   invoicesAsSeller?: boolean | Prisma.Company$invoicesAsSellerArgs<ExtArgs>
   invoicesAsBuyer?: boolean | Prisma.Company$invoicesAsBuyerArgs<ExtArgs>
+  commissions?: boolean | Prisma.Company$commissionsArgs<ExtArgs>
+  campaignRequests?: boolean | Prisma.Company$campaignRequestsArgs<ExtArgs>
+  campaignInbox?: boolean | Prisma.Company$campaignInboxArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["company"]>
 
@@ -4400,6 +5589,9 @@ export type CompanySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   coverUrl?: boolean
   verificationStatus?: boolean
   verifiedAt?: boolean
+  businessRole?: boolean
+  size?: boolean
+  direction?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -4432,6 +5624,9 @@ export type CompanySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   coverUrl?: boolean
   verificationStatus?: boolean
   verifiedAt?: boolean
+  businessRole?: boolean
+  size?: boolean
+  direction?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -4464,12 +5659,15 @@ export type CompanySelectScalar = {
   coverUrl?: boolean
   verificationStatus?: boolean
   verifiedAt?: boolean
+  businessRole?: boolean
+  size?: boolean
+  direction?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "legalName" | "tradeName" | "registrationNumber" | "taxNumber" | "country" | "city" | "legalAddress" | "description" | "activities" | "customCategory" | "website" | "facebookUrl" | "linkedinUrl" | "instagramUrl" | "contactPerson" | "contactEmail" | "contactPhone" | "showEmailPublicly" | "showPhonePublicly" | "logoUrl" | "coverUrl" | "verificationStatus" | "verifiedAt" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
+export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "legalName" | "tradeName" | "registrationNumber" | "taxNumber" | "country" | "city" | "legalAddress" | "description" | "activities" | "customCategory" | "website" | "facebookUrl" | "linkedinUrl" | "instagramUrl" | "contactPerson" | "contactEmail" | "contactPhone" | "showEmailPublicly" | "showPhonePublicly" | "logoUrl" | "coverUrl" | "verificationStatus" | "verifiedAt" | "businessRole" | "size" | "direction" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
 export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   categories?: boolean | Prisma.Company$categoriesArgs<ExtArgs>
@@ -4486,6 +5684,9 @@ export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   approvals?: boolean | Prisma.Company$approvalsArgs<ExtArgs>
   invoicesAsSeller?: boolean | Prisma.Company$invoicesAsSellerArgs<ExtArgs>
   invoicesAsBuyer?: boolean | Prisma.Company$invoicesAsBuyerArgs<ExtArgs>
+  commissions?: boolean | Prisma.Company$commissionsArgs<ExtArgs>
+  campaignRequests?: boolean | Prisma.Company$campaignRequestsArgs<ExtArgs>
+  campaignInbox?: boolean | Prisma.Company$campaignInboxArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CompanyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4513,6 +5714,9 @@ export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     approvals: Prisma.$DealApprovalPayload<ExtArgs>[]
     invoicesAsSeller: Prisma.$InvoicePayload<ExtArgs>[]
     invoicesAsBuyer: Prisma.$InvoicePayload<ExtArgs>[]
+    commissions: Prisma.$CommissionPayload<ExtArgs>[]
+    campaignRequests: Prisma.$CampaignRequestPayload<ExtArgs>[]
+    campaignInbox: Prisma.$CampaignRecipientPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -4543,6 +5747,12 @@ export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     coverUrl: string | null
     verificationStatus: $Enums.VerificationStatus
     verifiedAt: Date | null
+    businessRole: $Enums.BusinessRole
+    size: $Enums.CompanySize
+    /**
+     * Who to contact directly (e.g. "კორპორაციული გაყიდვები").
+     */
+    direction: string | null
     createdById: string
     createdAt: Date
     updatedAt: Date
@@ -4955,6 +6165,9 @@ export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends runtime.
   approvals<T extends Prisma.Company$approvalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$approvalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   invoicesAsSeller<T extends Prisma.Company$invoicesAsSellerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$invoicesAsSellerArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   invoicesAsBuyer<T extends Prisma.Company$invoicesAsBuyerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$invoicesAsBuyerArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  commissions<T extends Prisma.Company$commissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$commissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  campaignRequests<T extends Prisma.Company$campaignRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$campaignRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CampaignRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  campaignInbox<T extends Prisma.Company$campaignInboxArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$campaignInboxArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CampaignRecipientPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5009,6 +6222,9 @@ export interface CompanyFieldRefs {
   readonly coverUrl: Prisma.FieldRef<"Company", 'String'>
   readonly verificationStatus: Prisma.FieldRef<"Company", 'VerificationStatus'>
   readonly verifiedAt: Prisma.FieldRef<"Company", 'DateTime'>
+  readonly businessRole: Prisma.FieldRef<"Company", 'BusinessRole'>
+  readonly size: Prisma.FieldRef<"Company", 'CompanySize'>
+  readonly direction: Prisma.FieldRef<"Company", 'String'>
   readonly createdById: Prisma.FieldRef<"Company", 'String'>
   readonly createdAt: Prisma.FieldRef<"Company", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Company", 'DateTime'>
@@ -5746,6 +6962,78 @@ export type Company$invoicesAsBuyerArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.InvoiceScalarFieldEnum | Prisma.InvoiceScalarFieldEnum[]
+}
+
+/**
+ * Company.commissions
+ */
+export type Company$commissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Commission
+   */
+  select?: Prisma.CommissionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Commission
+   */
+  omit?: Prisma.CommissionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissionInclude<ExtArgs> | null
+  where?: Prisma.CommissionWhereInput
+  orderBy?: Prisma.CommissionOrderByWithRelationInput | Prisma.CommissionOrderByWithRelationInput[]
+  cursor?: Prisma.CommissionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CommissionScalarFieldEnum | Prisma.CommissionScalarFieldEnum[]
+}
+
+/**
+ * Company.campaignRequests
+ */
+export type Company$campaignRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CampaignRequest
+   */
+  select?: Prisma.CampaignRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CampaignRequest
+   */
+  omit?: Prisma.CampaignRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CampaignRequestInclude<ExtArgs> | null
+  where?: Prisma.CampaignRequestWhereInput
+  orderBy?: Prisma.CampaignRequestOrderByWithRelationInput | Prisma.CampaignRequestOrderByWithRelationInput[]
+  cursor?: Prisma.CampaignRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CampaignRequestScalarFieldEnum | Prisma.CampaignRequestScalarFieldEnum[]
+}
+
+/**
+ * Company.campaignInbox
+ */
+export type Company$campaignInboxArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CampaignRecipient
+   */
+  select?: Prisma.CampaignRecipientSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CampaignRecipient
+   */
+  omit?: Prisma.CampaignRecipientOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CampaignRecipientInclude<ExtArgs> | null
+  where?: Prisma.CampaignRecipientWhereInput
+  orderBy?: Prisma.CampaignRecipientOrderByWithRelationInput | Prisma.CampaignRecipientOrderByWithRelationInput[]
+  cursor?: Prisma.CampaignRecipientWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CampaignRecipientScalarFieldEnum | Prisma.CampaignRecipientScalarFieldEnum[]
 }
 
 /**

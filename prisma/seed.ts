@@ -1,5 +1,5 @@
 /**
- * Seed: platform admin (from env) + a starting category taxonomy.
+ * Seed: platform admin (from env), offer categories, industries, commission rules, campaign packages.
  * Idempotent — safe to run on every deploy. No demo companies or fake data.
  */
 import "dotenv/config";
@@ -10,19 +10,30 @@ import { slugify } from "../src/lib/slug";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }) });
 
-const CATEGORIES: [string, string[]][] = [
-  ["მშენებლობა და სამშენებლო მასალები", ["სამშენებლო მასალები", "სარემონტო სამუშაოები", "ინჟინერია და პროექტირება"]],
-  ["წარმოება", ["კვების წარმოება", "ტექსტილი და ტანსაცმელი", "ავეჯის წარმოება", "პლასტმასი და შეფუთვა"]],
-  ["საბითუმო ვაჭრობა", ["სურსათი და სასმელი", "სამომხმარებლო საქონელი", "საყოფაცხოვრებო ქიმია"]],
-  ["ლოგისტიკა და ტრანსპორტი", ["სატვირთო გადაზიდვები", "საწყობი და შენახვა", "საბაჟო მომსახურება"]],
-  ["IT და ტექნოლოგიები", ["პროგრამული უზრუნველყოფა", "IT ინფრასტრუქტურა", "ციფრული მარკეტინგი"]],
-  ["სოფლის მეურნეობა", ["მემცენარეობა", "მეცხოველეობა", "აგროტექნიკა"]],
-  ["ენერგეტიკა", ["მზის ენერგია", "ელექტრო მოწყობილობები"]],
-  ["პროფესიული მომსახურება", ["იურიდიული მომსახურება", "ბუღალტერია და აუდიტი", "კონსალტინგი", "საკადრო მომსახურება"]],
-  ["სასტუმრო და კვების ობიექტები", ["HoReCa მომარაგება", "კეიტერინგი"]],
-  ["ჯანდაცვა და ფარმაცია", ["სამედიცინო აღჭურვილობა", "ფარმაცევტული პროდუქცია"]],
-  ["აღჭურვილობა და დანადგარები", ["სამრეწველო დანადგარები", "სავაჭრო აღჭურვილობა"]],
-  ["ავტომობილები და ნაწილები", ["სატვირთო ტექნიკა", "ავტონაწილები"]],
+/** Special-offer categories (სპეც. შეთავაზებების ფილტრი). */
+export const OFFER_CATEGORIES = ["საწვავი", "ავტო", "დაზღვევა", "HR", "სასტუმროები", "ფინანსები"];
+
+/** Company industries (ბიზნესების ფილტრი). */
+export const INDUSTRIES = [
+  "საწვავი და ენერგია", "დაზღვევა", "ავტომობილები", "HoReCa და ღონისძიებები", "მედია და მარკეტინგი", "HR და რეკრუტინგი",
+  "ლოჯისტიკა", "სასტუმროები", "რიტეილი და მშენებლობა", "ჯანდაცვა", "მშენებლობა", "IT და ტექნოლოგიები", "სურსათი და წარმოება",
+  "საოფისე მომარაგება", "შრომის უსაფრთხოება", "ფარმაცია", "ტურიზმი", "იურიდიული მომსახურება", "პოლიგრაფია და შეფუთვა",
+  "ღვინის წარმოება", "განათლება", "დასუფთავების სერვისი", "რიტეილი", "ტრანსპორტი და ლოჯისტიკა", "ბუღალტერია და ფინანსები",
+  "ღონისძიებები", "აგრობიზნესი", "დისტრიბუცია", "HR და განათლება",
+];
+
+const COMMISSION_RULES: [string, string][] = [
+  ["საწვავი და დაბალმარჟიანი პროდუქტი", "ფიქსირებული ან 0.5–1%"],
+  ["სტანდარტული B2B სერვისი", "1–3%"],
+  ["პროფესიული მაღალი მარჟა", "3–5%"],
+  ["დიდი კორპორაციული გარიგება", "ინდივიდუალური ზედა ზღვარი"],
+];
+
+const CAMPAIGNS = [
+  { kind: "პროექტი", title: "ქალები ქმნიან ბიზნესს", audience: "100 ქალი მეწარმე და ბიზნესის წარმომადგენლები", channels: "პლატფორმა • ელფოსტა • ღონისძიება", priceFrom: 2000, accent: "violet" },
+  { kind: "მიზნობრივი კამპანია", title: "HR გადაწყვეტილების მიმღებები", audience: "HR ხელმძღვანელები და კომპანიის დირექტორები", channels: "პლატფორმა • ელფოსტა • SMS", priceFrom: 750, accent: "blue" },
+  { kind: "სექტორული კამპანია", title: "სასტუმროები და HoReCa", audience: "სასტუმროების შესყიდვები, HR და ადმინისტრაცია", channels: "პლატფორმა • ელფოსტა • Follow-up", priceFrom: 900, accent: "gold" },
+  { kind: "რეგიონული კამპანია", title: "შიდა ქართლის ბიზნესი", audience: "გორისა და რეგიონის აქტიური კომპანიები", channels: "პლატფორმა • მედია • ელფოსტა", priceFrom: 500, accent: "teal" },
 ];
 
 async function main() {
@@ -64,15 +75,22 @@ async function main() {
     console.warn("ADMIN_EMAIL / ADMIN_PASSWORD not set — admin not seeded.");
   }
 
-  if ((await db.category.count()) === 0) {
-    for (const [i, [name, children]] of CATEGORIES.entries()) {
-      const parent = await db.category.create({ data: { name, slug: slugify(name), sortOrder: i * 10 } });
-      for (const [j, child] of children.entries()) {
-        await db.category.create({ data: { name: child, slug: slugify(child), parentId: parent.id, sortOrder: j * 10 } });
-      }
-    }
-    console.log(`Categories seeded: ${CATEGORIES.length}`);
+  // Taxonomy (idempotent by slug).
+  for (const [i, name] of OFFER_CATEGORIES.entries()) {
+    const slug = `offer-${slugify(name) || i}`;
+    await db.category.upsert({ where: { slug }, update: { name, kind: "OFFER", sortOrder: i * 10 }, create: { name, slug, kind: "OFFER", sortOrder: i * 10 } });
   }
+  for (const [i, name] of INDUSTRIES.entries()) {
+    const slug = slugify(name) || `industry-${i}`;
+    await db.category.upsert({ where: { slug }, update: { name, kind: "INDUSTRY", sortOrder: i * 10 }, create: { name, slug, kind: "INDUSTRY", sortOrder: i * 10 } });
+  }
+  if ((await db.commissionRule.count()) === 0) {
+    await db.commissionRule.createMany({ data: COMMISSION_RULES.map(([title, rate], i) => ({ title, rate, sortOrder: i * 10 })) });
+  }
+  if ((await db.campaignPackage.count()) === 0) {
+    await db.campaignPackage.createMany({ data: CAMPAIGNS.map((c, i) => ({ ...c, sortOrder: i * 10 })) });
+  }
+  console.log("Taxonomy, commission rules and campaign packages ready.");
 }
 
 main()

@@ -113,7 +113,7 @@ export default async function TeamPage() {
               <ol className="space-y-2 rounded-lg bg-canvas p-3 text-sm">
                 {ka.team.steps.map((s, i) => (
                   <li key={i} className="flex gap-2">
-                    <span className="grid size-5 shrink-0 place-items-center rounded-full bg-accent text-[11px] font-semibold text-deep">{i + 1}</span>
+                    <span className="grid size-5 shrink-0 place-items-center rounded-full bg-accent text-[11px] font-semibold text-on-accent">{i + 1}</span>
                     <span>{s}</span>
                   </li>
                 ))}

@@ -71,7 +71,7 @@ export function HeaderSearch({ defaultValue = "", placeholder = ka.search.placeh
     ? [
         ...shown.companies.map((c) => ({ href: `/companies/${c.slug}`, key: `c-${c.slug}` })),
         ...shown.offers.map((o) => ({ href: `/offers/${o.id}`, key: `o-${o.id}` })),
-        ...shown.categories.map((c) => ({ href: `/categories/${c.slug}`, key: `k-${c.slug}` })),
+        ...shown.categories.map((c) => ({ href: `/offers?category=${c.slug}`, key: `k-${c.slug}` })),
       ]
     : [];
   const allHref = `/search?q=${encodeURIComponent(term)}`;
@@ -93,7 +93,7 @@ export function HeaderSearch({ defaultValue = "", placeholder = ka.search.placeh
           else if (term) go(allHref);
         }}
       >
-        <label className="flex h-10 w-72 items-center gap-2 rounded-[10px] border border-line bg-field px-3 text-muted focus-within:border-accent/50 xl:w-80">
+        <label className="flex h-[42px] w-full items-center gap-3 rounded-[11px] border border-line bg-surface-2 px-4 text-ink focus-within:border-accent/50 focus-within:bg-surface">
           <Icon name="search" size={16} />
           <input
             ref={input}
@@ -131,7 +131,7 @@ export function HeaderSearch({ defaultValue = "", placeholder = ka.search.placeh
       </form>
 
       {open && term.length > 0 && (
-        <div id="header-search-results" className="absolute right-0 top-12 z-50 max-h-[70vh] w-[min(420px,90vw)] overflow-y-auto rounded-[14px] border border-line bg-navy-2 p-2 shadow-2xl">
+        <div id="header-search-results" className="absolute left-0 top-12 z-50 max-h-[70vh] w-[min(490px,90vw)] overflow-y-auto rounded-[14px] border border-line bg-navy-2 p-2 shadow-2xl">
           {term.length < 2 ? (
             <p className="px-3 py-3 text-sm text-muted">{ka.search.minChars}</p>
           ) : !shown ? (
@@ -144,7 +144,7 @@ export function HeaderSearch({ defaultValue = "", placeholder = ka.search.placeh
               {shown.companies.map((c) => (
                 <button key={c.slug} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => go(`/companies/${c.slug}`)} className={rowCls(`c-${c.slug}`)}>
                   {c.logoUrl ? (
-                    <img src={c.logoUrl} alt="" className="size-8 shrink-0 rounded-md border border-line bg-white object-contain p-0.5" />
+                    <img src={c.logoUrl} alt="" className="size-8 shrink-0 rounded-md border border-line bg-surface object-contain p-0.5" />
                   ) : (
                     <span className="grid size-8 shrink-0 place-items-center rounded-md bg-accent/15 text-xs font-bold text-accent">
                       {c.name.replace(/^შპს\s*/, "").slice(0, 2)}
@@ -170,7 +170,7 @@ export function HeaderSearch({ defaultValue = "", placeholder = ka.search.placeh
               ))}
               {shown.categories.length > 0 && <Group title={ka.search.categories} />}
               {shown.categories.map((c) => (
-                <button key={c.slug} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => go(`/categories/${c.slug}`)} className={rowCls(`k-${c.slug}`)}>
+                <button key={c.slug} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => go(`/offers?category=${c.slug}`)} className={rowCls(`k-${c.slug}`)}>
                   <span className="grid size-8 shrink-0 place-items-center rounded-md bg-chip text-secondary">
                     <Icon name="folder" size={15} />
                   </span>

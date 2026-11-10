@@ -30,12 +30,14 @@ export type OfferAvgAggregateOutputType = {
   priceMin: runtime.Decimal | null
   priceMax: runtime.Decimal | null
   quantity: runtime.Decimal | null
+  commissionPct: runtime.Decimal | null
 }
 
 export type OfferSumAggregateOutputType = {
   priceMin: runtime.Decimal | null
   priceMax: runtime.Decimal | null
   quantity: runtime.Decimal | null
+  commissionPct: runtime.Decimal | null
 }
 
 export type OfferMinAggregateOutputType = {
@@ -58,6 +60,11 @@ export type OfferMinAggregateOutputType = {
   authorUserId: string | null
   companyId: string | null
   isAnonymous: boolean | null
+  perk: string | null
+  audience: string | null
+  tag: $Enums.OfferTag | null
+  commissionPct: runtime.Decimal | null
+  commissionText: string | null
   visibility: $Enums.OfferVisibility | null
   status: $Enums.OfferStatus | null
   publishedAt: Date | null
@@ -85,6 +92,11 @@ export type OfferMaxAggregateOutputType = {
   authorUserId: string | null
   companyId: string | null
   isAnonymous: boolean | null
+  perk: string | null
+  audience: string | null
+  tag: $Enums.OfferTag | null
+  commissionPct: runtime.Decimal | null
+  commissionText: string | null
   visibility: $Enums.OfferVisibility | null
   status: $Enums.OfferStatus | null
   publishedAt: Date | null
@@ -112,6 +124,11 @@ export type OfferCountAggregateOutputType = {
   authorUserId: number
   companyId: number
   isAnonymous: number
+  perk: number
+  audience: number
+  tag: number
+  commissionPct: number
+  commissionText: number
   visibility: number
   status: number
   publishedAt: number
@@ -125,12 +142,14 @@ export type OfferAvgAggregateInputType = {
   priceMin?: true
   priceMax?: true
   quantity?: true
+  commissionPct?: true
 }
 
 export type OfferSumAggregateInputType = {
   priceMin?: true
   priceMax?: true
   quantity?: true
+  commissionPct?: true
 }
 
 export type OfferMinAggregateInputType = {
@@ -153,6 +172,11 @@ export type OfferMinAggregateInputType = {
   authorUserId?: true
   companyId?: true
   isAnonymous?: true
+  perk?: true
+  audience?: true
+  tag?: true
+  commissionPct?: true
+  commissionText?: true
   visibility?: true
   status?: true
   publishedAt?: true
@@ -180,6 +204,11 @@ export type OfferMaxAggregateInputType = {
   authorUserId?: true
   companyId?: true
   isAnonymous?: true
+  perk?: true
+  audience?: true
+  tag?: true
+  commissionPct?: true
+  commissionText?: true
   visibility?: true
   status?: true
   publishedAt?: true
@@ -207,6 +236,11 @@ export type OfferCountAggregateInputType = {
   authorUserId?: true
   companyId?: true
   isAnonymous?: true
+  perk?: true
+  audience?: true
+  tag?: true
+  commissionPct?: true
+  commissionText?: true
   visibility?: true
   status?: true
   publishedAt?: true
@@ -321,6 +355,11 @@ export type OfferGroupByOutputType = {
   authorUserId: string
   companyId: string | null
   isAnonymous: boolean
+  perk: string | null
+  audience: string | null
+  tag: $Enums.OfferTag | null
+  commissionPct: runtime.Decimal | null
+  commissionText: string | null
   visibility: $Enums.OfferVisibility
   status: $Enums.OfferStatus
   publishedAt: Date | null
@@ -371,6 +410,11 @@ export type OfferWhereInput = {
   authorUserId?: Prisma.StringFilter<"Offer"> | string
   companyId?: Prisma.StringNullableFilter<"Offer"> | string | null
   isAnonymous?: Prisma.BoolFilter<"Offer"> | boolean
+  perk?: Prisma.StringNullableFilter<"Offer"> | string | null
+  audience?: Prisma.StringNullableFilter<"Offer"> | string | null
+  tag?: Prisma.EnumOfferTagNullableFilter<"Offer"> | $Enums.OfferTag | null
+  commissionPct?: Prisma.DecimalNullableFilter<"Offer"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.StringNullableFilter<"Offer"> | string | null
   visibility?: Prisma.EnumOfferVisibilityFilter<"Offer"> | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFilter<"Offer"> | $Enums.OfferStatus
   publishedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
@@ -404,6 +448,11 @@ export type OfferOrderByWithRelationInput = {
   authorUserId?: Prisma.SortOrder
   companyId?: Prisma.SortOrderInput | Prisma.SortOrder
   isAnonymous?: Prisma.SortOrder
+  perk?: Prisma.SortOrderInput | Prisma.SortOrder
+  audience?: Prisma.SortOrderInput | Prisma.SortOrder
+  tag?: Prisma.SortOrderInput | Prisma.SortOrder
+  commissionPct?: Prisma.SortOrderInput | Prisma.SortOrder
+  commissionText?: Prisma.SortOrderInput | Prisma.SortOrder
   visibility?: Prisma.SortOrder
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -440,6 +489,11 @@ export type OfferWhereUniqueInput = Prisma.AtLeast<{
   authorUserId?: Prisma.StringFilter<"Offer"> | string
   companyId?: Prisma.StringNullableFilter<"Offer"> | string | null
   isAnonymous?: Prisma.BoolFilter<"Offer"> | boolean
+  perk?: Prisma.StringNullableFilter<"Offer"> | string | null
+  audience?: Prisma.StringNullableFilter<"Offer"> | string | null
+  tag?: Prisma.EnumOfferTagNullableFilter<"Offer"> | $Enums.OfferTag | null
+  commissionPct?: Prisma.DecimalNullableFilter<"Offer"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.StringNullableFilter<"Offer"> | string | null
   visibility?: Prisma.EnumOfferVisibilityFilter<"Offer"> | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFilter<"Offer"> | $Enums.OfferStatus
   publishedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
@@ -473,6 +527,11 @@ export type OfferOrderByWithAggregationInput = {
   authorUserId?: Prisma.SortOrder
   companyId?: Prisma.SortOrderInput | Prisma.SortOrder
   isAnonymous?: Prisma.SortOrder
+  perk?: Prisma.SortOrderInput | Prisma.SortOrder
+  audience?: Prisma.SortOrderInput | Prisma.SortOrder
+  tag?: Prisma.SortOrderInput | Prisma.SortOrder
+  commissionPct?: Prisma.SortOrderInput | Prisma.SortOrder
+  commissionText?: Prisma.SortOrderInput | Prisma.SortOrder
   visibility?: Prisma.SortOrder
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -508,6 +567,11 @@ export type OfferScalarWhereWithAggregatesInput = {
   authorUserId?: Prisma.StringWithAggregatesFilter<"Offer"> | string
   companyId?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
   isAnonymous?: Prisma.BoolWithAggregatesFilter<"Offer"> | boolean
+  perk?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
+  audience?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
+  tag?: Prisma.EnumOfferTagNullableWithAggregatesFilter<"Offer"> | $Enums.OfferTag | null
+  commissionPct?: Prisma.DecimalNullableWithAggregatesFilter<"Offer"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
   visibility?: Prisma.EnumOfferVisibilityWithAggregatesFilter<"Offer"> | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusWithAggregatesFilter<"Offer"> | $Enums.OfferStatus
   publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Offer"> | Date | string | null
@@ -532,6 +596,11 @@ export type OfferCreateInput = {
   city?: string | null
   validUntil?: Date | string | null
   isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  tag?: $Enums.OfferTag | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
   publishedAt?: Date | string | null
@@ -565,6 +634,11 @@ export type OfferUncheckedCreateInput = {
   authorUserId: string
   companyId?: string | null
   isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  tag?: $Enums.OfferTag | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
   publishedAt?: Date | string | null
@@ -592,6 +666,11 @@ export type OfferUpdateInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -625,6 +704,11 @@ export type OfferUncheckedUpdateInput = {
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -655,6 +739,11 @@ export type OfferCreateManyInput = {
   authorUserId: string
   companyId?: string | null
   isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  tag?: $Enums.OfferTag | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
   publishedAt?: Date | string | null
@@ -679,6 +768,11 @@ export type OfferUpdateManyMutationInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -706,6 +800,11 @@ export type OfferUncheckedUpdateManyInput = {
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -743,6 +842,11 @@ export type OfferCountOrderByAggregateInput = {
   authorUserId?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
   isAnonymous?: Prisma.SortOrder
+  perk?: Prisma.SortOrder
+  audience?: Prisma.SortOrder
+  tag?: Prisma.SortOrder
+  commissionPct?: Prisma.SortOrder
+  commissionText?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
@@ -754,6 +858,7 @@ export type OfferAvgOrderByAggregateInput = {
   priceMin?: Prisma.SortOrder
   priceMax?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  commissionPct?: Prisma.SortOrder
 }
 
 export type OfferMaxOrderByAggregateInput = {
@@ -776,6 +881,11 @@ export type OfferMaxOrderByAggregateInput = {
   authorUserId?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
   isAnonymous?: Prisma.SortOrder
+  perk?: Prisma.SortOrder
+  audience?: Prisma.SortOrder
+  tag?: Prisma.SortOrder
+  commissionPct?: Prisma.SortOrder
+  commissionText?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
@@ -803,6 +913,11 @@ export type OfferMinOrderByAggregateInput = {
   authorUserId?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
   isAnonymous?: Prisma.SortOrder
+  perk?: Prisma.SortOrder
+  audience?: Prisma.SortOrder
+  tag?: Prisma.SortOrder
+  commissionPct?: Prisma.SortOrder
+  commissionText?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
@@ -814,6 +929,7 @@ export type OfferSumOrderByAggregateInput = {
   priceMin?: Prisma.SortOrder
   priceMax?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  commissionPct?: Prisma.SortOrder
 }
 
 export type OfferScalarRelationFilter = {
@@ -972,6 +1088,10 @@ export type NullableDecimalFieldUpdateOperationsInput = {
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
+export type NullableEnumOfferTagFieldUpdateOperationsInput = {
+  set?: $Enums.OfferTag | null
+}
+
 export type EnumOfferVisibilityFieldUpdateOperationsInput = {
   set?: $Enums.OfferVisibility
 }
@@ -1041,6 +1161,11 @@ export type OfferCreateWithoutAuthorInput = {
   city?: string | null
   validUntil?: Date | string | null
   isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  tag?: $Enums.OfferTag | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
   publishedAt?: Date | string | null
@@ -1072,6 +1197,11 @@ export type OfferUncheckedCreateWithoutAuthorInput = {
   validUntil?: Date | string | null
   companyId?: string | null
   isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  tag?: $Enums.OfferTag | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
   publishedAt?: Date | string | null
@@ -1131,6 +1261,11 @@ export type OfferScalarWhereInput = {
   authorUserId?: Prisma.StringFilter<"Offer"> | string
   companyId?: Prisma.StringNullableFilter<"Offer"> | string | null
   isAnonymous?: Prisma.BoolFilter<"Offer"> | boolean
+  perk?: Prisma.StringNullableFilter<"Offer"> | string | null
+  audience?: Prisma.StringNullableFilter<"Offer"> | string | null
+  tag?: Prisma.EnumOfferTagNullableFilter<"Offer"> | $Enums.OfferTag | null
+  commissionPct?: Prisma.DecimalNullableFilter<"Offer"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.StringNullableFilter<"Offer"> | string | null
   visibility?: Prisma.EnumOfferVisibilityFilter<"Offer"> | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFilter<"Offer"> | $Enums.OfferStatus
   publishedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
@@ -1155,6 +1290,11 @@ export type OfferCreateWithoutCategoryInput = {
   city?: string | null
   validUntil?: Date | string | null
   isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  tag?: $Enums.OfferTag | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
   publishedAt?: Date | string | null
@@ -1186,6 +1326,11 @@ export type OfferUncheckedCreateWithoutCategoryInput = {
   authorUserId: string
   companyId?: string | null
   isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  tag?: $Enums.OfferTag | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
   publishedAt?: Date | string | null
@@ -1239,6 +1384,11 @@ export type OfferCreateWithoutCompanyInput = {
   city?: string | null
   validUntil?: Date | string | null
   isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  tag?: $Enums.OfferTag | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
   publishedAt?: Date | string | null
@@ -1270,6 +1420,11 @@ export type OfferUncheckedCreateWithoutCompanyInput = {
   validUntil?: Date | string | null
   authorUserId: string
   isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  tag?: $Enums.OfferTag | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
   publishedAt?: Date | string | null
@@ -1323,6 +1478,11 @@ export type OfferCreateWithoutAttachmentsInput = {
   city?: string | null
   validUntil?: Date | string | null
   isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  tag?: $Enums.OfferTag | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
   publishedAt?: Date | string | null
@@ -1355,6 +1515,11 @@ export type OfferUncheckedCreateWithoutAttachmentsInput = {
   authorUserId: string
   companyId?: string | null
   isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  tag?: $Enums.OfferTag | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
   publishedAt?: Date | string | null
@@ -1397,6 +1562,11 @@ export type OfferUpdateWithoutAttachmentsInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1429,6 +1599,11 @@ export type OfferUncheckedUpdateWithoutAttachmentsInput = {
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1455,6 +1630,11 @@ export type OfferCreateWithoutResponsesInput = {
   city?: string | null
   validUntil?: Date | string | null
   isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  tag?: $Enums.OfferTag | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
   publishedAt?: Date | string | null
@@ -1487,6 +1667,11 @@ export type OfferUncheckedCreateWithoutResponsesInput = {
   authorUserId: string
   companyId?: string | null
   isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  tag?: $Enums.OfferTag | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
   publishedAt?: Date | string | null
@@ -1529,6 +1714,11 @@ export type OfferUpdateWithoutResponsesInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1561,6 +1751,11 @@ export type OfferUncheckedUpdateWithoutResponsesInput = {
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1587,6 +1782,11 @@ export type OfferCreateWithoutConversationsInput = {
   city?: string | null
   validUntil?: Date | string | null
   isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  tag?: $Enums.OfferTag | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
   publishedAt?: Date | string | null
@@ -1619,6 +1819,11 @@ export type OfferUncheckedCreateWithoutConversationsInput = {
   authorUserId: string
   companyId?: string | null
   isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  tag?: $Enums.OfferTag | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
   publishedAt?: Date | string | null
@@ -1661,6 +1866,11 @@ export type OfferUpdateWithoutConversationsInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1693,6 +1903,11 @@ export type OfferUncheckedUpdateWithoutConversationsInput = {
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1721,6 +1936,11 @@ export type OfferCreateManyAuthorInput = {
   validUntil?: Date | string | null
   companyId?: string | null
   isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  tag?: $Enums.OfferTag | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
   publishedAt?: Date | string | null
@@ -1745,6 +1965,11 @@ export type OfferUpdateWithoutAuthorInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1776,6 +2001,11 @@ export type OfferUncheckedUpdateWithoutAuthorInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1805,6 +2035,11 @@ export type OfferUncheckedUpdateManyWithoutAuthorInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1831,6 +2066,11 @@ export type OfferCreateManyCategoryInput = {
   authorUserId: string
   companyId?: string | null
   isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  tag?: $Enums.OfferTag | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
   publishedAt?: Date | string | null
@@ -1855,6 +2095,11 @@ export type OfferUpdateWithoutCategoryInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1886,6 +2131,11 @@ export type OfferUncheckedUpdateWithoutCategoryInput = {
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1915,6 +2165,11 @@ export type OfferUncheckedUpdateManyWithoutCategoryInput = {
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1941,6 +2196,11 @@ export type OfferCreateManyCompanyInput = {
   validUntil?: Date | string | null
   authorUserId: string
   isAnonymous?: boolean
+  perk?: string | null
+  audience?: string | null
+  tag?: $Enums.OfferTag | null
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
   publishedAt?: Date | string | null
@@ -1965,6 +2225,11 @@ export type OfferUpdateWithoutCompanyInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1996,6 +2261,11 @@ export type OfferUncheckedUpdateWithoutCompanyInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2025,6 +2295,11 @@ export type OfferUncheckedUpdateManyWithoutCompanyInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tag?: Prisma.NullableEnumOfferTagFieldUpdateOperationsInput | $Enums.OfferTag | null
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2101,6 +2376,11 @@ export type OfferSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   authorUserId?: boolean
   companyId?: boolean
   isAnonymous?: boolean
+  perk?: boolean
+  audience?: boolean
+  tag?: boolean
+  commissionPct?: boolean
+  commissionText?: boolean
   visibility?: boolean
   status?: boolean
   publishedAt?: boolean
@@ -2135,6 +2415,11 @@ export type OfferSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   authorUserId?: boolean
   companyId?: boolean
   isAnonymous?: boolean
+  perk?: boolean
+  audience?: boolean
+  tag?: boolean
+  commissionPct?: boolean
+  commissionText?: boolean
   visibility?: boolean
   status?: boolean
   publishedAt?: boolean
@@ -2165,6 +2450,11 @@ export type OfferSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   authorUserId?: boolean
   companyId?: boolean
   isAnonymous?: boolean
+  perk?: boolean
+  audience?: boolean
+  tag?: boolean
+  commissionPct?: boolean
+  commissionText?: boolean
   visibility?: boolean
   status?: boolean
   publishedAt?: boolean
@@ -2195,6 +2485,11 @@ export type OfferSelectScalar = {
   authorUserId?: boolean
   companyId?: boolean
   isAnonymous?: boolean
+  perk?: boolean
+  audience?: boolean
+  tag?: boolean
+  commissionPct?: boolean
+  commissionText?: boolean
   visibility?: boolean
   status?: boolean
   publishedAt?: boolean
@@ -2202,7 +2497,7 @@ export type OfferSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "title" | "description" | "categoryId" | "itemKind" | "priceType" | "priceMin" | "priceMax" | "currency" | "quantity" | "unit" | "deliveryTerms" | "country" | "city" | "validUntil" | "authorUserId" | "companyId" | "isAnonymous" | "visibility" | "status" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
+export type OfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "title" | "description" | "categoryId" | "itemKind" | "priceType" | "priceMin" | "priceMax" | "currency" | "quantity" | "unit" | "deliveryTerms" | "country" | "city" | "validUntil" | "authorUserId" | "companyId" | "isAnonymous" | "perk" | "audience" | "tag" | "commissionPct" | "commissionText" | "visibility" | "status" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
 export type OfferInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.Offer$categoryArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -2256,6 +2551,23 @@ export type $OfferPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
      * When true the public site/API never exposes author or company identity.
      */
     isAnonymous: boolean
+    /**
+     * Special member condition shown in green, e.g. "−20%".
+     */
+    perk: string | null
+    /**
+     * Who the offer is for.
+     */
+    audience: string | null
+    /**
+     * Set by platform admins.
+     */
+    tag: $Enums.OfferTag | null
+    /**
+     * Platform commission for deals from this offer (percent) and its display text.
+     */
+    commissionPct: runtime.Decimal | null
+    commissionText: string | null
     visibility: $Enums.OfferVisibility
     status: $Enums.OfferStatus
     publishedAt: Date | null
@@ -2709,6 +3021,11 @@ export interface OfferFieldRefs {
   readonly authorUserId: Prisma.FieldRef<"Offer", 'String'>
   readonly companyId: Prisma.FieldRef<"Offer", 'String'>
   readonly isAnonymous: Prisma.FieldRef<"Offer", 'Boolean'>
+  readonly perk: Prisma.FieldRef<"Offer", 'String'>
+  readonly audience: Prisma.FieldRef<"Offer", 'String'>
+  readonly tag: Prisma.FieldRef<"Offer", 'OfferTag'>
+  readonly commissionPct: Prisma.FieldRef<"Offer", 'Decimal'>
+  readonly commissionText: Prisma.FieldRef<"Offer", 'String'>
   readonly visibility: Prisma.FieldRef<"Offer", 'OfferVisibility'>
   readonly status: Prisma.FieldRef<"Offer", 'OfferStatus'>
   readonly publishedAt: Prisma.FieldRef<"Offer", 'DateTime'>

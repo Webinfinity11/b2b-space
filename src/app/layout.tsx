@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import "@fontsource-variable/noto-sans";
 import "@fontsource-variable/noto-sans-georgian";
 import "./globals.css";
 import { ka } from "@/i18n/ka";
@@ -10,14 +11,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#071426",
+  themeColor: "#ffffff",
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  // Dark is the default design; the light theme is opt-in via the header toggle.
   const theme = await getTheme();
   return (
-    <html lang="ka" data-theme={theme === "light" ? "light" : undefined}>
+    <html lang="ka" data-theme={theme === "dark" ? "dark" : undefined}>
       <body className="min-h-dvh">{children}</body>
     </html>
   );

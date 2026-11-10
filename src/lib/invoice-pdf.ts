@@ -55,13 +55,13 @@ export function renderInvoicePdf(inv: PdfInvoice): Promise<Buffer> {
 
   // Header band
   doc.rect(0, 0, doc.page.width, 92).fill(NAVY);
-  doc.rect(L, 30, 12, 12).fill("#8EC5ED");
+  doc.rect(L, 30, 12, 12).fill("#1D45D1");
   doc.rect(L + 14, 30, 12, 12).fill("#FFFFFF");
   doc.rect(L, 44, 12, 12).fill("#FFFFFF");
-  doc.rect(L + 14, 44, 12, 12).lineWidth(1.5).stroke("#8EC5ED");
+  doc.rect(L + 14, 44, 12, 12).lineWidth(1.5).stroke("#1D45D1");
   doc.fillColor("#FFFFFF").font("b").fontSize(16).text(ka.brand, L + 36, 34);
   doc.font("b").fontSize(18).text(i.invoiceWord, L, 28, { width: W, align: "right" });
-  doc.font("r").fontSize(10).fillColor("#8EC5ED").text(inv.number, L, 54, { width: W, align: "right" });
+  doc.font("r").fontSize(10).fillColor("#1D45D1").text(inv.number, L, 54, { width: W, align: "right" });
 
   // Meta
   let y = 116;

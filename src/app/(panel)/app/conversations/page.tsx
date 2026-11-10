@@ -2,79 +2,113 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ka } from "@/i18n/ka";
 import { getActiveMembership, requireUser } from "@/lib/authz";
-import { otherPartyLabel, partySelect } from "@/lib/chat";
+import { partySelect } from "@/lib/chat";
+import { dealCommissionPct } from "@/lib/commission";
 import { db } from "@/lib/db";
-import { formatDateTime } from "@/lib/format";
+import { dealSideFor } from "@/lib/deals";
+import { formatAmount } from "@/lib/money";
 import { param } from "@/lib/params";
+import { companyName } from "@/lib/public";
 import { visibleConversations } from "@/lib/scope";
-import { Badge } from "@/components/ui/Badge";
-import { Card, EmptyState, PageHeader } from "@/components/ui/Card";
-import { controlClass } from "@/components/ui/styles";
 import { ButtonLink } from "@/components/ui/Button";
+import { Icon } from "@/components/ui/Icon";
+import { KpiCard, PageHeader } from "@/components/ui/Card";
+import { StagePill } from "@/components/panel/StagePill";
 
-export const metadata: Metadata = { title: ka.chat.title };
+export const metadata: Metadata = { title: ka.sgba.nav.deals };
 
-export default async function ConversationsPage({ searchParams }: PageProps<"/app/conversations">) {
+type Party = { side: "AUTHOR" | "RESPONDER"; identityRevealed: boolean; user: { firstName: string; lastName: string }; company: { legalName: string; tradeName: string | null } | null };
+const partyName = (p?: Party) => (!p ? "—" : !p.identityRevealed ? ka.chat.anonymousParty : p.company ? companyName(p.company) : `${p.user.firstName} ${p.user.lastName}`);
+
+/** Negotiations table: seller/offer, buyer, stage, amount, platform commission. */
+export default async function DealsPage({ searchParams }: PageProps<"/app/conversations">) {
   const user = await requireUser("/app/conversations");
   const m = await getActiveMembership(user.id);
   const q = param((await searchParams).q);
-  const conversations = await db.conversation.findMany({
-    where: { AND: [visibleConversations(user.id, m), q ? { subject: { contains: q, mode: "insensitive" } } : {}] },
+  const scope = visibleConversations(user.id, m);
+  const rows = await db.conversation.findMany({
+    where: { AND: [scope, q ? { subject: { contains: q, mode: "insensitive" } } : {}] },
     orderBy: { lastMessageAt: "desc" },
-    take: 100,
+    take: 200,
     include: {
       participants: { select: partySelect },
-      messages: { orderBy: { createdAt: "desc" }, take: 1, select: { body: true, kind: true, createdAt: true, senderId: true } },
+      offer: { select: { title: true, type: true, commissionPct: true } },
+      _count: { select: { messages: true } },
     },
   });
 
-  // Unread counts per conversation (messages after my lastReadAt, not sent by me).
-  const unread = new Map<string, number>();
-  await Promise.all(
-    conversations.map(async (c) => {
-      const me = c.participants.find((p) => p.userId === user.id);
-      const n = await db.message.count({
-        where: { conversationId: c.id, senderId: { not: user.id }, kind: { not: "SYSTEM" }, ...(me?.lastReadAt ? { createdAt: { gt: me.lastReadAt } } : {}) },
-      });
-      unread.set(c.id, n);
-    }),
-  );
+  const monthStart = new Date();
+  monthStart.setDate(1);
+  monthStart.setHours(0, 0, 0, 0);
+  const active = rows.filter((r) => r.stage !== "CONTRACT");
+  const total = active.reduce((s, r) => s + Number(r.amount ?? 0), 0);
+  const commission = active.reduce((s, r) => s + Number(r.amount ?? 0) * Number(dealCommissionPct(r) ?? 0) / 100, 0);
+  const closing = rows.filter((r) => (r.stage === "CONTRACT" || r.stage === "MEETING") && r.updatedAt >= monthStart).length;
 
   return (
     <>
-      <PageHeader title={ka.chat.title} text={ka.chat.text} />
-      <form className="mb-4 max-w-md">
-        <input name="q" type="search" defaultValue={q} placeholder={ka.chat.searchPlaceholder} className={`${controlClass} h-10`} />
-      </form>
-      {conversations.length === 0 ? (
-        <EmptyState text={ka.chat.empty} action={<ButtonLink href="/offers">{ka.home.viewOffers}</ButtonLink>} />
-      ) : (
-        <Card>
-          <ul className="divide-y divide-line">
-            {conversations.map((c) => {
-              const me = c.participants.find((p) => p.userId === user.id);
-              const mySide = me?.side ?? c.participants.find((p) => p.companyId && p.companyId === m?.companyId)?.side ?? null;
-              const last = c.messages[0];
-              const n = unread.get(c.id) ?? 0;
-              return (
-                <li key={c.id}>
-                  <Link href={`/app/conversations/${c.id}`} className="flex items-start justify-between gap-4 px-5 py-4 hover:bg-canvas/60">
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className={`truncate ${n ? "font-semibold" : "font-medium"}`}>{c.subject}</span>
-                        {n > 0 && <Badge tone="info">{ka.chat.unread(n)}</Badge>}
-                      </div>
-                      <p className="text-sm text-muted">{otherPartyLabel(c.participants, mySide)}</p>
-                      {last && last.kind !== "SYSTEM" && <p className="mt-1 truncate text-sm text-muted">{last.body || "📎"}</p>}
-                    </div>
-                    <span className="shrink-0 text-xs text-muted">{formatDateTime(c.lastMessageAt)}</span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </Card>
-      )}
+      <PageHeader
+        eyebrow={ka.sgba.dealsEyebrow}
+        title={ka.sgba.nav.deals}
+        text={ka.sgba.dealsText}
+        action={
+          <ButtonLink href="/companies">
+            <Icon name="plus" size={16} /> {ka.sgba.newDeal}
+          </ButtonLink>
+        }
+      />
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <KpiCard label={ka.sgba.kpiActiveCases} value={active.length} icon={<Icon name="chat" size={18} />} tone="blue" />
+        <KpiCard label={ka.sgba.kpiTotalValue} value={formatAmount(total, "GEL")} icon={<Icon name="trend" size={18} />} tone="green" />
+        <KpiCard label={ka.sgba.kpiExpectedCommission} value={formatAmount(commission, "GEL")} icon={<Icon name="invoice" size={18} />} tone="violet" />
+        <KpiCard label={ka.sgba.kpiClosing} value={closing} icon={<Icon name="clock" size={18} />} tone="yellow" />
+      </div>
+
+      <div className="mt-6 overflow-hidden rounded-[16px] border border-line bg-surface">
+        {rows.length === 0 ? (
+          <p className="px-6 py-14 text-center text-sm text-muted">{ka.sgba.noDealsTable}</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[820px] text-sm">
+              <thead>
+                <tr className="border-b border-line bg-canvas/60 text-left text-xs text-muted">
+                  <th className="px-5 py-3 font-medium">{ka.sgba.colSellerOffer}</th>
+                  <th className="px-5 py-3 font-medium">{ka.sgba.colBuyer}</th>
+                  <th className="px-5 py-3 font-medium">{ka.sgba.colStage}</th>
+                  <th className="px-5 py-3 text-right font-medium">{ka.sgba.colDeal}</th>
+                  <th className="px-5 py-3 text-right font-medium">{ka.sgba.colCommission}</th>
+                  <th className="px-5 py-3" />
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line">
+                {rows.map((c) => {
+                  const seller = c.participants.find((p) => dealSideFor(p.side, c.offer?.type ?? null) === "SELLER");
+                  const buyer = c.participants.find((p) => p !== seller);
+                  const pct = dealCommissionPct(c);
+                  const amount = c.amount ? Number(c.amount) : null;
+                  return (
+                    <tr key={c.id} className="hover:bg-canvas/50">
+                      <td className="px-5 py-3.5">
+                        <div className="font-semibold text-ink">{partyName(seller)}</div>
+                        <div className="max-w-[280px] truncate text-xs text-muted">{c.offer?.title ?? c.subject}</div>
+                      </td>
+                      <td className="px-5 py-3.5">{partyName(buyer)}</td>
+                      <td className="px-5 py-3.5"><StagePill stage={c.stage} /></td>
+                      <td className="px-5 py-3.5 text-right font-semibold tabular-nums">{amount !== null ? formatAmount(amount, "GEL") : "—"}</td>
+                      <td className="px-5 py-3.5 text-right text-xs font-semibold text-success tabular-nums">
+                        {amount !== null && pct ? ka.sgba.commissionLine(formatAmount((amount * Number(pct)) / 100, "GEL"), pct.toString()) : "—"}
+                      </td>
+                      <td className="px-5 py-3.5 text-right">
+                        <Link href={`/app/conversations/${c.id}`} className="whitespace-nowrap text-sm font-medium text-accent-strong hover:underline">{ka.sgba.open} →</Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </>
   );
 }

@@ -14,6 +14,7 @@ import { fail, type FormState } from "@/lib/forms";
 import { assertInvoiceManager, buildInvoiceSnapshot } from "@/lib/invoices";
 import { notify } from "@/lib/notify";
 import { todayInGeorgia } from "@/lib/money";
+import { createCommissionForPaidInvoice } from "@/lib/commission";
 
 const i18n = ka.invoice;
 
@@ -164,6 +165,7 @@ export async function recordPaymentAction(_: FormState, formData: FormData): Pro
       ? [db.invoiceStatusChange.create({ data: { invoiceId: inv.id, fromStatus: inv.status, toStatus: status, changedById: user.id, comment: `${amount.toFixed(2)} ${inv.currency}` } })]
       : []),
   ]);
+  if (status === "PAID") await createCommissionForPaidInvoice(inv.id);
   await audit({ actorId: user.id, action: "invoice.payment_recorded", entityType: "Invoice", entityId: inv.id, metadata: { amount: amount.toFixed(2), currency: inv.currency, status } });
   revalidatePath(`/app/invoices/${inv.id}`);
   return { ok: true, message: i18n.saved };

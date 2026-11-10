@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ka } from "@/i18n/ka";
-import { sendMessageAction } from "@/actions/chat";
+import { sendMessageAction, updateDealInfoAction } from "@/actions/chat";
+import { dealCommissionPct } from "@/lib/commission";
 import { getActiveMembership, requireUser } from "@/lib/authz";
 import { partyLabel, partySelect } from "@/lib/chat";
 import { db } from "@/lib/db";
@@ -10,7 +11,7 @@ import { formatDateTime } from "@/lib/format";
 import { visibleConversations } from "@/lib/scope";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardBody, CardHeader } from "@/components/ui/Card";
-import { ActionForm, Input, SubmitButton, Textarea } from "@/components/ui/Form";
+import { ActionForm, Field, Input, Select, SubmitButton, Textarea } from "@/components/ui/Form";
 import { ChatLive } from "@/components/panel/ChatLive";
 import { ChatInvoiceCard } from "@/components/panel/ChatInvoiceCard";
 import { loadDealContext } from "@/lib/deals";
@@ -29,10 +30,11 @@ export default async function ConversationPage({ params }: PageProps<"/app/conve
     include: {
       participants: { select: partySelect, orderBy: { createdAt: "asc" } },
       messages: { orderBy: { createdAt: "asc" }, take: 500 },
-      offer: { select: { id: true, title: true, type: true } },
+      offer: { select: { id: true, title: true, type: true, commissionPct: true } },
     },
   });
   if (!c) notFound();
+  const pct = dealCommissionPct(c);
   const deal = await loadDealContext(c.id);
   const canInvoice = Boolean(deal && deal.dealSide === "SELLER" && deal.can("invoices.manage"));
   const offerFull = canInvoice && c.offer ? await db.offer.findUnique({ where: { id: c.offer.id }, select: { title: true, currency: true, priceMin: true, priceType: true } }) : null;
@@ -52,7 +54,7 @@ export default async function ConversationPage({ params }: PageProps<"/app/conve
           text={others.map((p) => partyLabel(p, mySide, user.id)).join(", ")}
           action={
             canInvoice ? (
-              <a href="#invoice" className="inline-flex h-9 items-center gap-2 rounded-full bg-accent px-3 text-sm font-medium text-deep hover:bg-accent-hover">
+              <a href="#invoice" className="inline-flex h-9 items-center gap-2 rounded-full bg-accent px-3 text-sm font-medium text-on-accent hover:bg-accent-hover">
                 <Icon name="invoice" size={16} /> {ka.invoice.composerButton}
               </a>
             ) : deal?.dealSide === "BUYER" ? (
@@ -77,7 +79,7 @@ export default async function ConversationPage({ params }: PageProps<"/app/conve
                       </div>
                     </div>
                     <div className="mt-3 flex gap-2">
-                      <Link href={msg.fileUrl} className="flex-1 rounded-lg bg-accent px-3 py-2 text-center text-sm font-medium text-deep hover:bg-accent-hover">{ka.invoice.chatCardOpen}</Link>
+                      <Link href={msg.fileUrl} className="flex-1 rounded-lg bg-accent px-3 py-2 text-center text-sm font-medium text-on-accent hover:bg-accent-hover">{ka.invoice.chatCardOpen}</Link>
                       <a href={`/api/invoices/${invId}/pdf`} target="_blank" className="rounded-lg border border-line px-3 py-2 text-sm font-medium hover:border-accent">{ka.invoice.chatCardPdf}</a>
                     </div>
                     <div className="mt-2 text-[11px] text-muted">{formatDateTime(msg.createdAt)}</div>
@@ -96,15 +98,15 @@ export default async function ConversationPage({ params }: PageProps<"/app/conve
             const sender = msg.senderId ? byUser.get(msg.senderId) : null;
             return (
               <div key={msg.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[85%] rounded-xl px-4 py-2.5 sm:max-w-[70%] ${mine ? "bg-accent text-deep" : "border border-line bg-surface"}`}>
+                <div className={`max-w-[85%] rounded-xl px-4 py-2.5 sm:max-w-[70%] ${mine ? "bg-accent text-on-accent" : "border border-line bg-surface"}`}>
                   {!mine && sender && <div className="mb-0.5 text-xs font-medium text-accent-strong">{partyLabel(sender, mySide, user.id)}</div>}
                   {msg.body && <p className="whitespace-pre-line break-words text-sm">{msg.body}</p>}
                   {msg.kind === "FILE" && (
-                    <a href={`/api/chat-files/${msg.id}`} target="_blank" className={`mt-1 flex items-center gap-1.5 text-sm underline ${mine ? "text-deep" : "text-accent"}`}>
+                    <a href={`/api/chat-files/${msg.id}`} target="_blank" className={`mt-1 flex items-center gap-1.5 text-sm underline ${mine ? "text-white" : "text-accent"}`}>
                       📎 <span className="truncate">{msg.fileName}</span>
                     </a>
                   )}
-                  <div className={`mt-1 text-[11px] ${mine ? "text-deep/60" : "text-muted"}`}>
+                  <div className={`mt-1 text-[11px] ${mine ? "text-white/75" : "text-muted"}`}>
                     {formatDateTime(msg.createdAt)}
                     {mine && msg.id === lastMine?.id && othersLastRead && othersLastRead >= msg.createdAt ? ` · ${ka.chat.read}` : ""}
                   </div>
@@ -144,6 +146,25 @@ export default async function ConversationPage({ params }: PageProps<"/app/conve
       </Card>
 
       <aside className="space-y-6">
+        <Card>
+          <CardHeader title={ka.sgba.dealPanel} text={ka.sgba.dealPanelText} />
+          <CardBody>
+            <ActionForm action={updateDealInfoAction} className="space-y-3" toast>
+              <input type="hidden" name="conversationId" value={c.id} />
+              <Field label={ka.sgba.colStage} name="stage">
+                <Select name="stage" defaultValue={c.stage} options={Object.entries(ka.sgba.stages).map(([value, label]) => ({ value, label }))} />
+              </Field>
+              <Field label={ka.sgba.dealAmount} name="amount" optional>
+                <Input name="amount" inputMode="decimal" defaultValue={c.amount?.toString() ?? ""} />
+              </Field>
+              <div className="flex items-center justify-between rounded-[10px] bg-[#e3f4ec] px-3 py-2 text-sm">
+                <span className="text-[#1b6a4c]">{ka.sgba.dealCommission}</span>
+                <span className="font-semibold text-success">{pct ? `${pct.toString()}%` : ka.sgba.dealCommissionNone}</span>
+              </div>
+              <SubmitButton className="w-full" variant="secondary">{ka.common.save}</SubmitButton>
+            </ActionForm>
+          </CardBody>
+        </Card>
         {deal && deal.dealSide && <ChatInvoiceCard ctx={deal} />}
         {c.offer && (
           <Card>

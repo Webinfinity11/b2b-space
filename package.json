@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@expo-google-fonts/noto-sans-georgian": "^0.4.4",
+    "@fontsource-variable/noto-sans": "^5.2.10",
     "@fontsource-variable/noto-sans-georgian": "^5.3.0",
     "@prisma/adapter-pg": "^7.10.1",
     "@prisma/client": "^7.10.1",

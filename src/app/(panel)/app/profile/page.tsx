@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ka } from "@/i18n/ka";
 import { changePasswordAction, updateEmailPrefsAction, updateProfileAction } from "@/actions/profile";
 import { getMemberships, requireUser } from "@/lib/authz";
@@ -68,7 +67,7 @@ export default async function ProfilePage() {
             </CardBody>
           </Card>
           <Card>
-            <CardHeader title={ka.profile.memberships} action={<Link href="/company/new" className="text-sm text-accent-strong hover:underline">+ {ka.panel.createCompany}</Link>} />
+            <CardHeader title={ka.profile.memberships} />
             <CardBody>
               {memberships.length === 0 ? (
                 <p className="text-sm text-muted">{ka.panel.noCompany}</p>

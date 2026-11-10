@@ -1,5 +1,6 @@
 /**
- * Demo content (clearly marked "(დემო)"): 4 users, 3 companies, 6 offers, one chat.
+ * Demo content from the SGBA analysis: 30 businesses (+ ProCredit Bank and the SGBA demo company),
+ * 6 special offers, 4 negotiations with stages and commissions. All accounts use @demo.b2bspace.ge.
  * Used by prisma/seed-demo.ts and by the admin "demo data" buttons. No "server-only" so scripts can import it.
  */
 import bcrypt from "bcryptjs";
@@ -8,21 +9,67 @@ import type { PrismaClient } from "@/generated/prisma/client";
 export const DEMO_DOMAIN = "demo.b2bspace.ge";
 const DOMAIN = DEMO_DOMAIN;
 
-const PEOPLE = [
-  { key: "nino", firstName: "ნინო", lastName: "ბერიძე", phone: "+995 555 100 201" },
-  { key: "giorgi", firstName: "გიორგი", lastName: "კაპანაძე", phone: "+995 555 100 202" },
-  { key: "mariam", firstName: "მარიამ", lastName: "ლომიძე", phone: "+995 555 100 203" },
-  { key: "luka", firstName: "ლუკა", lastName: "გელაშვილი", phone: "+995 555 100 204" },
-] as const;
+type Role = "BUYER" | "SELLER" | "BOTH";
+type Size = "SMALL" | "MEDIUM" | "LARGE";
+const R: Record<string, Role> = { გ: "SELLER", ო: "BOTH", შ: "BUYER" };
+const S: Record<string, Size> = { დ: "LARGE", ს: "MEDIUM", მ: "SMALL" };
 
-const COMPANIES = [
-  { owner: "nino", legalName: "შპს „კავკასია ბილდი“ (დემო)", tradeName: "კავკასია ბილდი (დემო)", city: "თბილისი", cat: "samsheneblo-masalebi", verified: true,
-    description: "სამშენებლო მასალების საბითუმო მომწოდებელი: ცემენტი, არმატურა, ბლოკი.", activities: "საბითუმო მიწოდება\nლოჯისტიკა თბილისსა და რეგიონებში" },
-  { owner: "giorgi", legalName: "შპს „ლოჯი ექსპრესი“ (დემო)", tradeName: "ლოჯი ექსპრესი (დემო)", city: "ბათუმი", cat: "satvirto-gadazidvebi", verified: true,
-    description: "სატვირთო გადაზიდვები საქართველოსა და თურქეთს შორის.", activities: "FTL/LTL გადაზიდვები\nსაბაჟო მომსახურება" },
-  { owner: "mariam", legalName: "შპს „დიჯი სოლუშენსი“ (დემო)", tradeName: "დიჯი სოლუშენსი (დემო)", city: "თბილისი", cat: "programuli-uzrunvelqopa", verified: false,
-    description: "ბიზნეს პროგრამული უზრუნველყოფა და CRM სისტემები.", activities: "ვებ აპლიკაციები\nCRM დანერგვა" },
-] as const;
+// abbr | role | name | industry | city | size | direction
+const COMPANIES: [string, string, string, string, string, string, string][] = [
+  ["GU", "გ", "Gulf Georgia", "საწვავი და ენერგია", "თბილისი", "დ", "კორპორაციული გაყიდვები"],
+  ["GP", "ო", "GPI Holding", "დაზღვევა", "თბილისი", "დ", "ბიზნეს დაზღვევა"],
+  ["AM", "ო", "Amboli", "ავტომობილები", "თბილისი", "დ", "B2B გაყიდვები"],
+  ["LE", "ო", "Lisi Event Hall", "HoReCa და ღონისძიებები", "თბილისი", "ს", "კორპორაციული ღონისძიებები"],
+  ["TV", "გ", "TV Monitoring", "მედია და მარკეტინგი", "გორი", "ს", "კორპორაციული გაყიდვები"],
+  ["PL", "გ", "PeopleLab", "HR და რეკრუტინგი", "თბილისი", "მ", "HR მომსახურებები"],
+  ["TL", "შ", "Tbilisi Logistics", "ლოჯისტიკა", "რუსთავი", "ს", "შესყიდვები"],
+  ["HC", "შ", "Hotel Costé", "სასტუმროები", "თბილისი", "ს", "შესყიდვები და ივენთები"],
+  ["GO", "ო", "Gorgia", "რიტეილი და მშენებლობა", "თბილისი", "დ", "შესყიდვები"],
+  ["TM", "შ", "TestMed Clinic", "ჯანდაცვა", "თბილისი", "ს", "ადმინისტრაცია და შესყიდვები"],
+  ["GC", "ო", "GeoConstruct Test", "მშენებლობა", "ბათუმი", "დ", "ტენდერები და შესყიდვები"],
+  ["DL", "გ", "Digital Line", "IT და ტექნოლოგიები", "თბილისი", "მ", "B2B გაყიდვები"],
+  ["KF", "ო", "Kartli Foods", "სურსათი და წარმოება", "გორი", "ს", "დისტრიბუცია"],
+  ["GR", "გ", "Green Office", "საოფისე მომარაგება", "თბილისი", "მ", "კორპორაციული გაყიდვები"],
+  ["BH", "ო", "Batumi Business Hotel", "სასტუმროები", "ბათუმი", "ს", "კორპორაციული გაყიდვები და შესყიდვები"],
+  ["SW", "გ", "SecureWork", "შრომის უსაფრთხოება", "რუსთავი", "მ", "გაყიდვების დეპარტამენტი"],
+  ["PH", "შ", "GeoPharma Test", "ფარმაცია", "თბილისი", "დ", "შესყიდვების დეპარტამენტი"],
+  ["IT", "ო", "Imereti Travel", "ტურიზმი", "ქუთაისი", "მ", "პარტნიორული გაყიდვები"],
+  ["LP", "გ", "Legal Partners", "იურიდიული მომსახურება", "თბილისი", "მ", "კორპორაციული მომსახურებები"],
+  ["CP", "გ", "Caucasus Print", "პოლიგრაფია და შეფუთვა", "თბილისი", "ს", "B2B შეკვეთები"],
+  ["WR", "ო", "Wine Route", "ღვინის წარმოება", "თელავი", "ს", "HoReCa და ექსპორტი"],
+  ["ED", "გ", "EduLab Georgia", "განათლება", "თბილისი", "ს", "კორპორაციული სწავლება"],
+  ["CL", "გ", "CleanPro", "დასუფთავების სერვისი", "თბილისი", "ს", "კორპორაციული გაყიდვები"],
+  ["RH", "შ", "Retail House", "რიტეილი", "ქუთაისი", "დ", "შესყიდვები და მომწოდებლები"],
+  ["TC", "ო", "TransCaucasus", "ტრანსპორტი და ლოჯისტიკა", "თბილისი", "დ", "გაყიდვები და შესყიდვები"],
+  ["FS", "გ", "Finance Support", "ბუღალტერია და ფინანსები", "თბილისი", "მ", "B2B მომსახურებები"],
+  ["EF", "ო", "Event Factory", "ღონისძიებები", "თბილისი", "ს", "კორპორაციული ღონისძიებები"],
+  ["AK", "ო", "Agro Kartli", "აგრობიზნესი", "გორი", "ს", "მომარაგება და რეალიზაცია"],
+  ["BD", "შ", "Black Sea Distribution", "დისტრიბუცია", "ბათუმი", "დ", "შესყიდვები"],
+  ["HA", "გ", "HR Academy", "HR და განათლება", "თბილისი", "მ", "კორპორაციული პროგრამები"],
+  ["PC", "გ", "ProCredit Bank", "ბუღალტერია და ფინანსები", "თბილისი", "დ", "ბიზნეს ბანკინგი"],
+  ["SG", "ო", "SGBA", "HR და განათლება", "თბილისი", "ს", "პარტნიორობა და შესყიდვები"],
+];
+
+// company | offer category | title | perk | description | audience | commission % | commission text | tag
+const OFFERS: [string, string, string, string, string, string, number | null, string | null, "MAIN_PARTNER" | "WOMEN_BUSINESS" | null][] = [
+  ["GU", "საწვავი", "კორპორაციული საწვავი", "−25 თეთრი / ლ", "ფიქსირებული კორპორაციული ფასდაკლება და დღგ-ის ანგარიშფაქტურა წევრებისთვის.", "ავტოპარკის მქონე კომპანიები", null, "ფიქსირებული შეთანხმებით", "MAIN_PARTNER"],
+  ["AM", "ავტო", "ავტოპარკის მომსახურება", "30%-მდე", "სპეციალური პირობები საბურავებზე, აკუმულატორებზე, ზეთებსა და მობილურ სერვისზე.", "ტრანსპორტი და ლოჯისტიკა", 1, null, "MAIN_PARTNER"],
+  ["GP", "დაზღვევა", "ქალი მეწარმეების ბიზნეს დაზღვევა", "სპეც. პირობა", "ინდივიდუალური სადაზღვევო შეთავაზება კომპანიის, ქონებისა და თანამშრომლებისთვის.", "ქალი მეწარმეები", 2, null, "WOMEN_BUSINESS"],
+  ["PC", "ფინანსები", "ბიზნეს ანგარიშის პაკეტი", "პარტნიორის პირობა", "ბიზნესის ყოველდღიური ოპერაციებისთვის სპეციალური კონსულტაცია და პირობები.", "SME და ქალი მეწარმეები", null, "ლიდის ფიქსირებული ფასი", "WOMEN_BUSINESS"],
+  ["LE", "სასტუმროები", "კორპორაციული ღონისძიებები", "−18%", "დარბაზი, კვება და სრული ღონისძიების პაკეტი წევრი კომპანიებისთვის.", "HR, მარკეტინგი, ადმინისტრაცია", 3, null, null],
+  ["PL", "HR", "HR აუთსორსინგი", "−20%", "რეკრუტინგი, HR აუდიტი და თანამშრომელთა განვითარების პაკეტები.", "დირექტორები და HR", 5, null, null],
+];
+
+// seller | offer title | buyer | stage | amount | commission %
+const DEALS: [string, string, string, "INTEREST" | "OFFER" | "NEGOTIATION" | "MEETING" | "CONTRACT", number, number][] = [
+  ["PL", "HR აუთსორსინგი", "TV", "OFFER", 12000, 5],
+  ["LE", "კორპორაციული ღონისძიებები", "SG", "CONTRACT", 18500, 3],
+  ["AM", "ავტოპარკის მომსახურება", "TL", "NEGOTIATION", 8400, 1],
+  ["GP", "ქალი მეწარმეების ბიზნეს დაზღვევა", "HC", "INTEREST", 24000, 2],
+  ["GU", "კორპორაციული საწვავი", "SG", "MEETING", 18500, 1],
+];
+
+const ALL_PERMISSIONS = ["company.edit", "offers.manage", "responses.manage", "terms.manage", "invoices.view", "invoices.manage", "finance.view"];
 
 /** Deletes every demo user (…@${DOMAIN}) together with their companies, offers, chats and invoices. */
 export async function removeDemoData(db: PrismaClient): Promise<number> {
@@ -38,6 +85,7 @@ export async function removeDemoData(db: PrismaClient): Promise<number> {
   await db.conversation.deleteMany({ where: { id: { in: convs.map((c) => c.conversationId) } } });
   await db.offerResponse.deleteMany({ where: { responderUserId: { in: ids } } });
   await db.offer.deleteMany({ where: { authorUserId: { in: ids } } });
+  await db.verificationDecision.deleteMany({ where: { company: { createdById: { in: ids } } } });
   await db.company.deleteMany({ where: { createdById: { in: ids } } });
   await db.notification.deleteMany({ where: { userId: { in: ids } } });
   await db.auditLog.deleteMany({ where: { actorId: { in: ids } } });
@@ -48,114 +96,111 @@ export async function removeDemoData(db: PrismaClient): Promise<number> {
 /** (Re)creates the demo set. Existing demo data is removed first, so it is safe to run repeatedly. */
 export async function loadDemoData(db: PrismaClient, password: string) {
   await removeDemoData(db);
-
   const hash = await bcrypt.hash(password, 12);
-  const users: Record<string, string> = {};
-  for (const p of PEOPLE) {
-    const u = await db.user.create({
-      data: { firstName: p.firstName, lastName: p.lastName, phone: p.phone, email: `${p.key}@${DOMAIN}`, passwordHash: hash, emailVerifiedAt: new Date() },
-    });
-    users[p.key] = u.id;
-  }
+  const cats = await db.category.findMany({ select: { id: true, name: true, kind: true } });
+  const catId = (name: string, kind: "OFFER" | "INDUSTRY") => cats.find((c) => c.name === name && c.kind === kind)?.id ?? null;
 
-  const companies: Record<string, string> = {};
-  for (const [i, c] of COMPANIES.entries()) {
-    const cat = await db.category.findUnique({ where: { slug: c.cat } });
-    const company = await db.company.create({
+  const owner: Record<string, string> = {};
+  const company: Record<string, string> = {};
+  for (const [i, [abbr, role, name, industry, city, size, direction]] of COMPANIES.entries()) {
+    const sgba = abbr === "SG";
+    const user = await db.user.create({
       data: {
-        slug: `demo-${i + 1}-${c.cat}`,
-        legalName: c.legalName,
-        tradeName: c.tradeName,
-        registrationNumber: `DEMO-00${i + 1}`,
-        country: "GE",
-        city: c.city,
-        legalAddress: `${c.city}, დემო მისამართი ${i + 1}`,
-        description: c.description,
-        activities: c.activities,
-        contactPerson: PEOPLE.find((p) => p.key === c.owner)!.firstName,
-        contactEmail: `${c.owner}@${DOMAIN}`,
-        contactPhone: PEOPLE.find((p) => p.key === c.owner)!.phone,
-        showEmailPublicly: true,
-        verificationStatus: c.verified ? "VERIFIED" : "PENDING",
-        verifiedAt: c.verified ? new Date() : null,
-        createdById: users[c.owner],
-        categories: cat ? { create: [{ categoryId: cat.id }] } : undefined,
-        members: { create: { userId: users[c.owner], role: "OWNER", permissions: ["company.edit", "offers.manage", "responses.manage", "terms.manage", "invoices.view", "invoices.manage", "finance.view"] } },
+        firstName: sgba ? "მაია" : name,
+        lastName: sgba ? "ტატულაშვილი" : "მენეჯერი",
+        email: sgba ? `maia@${DOMAIN}` : `${abbr.toLowerCase()}@${DOMAIN}`,
+        phone: `+995 555 20${String(i).padStart(2, "0")} 00`,
+        passwordHash: hash,
+        emailVerifiedAt: new Date(),
       },
     });
-    companies[c.owner] = company.id;
+    const industryId = catId(industry, "INDUSTRY");
+    const c = await db.company.create({
+      data: {
+        slug: `demo-${abbr.toLowerCase()}`,
+        legalName: name,
+        registrationNumber: `DEMO-${String(i + 1).padStart(3, "0")}`,
+        country: "GE",
+        city,
+        legalAddress: `${city}, სატესტო მისამართი`,
+        description: `${name} — ${industry}. სატესტო პროფილი.`,
+        contactPerson: sgba ? "მაია ტატულაშვილი" : `${name} მენეჯერი`,
+        contactEmail: user.email,
+        contactPhone: user.phone,
+        businessRole: R[role],
+        size: S[size],
+        direction,
+        verificationStatus: "VERIFIED",
+        verifiedAt: new Date(),
+        createdById: user.id,
+        categories: industryId ? { create: [{ categoryId: industryId }] } : undefined,
+        members: { create: { userId: user.id, role: "OWNER", permissions: ALL_PERMISSIONS } },
+      },
+    });
+    owner[abbr] = user.id;
+    company[abbr] = c.id;
   }
 
-  const catId = async (slug: string) => (await db.category.findUnique({ where: { slug } }))?.id ?? null;
-  const in30 = new Date(Date.now() + 30 * 864e5);
-  const offers = [
-    { author: "nino", company: true, type: "OFFER", title: "ცემენტი M400 — საბითუმო მიწოდება (დემო)", cat: "samsheneblo-masalebi", priceType: "FROM", priceMin: "185", currency: "GEL", quantity: "500", unit: "ტონა",
-      description: "ცემენტი M400, 50 კგ ტომრებში. მიწოდება თბილისში 2 დღეში, რეგიონებში — შეთანხმებით.", anonymous: false },
-    { author: "nino", company: true, type: "OFFER", title: "არმატურა A500C, Ø12 (დემო)", cat: "samsheneblo-masalebi", priceType: "FIXED", priceMin: "2150", currency: "GEL", quantity: "40", unit: "ტონა",
-      description: "არმატურა სერტიფიკატით, ჭრა ზომაზე შესაძლებელია.", anonymous: false },
-    { author: "giorgi", company: true, type: "OFFER", title: "სატვირთო გადაზიდვა თბილისი — სტამბოლი (დემო)", cat: "satvirto-gadazidvebi", priceType: "RANGE", priceMin: "4900", priceMax: "6500", currency: "GEL", quantity: null, unit: null,
-      description: "სრული ტრაილერი (FTL), 13.6 მ, 24 ტონამდე. ვადა 4–5 დღე.", anonymous: false },
-    { author: "mariam", company: true, type: "OFFER", title: "CRM სისტემის დანერგვა მცირე ბიზნესისთვის (დემო)", cat: "programuli-uzrunvelqopa", priceType: "NEGOTIABLE", priceMin: null, currency: null, quantity: null, unit: null,
-      description: "CRM-ის დანერგვა, მონაცემების მიგრაცია და თანამშრომლების ტრენინგი.", anonymous: false },
-    { author: "luka", company: false, type: "REQUEST", title: "ვეძებთ საოფისე ავეჯის მომწოდებელს (დემო)", cat: "avejis-tsarmoeba", priceType: "NONE", priceMin: null, currency: null, quantity: "25", unit: "სამუშაო ადგილი",
-      description: "საჭიროა 25 სამუშაო ადგილის ავეჯი (მაგიდა + სკამი) თბილისში, მიწოდება 3 კვირაში.", anonymous: true },
-    { author: "giorgi", company: true, type: "REQUEST", title: "ვეძებთ საწყობს ბათუმში, 500 მ² (დემო)", cat: "satsqobi-da-shenakhva", priceType: "RANGE", priceMin: "3000", priceMax: "4500", currency: "GEL", quantity: "500", unit: "მ²",
-      description: "გრძელვადიანი იჯარა, სატვირთოს მისასვლელით.", anonymous: true },
-  ] as const;
-
-  const created: Record<string, string> = {};
-  for (const o of offers) {
-    const offer = await db.offer.create({
+  const offerId: Record<string, string> = {};
+  for (const [abbr, cat, title, perk, description, audience, pct, pctText, tag] of OFFERS) {
+    const o = await db.offer.create({
       data: {
-        type: o.type,
-        title: o.title,
-        description: o.description,
-        categoryId: await catId(o.cat),
-        itemKind: o.cat.includes("gadazidv") || o.cat.includes("uzrunvelqofa") || o.cat.includes("satsqobi") ? "SERVICE" : "PRODUCT",
-        priceType: o.priceType,
-        priceMin: o.priceMin,
-        priceMax: "priceMax" in o ? o.priceMax : null,
-        currency: o.currency,
-        quantity: o.quantity,
-        unit: o.unit,
-        city: COMPANIES.find((c) => c.owner === o.author)?.city ?? "თბილისი",
-        validUntil: in30,
-        authorUserId: users[o.author],
-        companyId: o.company ? companies[o.author] : null,
-        isAnonymous: o.anonymous,
+        type: "OFFER",
+        title,
+        description,
+        categoryId: catId(cat, "OFFER"),
+        itemKind: "SERVICE",
+        perk,
+        audience,
+        commissionPct: pct,
+        commissionText: pctText,
+        tag,
+        city: "თბილისი",
+        authorUserId: owner[abbr],
+        companyId: company[abbr],
         status: "PUBLISHED",
         publishedAt: new Date(),
       },
     });
-    created[o.title] = offer.id;
+    offerId[title] = o.id;
   }
 
-  // One ready conversation: Giorgi (Logi Express) responds to Nino's cement offer.
-  const cementId = created[offers[0].title];
-  const response = await db.offerResponse.create({
-    data: { offerId: cementId, responderUserId: users.giorgi, responderCompanyId: companies.giorgi, message: "გამარჯობა! გვაინტერესებს 120 ტონა ბათუმში მიწოდებით. რა ვადაში შეძლებთ?" },
-  });
-  const conv = await db.conversation.create({
-    data: {
-      offerId: cementId,
-      responseId: response.id,
-      subject: offers[0].title,
-      participants: {
-        create: [
-          { userId: users.nino, companyId: companies.nino, side: "AUTHOR", identityRevealed: true },
-          { userId: users.giorgi, companyId: companies.giorgi, side: "RESPONDER", identityRevealed: true, lastReadAt: new Date() },
-        ],
+  const now = Date.now();
+  for (const [i, [seller, title, buyer, stage, amount, pct]] of DEALS.entries()) {
+    const sellerName = COMPANIES.find((c) => c[0] === seller)![2];
+    const buyerName = COMPANIES.find((c) => c[0] === buyer)![2];
+    await db.conversation.create({
+      data: {
+        offerId: offerId[title],
+        subject: `${sellerName} — ${title}`,
+        stage,
+        amount,
+        commissionPct: pct,
+        lastMessageAt: new Date(now - i * 3600_000),
+        participants: {
+          create: [
+            { userId: owner[seller], companyId: company[seller], side: "AUTHOR" },
+            { userId: owner[buyer], companyId: company[buyer], side: "RESPONDER", lastReadAt: new Date() },
+          ],
+        },
+        messages: {
+          create: [
+            { kind: "SYSTEM", body: "conversation.opened" },
+            { kind: "TEXT", senderId: owner[buyer], body: `გამარჯობა! ${buyerName}-ს აინტერესებს „${title}“. გთხოვთ, გამოგვიგზავნოთ პირობები.` },
+            { kind: "TEXT", senderId: owner[seller], body: "გამარჯობა! სიამოვნებით — დეტალურ შეთავაზებას დღესვე გამოგიგზავნით." },
+          ],
+        },
       },
-      messages: {
-        create: [
-          { kind: "SYSTEM", body: "conversation.opened" },
-          { kind: "TEXT", senderId: users.giorgi, body: "გამარჯობა! გვაინტერესებს 120 ტონა ბათუმში მიწოდებით. რა ვადაში შეძლებთ?" },
-        ],
-      },
-    },
-  });
-  await db.offer.update({ where: { id: cementId }, data: { status: "ACCEPTING_RESPONSES" } });
-  await db.notification.create({
-    data: { userId: users.nino, type: "NEW_RESPONSE", title: `ახალი გამოხმაურება: „${offers[0].title}“`, link: `/app/conversations/${conv.id}` },
+    });
+  }
+
+  // Recent activity for the SGBA demo user.
+  const hours = (h: number) => new Date(now - h * 3600_000);
+  await db.notification.createMany({
+    data: [
+      { userId: owner.SG, type: "NEW_RESPONSE", title: "GPI Holding-მა გამოგიგზავნათ შეთავაზება", link: "/app/conversations", createdAt: hours(1) },
+      { userId: owner.SG, type: "NEW_MESSAGE", title: "HR კამპანიას 14 ახალი პასუხი აქვს", link: "/app/campaigns", createdAt: hours(2) },
+      { userId: owner.SG, type: "NEW_REPLY", title: "Gulf-ის მოთხოვნა დამუშავების პროცესშია", link: "/app/conversations", createdAt: hours(3) },
+    ],
   });
 }

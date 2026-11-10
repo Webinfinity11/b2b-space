@@ -18,6 +18,8 @@ enum PlatformRole {
 enum UserStatus {
   ACTIVE
   SUSPENDED
+  PENDING
+  REJECTED
 }
 
 model User {
@@ -78,6 +80,31 @@ model Session {
 
 // ─────────────────────────────── Companies ───────────────────────────────
 
+enum BusinessRole {
+  BUYER
+  SELLER
+  BOTH
+}
+
+enum CompanySize {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
+enum OfferTag {
+  MAIN_PARTNER
+  WOMEN_BUSINESS
+}
+
+enum DealStage {
+  INTEREST
+  OFFER
+  NEGOTIATION
+  MEETING
+  CONTRACT
+}
+
 enum VerificationStatus {
   PENDING
   IN_REVIEW
@@ -101,6 +128,8 @@ model Category {
   id        String   @id @default(cuid())
   name      String
   slug      String   @unique
+  /// OFFER = special-offer category; INDUSTRY = company industry.
+  kind      String   @default("INDUSTRY")
   parentId  String?
   sortOrder Int      @default(0)
   isActive  Boolean  @default(true)
@@ -143,6 +172,10 @@ model Company {
   coverUrl           String?
   verificationStatus VerificationStatus @default(PENDING)
   verifiedAt         DateTime?
+  businessRole       BusinessRole       @default(BOTH)
+  size               CompanySize        @default(SMALL)
+  /// Who to contact directly (e.g. "კორპორაციული გაყიდვები").
+  direction          String?
   createdById        String
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
@@ -162,6 +195,9 @@ model Company {
   approvals             DealApproval[]
   invoicesAsSeller      Invoice[]              @relation("InvoiceSellerCompany")
   invoicesAsBuyer       Invoice[]              @relation("InvoiceBuyerCompany")
+  commissions           Commission[]
+  campaignRequests      CampaignRequest[]
+  campaignInbox         CampaignRecipient[]
 
   @@unique([country, registrationNumber])
   @@index([verificationStatus])
@@ -325,6 +361,15 @@ model Offer {
   companyId     String?
   /// When true the public site/API never exposes author or company identity.
   isAnonymous   Boolean         @default(false)
+  /// Special member condition shown in green, e.g. "−20%".
+  perk          String?
+  /// Who the offer is for.
+  audience      String?
+  /// Set by platform admins.
+  tag           OfferTag?
+  /// Platform commission for deals from this offer (percent) and its display text.
+  commissionPct  Decimal?       @db.Decimal(5, 2)
+  commissionText String?
   visibility    OfferVisibility @default(PUBLIC)
   status        OfferStatus     @default(DRAFT)
   publishedAt   DateTime?
@@ -395,6 +440,10 @@ model Conversation {
   offerId       String?
   responseId    String?   @unique
   subject       String
+  stage         DealStage @default(INTEREST)
+  amount        Decimal?  @db.Decimal(18, 2)
+  /// Commission percent for this deal (falls back to the offer's).
+  commissionPct Decimal?  @db.Decimal(5, 2)
   lastMessageAt DateTime  @default(now())
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -404,6 +453,7 @@ model Conversation {
   participants ConversationParticipant[]
   messages     Message[]
   dealTerms    DealTerms?
+  commissions  Commission[]
 
   @@index([offerId])
   @@index([lastMessageAt])
@@ -610,6 +660,7 @@ model Invoice {
   items            InvoiceItem[]
   payments         PaymentRecord[]
   statusHistory    InvoiceStatusChange[]
+  commission       Commission?
 
   @@index([sellerCompanyId, status])
   @@index([buyerCompanyId, status])
@@ -682,6 +733,7 @@ enum NotificationType {
   INVOICE_OVERDUE
   COMPANY_STATUS_CHANGED
   MEMBER_INVITED
+  CAMPAIGN
 }
 
 model Notification {
@@ -746,4 +798,118 @@ model PlatformSetting {
   key       String   @id
   value     Json
   updatedAt DateTime @updatedAt
+}
+
+enum CommissionStatus {
+  CONFIRMED
+  SETTLED
+  CANCELLED
+}
+
+/// Platform commission, created when an invoice of a deal is fully paid.
+model Commission {
+  id             String           @id @default(cuid())
+  invoiceId      String           @unique
+  conversationId String?
+  companyId      String?
+  currency       String
+  baseAmount     Decimal          @db.Decimal(18, 2)
+  pct            Decimal          @db.Decimal(5, 2)
+  amount         Decimal          @db.Decimal(18, 2)
+  status         CommissionStatus @default(CONFIRMED)
+  settledAt      DateTime?
+  createdAt      DateTime         @default(now())
+
+  invoice      Invoice       @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  company      Company?      @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  @@index([companyId, status])
+  @@index([status, createdAt])
+}
+
+/// Commission models shown in Finance (managed by admins).
+model CommissionRule {
+  id        String @id @default(cuid())
+  title     String
+  rate      String
+  sortOrder Int    @default(0)
+}
+
+/// Paid campaign packages.
+model CampaignPackage {
+  id        String   @id @default(cuid())
+  kind      String
+  title     String
+  audience  String
+  channels  String
+  priceFrom Decimal  @db.Decimal(18, 2)
+  accent    String   @default("blue")
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  requests CampaignRequest[]
+}
+
+enum CampaignRequestStatus {
+  NEW
+  IN_PROGRESS
+  APPROVED
+  RUNNING
+  DONE
+  REJECTED
+}
+
+/// A company's application for a campaign (package or custom).
+model CampaignRequest {
+  id        String                @id @default(cuid())
+  packageId String?
+  companyId String
+  userId    String
+  title     String
+  message   String?
+  status    CampaignRequestStatus @default(NEW)
+  adminNote String?
+  /// Audience filters (empty = all).
+  industryIds String[]  @default([])
+  cities      String[]  @default([])
+  sizes       String[]  @default([])
+  roles       String[]  @default([])
+  positions   String?
+  perk        String?
+  ctaUrl      String?
+  fileUrl     String?
+  fileName    String?
+  startDate   DateTime?
+  /// Final price set by the admin.
+  price       Decimal?  @db.Decimal(18, 2)
+  paidAt      DateTime?
+  launchedAt  DateTime?
+  finishedAt  DateTime?
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+
+  package    CampaignPackage?    @relation(fields: [packageId], references: [id], onDelete: SetNull)
+  company    Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  recipients CampaignRecipient[]
+
+  @@index([status, createdAt])
+  @@index([companyId])
+}
+
+/// A company that received a launched campaign (delivery + results).
+model CampaignRecipient {
+  id        String    @id @default(cuid())
+  requestId String
+  companyId String
+  viewedAt  DateTime?
+  repliedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  request CampaignRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  company Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([requestId, companyId])
+  @@index([companyId])
 }

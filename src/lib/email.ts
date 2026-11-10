@@ -24,11 +24,11 @@ export function renderEmail(p: { title: string; body?: string | null; link?: str
   const html = `<!doctype html><html lang="ka"><body style="margin:0;background:#f3f5f9;font-family:'Noto Sans Georgian',Arial,sans-serif;color:#071426">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:24px 12px"><tr><td align="center">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:12px;overflow:hidden">
-<tr><td style="background:#071426;padding:18px 24px;color:#ffffff;font-size:18px;font-weight:700">B2B Space</td></tr>
+<tr><td style="background:#1d45d1;padding:18px 24px;color:#ffffff;font-size:18px;font-weight:700">B2B Space</td></tr>
 <tr><td style="padding:24px">
 <h1 style="margin:0 0 12px;font-size:18px;line-height:1.4">${esc(p.title)}</h1>
 ${p.body ? `<p style="margin:0 0 16px;font-size:14px;line-height:1.6;white-space:pre-line">${esc(p.body)}</p>` : ""}
-${url ? `<a href="${esc(url)}" style="display:inline-block;background:#8ec5ed;color:#071426;text-decoration:none;font-weight:600;font-size:14px;padding:10px 18px;border-radius:999px">${esc(p.button)}</a>` : ""}
+${url ? `<a href="${esc(url)}" style="display:inline-block;background:#1d45d1;color:#ffffff;text-decoration:none;font-weight:600;font-size:14px;padding:10px 18px;border-radius:999px">${esc(p.button)}</a>` : ""}
 </td></tr>
 <tr><td style="padding:16px 24px;border-top:1px solid #e6e9f0;font-size:12px;color:#6b7690">${esc(p.footer)}</td></tr>
 </table></td></tr></table></body></html>`;

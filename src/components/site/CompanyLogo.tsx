@@ -8,7 +8,7 @@ export function CompanyLogo({ name, url, size = 48 }: { name: string; url: strin
         alt={name}
         width={size}
         height={size}
-        className="shrink-0 border border-line bg-white object-contain p-1"
+        className="shrink-0 border border-line bg-surface object-contain p-1"
         style={{ width: size, height: size, borderRadius: radius }}
       />
     );

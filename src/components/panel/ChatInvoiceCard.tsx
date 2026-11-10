@@ -39,7 +39,7 @@ export async function ChatInvoiceCard({ ctx }: { ctx: DealContext }) {
           </ul>
         )}
         {isSeller && ctx.can("invoices.manage") && (
-          <a href="#invoice" className="hidden h-10 w-full items-center justify-center gap-2 rounded-full bg-accent lg:flex text-sm font-medium text-deep hover:bg-accent-hover">
+          <a href="#invoice" className="hidden h-10 w-full items-center justify-center gap-2 rounded-full bg-accent lg:flex text-sm font-medium text-on-accent hover:bg-accent-hover">
             + {ka.invoice.composerButton}
           </a>
         )}

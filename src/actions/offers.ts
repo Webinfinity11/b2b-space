@@ -49,6 +49,8 @@ const offerSchema = z
     quantity: zQty,
     unit: zOptionalText(30),
     deliveryTerms: zOptionalText(1000),
+    perk: zOptionalText(80),
+    audience: zOptionalText(160),
     city: zOptionalText(80),
     validUntil: z
       .string()
@@ -136,6 +138,8 @@ export async function saveOfferAction(_: FormState, formData: FormData): Promise
     quantity: d.quantity,
     unit: d.quantity ? d.unit : null,
     deliveryTerms: d.deliveryTerms,
+    perk: d.perk,
+    audience: d.audience,
     city: d.city,
     validUntil: d.validUntil,
     visibility: d.visibility,

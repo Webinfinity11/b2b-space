@@ -1,4 +1,32 @@
 /** Minimal line icon set (24×24, stroke). */
+/** Icons from the B2B Space dashboard design (inner SVG markup, static). */
+const RAW: Record<string, string> = {
+  home: "<path d=\"m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1Z\"/>",
+  tag: "<path d=\"M20 3h-7L3 13a2 2 0 0 0 0 3l5 5a2 2 0 0 0 3 0L21 11V4a1 1 0 0 0-1-1Z\"/><circle cx=\"17\" cy=\"7\" r=\"1\"/>",
+  building: "<path d=\"M3 21V5l8-2v18M11 7h9v14M1 21h22M6 7h2M6 11h2M6 15h2M15 10h2M15 14h2M15 18h2M6 21v-3h2v3\"/>",
+  bell: "<path d=\"M18 8a6 6 0 0 0-12 0c0 7-3 8-3 10h18c0-2-3-3-3-10ZM10 21h4M12 2V1\"/>",
+  users: "<circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M1 21v-2a8 8 0 0 1 16 0v2M17 3a4 4 0 0 1 0 8M18 14a6 6 0 0 1 5 6v1\"/>",
+  chart: "<path d=\"M3 21V11M8 21V7M13 21V13M18 21V3M23 21V1\"/>",
+  settings: "<path d=\"m9 2-1 3-3 1-3 3 2 3-1 3 3 3 3-1 3 2 3-2 3 1 3-3-1-3 2-3-3-3-3-1-1-3H9Z\"/><circle cx=\"12\" cy=\"11\" r=\"3.5\"/>",
+  search: "<circle cx=\"10.5\" cy=\"10.5\" r=\"7.5\"/><path d=\"m16 16 6 6\"/>",
+  chat: "<path d=\"M3 3h18v14H8l-5 5V3Z\"/>",
+  trend: "<path d=\"m2 20 7-8 5 4 8-11M15 5h7v7\"/>",
+  box: "<path d=\"m12 2 9 5v10l-9 5-9-5V7l9-5Zm0 10L3 7m9 5 9-5M12 12v10M7 4.8l10 5.4\"/>",
+  arrow: "<path d=\"M4 12h15m-5-5 5 5-5 5\"/>",
+  plus: "<path d=\"M12 4v16M4 12h16\"/>",
+  megaphone: "<path d=\"m3 8 9-2 8-3v18l-8-3-9-2V8ZM12 6v12M5 17l2 5h4l-2-5M20 8a4 4 0 0 1 0 8\"/>",
+  handshake: "<path d=\"m2 7 3-3 5 2 4-1 3 1 3-2 3 7-3 2M1 8l2 8 3-1M5 5l-3 9M18 6l4 8M10 6l-4 5 2 2 5-4 7 6-1 3-2 1-2 2-3 1-7-7M8 17l2-2M11 20l2-3M15 20l1-2\"/>",
+  coins: "<ellipse cx=\"14\" cy=\"5\" rx=\"7\" ry=\"3\"/><path d=\"M7 5v4c0 2 3 3 7 3s7-1 7-3V5M7 9v4c0 2 3 3 7 3s7-1 7-3V9M21 13v4c0 2-3 3-7 3M3 10c-1 .5-2 1-2 2 0 2 3 3 7 3M1 12v4c0 2 3 3 7 3M1 16v3c0 2 3 3 7 3s7-1 7-3v-3\"/>",
+  mail: "<rect x=\"2\" y=\"4\" width=\"20\" height=\"16\" rx=\"1\"/><path d=\"m2 5 10 8L22 5\"/>",
+  car: "<path d=\"m5 8 2-6h10l2 6M3 9h18v10H3V9ZM5 19v3M19 19v3M7 13h1M16 13h1M3 16h18\"/>",
+  calendar: "<rect x=\"3\" y=\"4\" width=\"18\" height=\"18\" rx=\"1\"/><path d=\"M7 1v6M17 1v6M3 10h18\"/>",
+  bank: "<path d=\"m2 8 10-6 10 6H2ZM3 22h18M2 19h20M6 10v7M10 10v7M14 10v7M18 10v7\"/>",
+  star: "<path d=\"m12 2 3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-6Z\"/>",
+  file: "<path d=\"M14 2H5a1 1 0 0 0-1 1v18a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V8l-6-6ZM14 2v6h6M8 12h8M8 16h8M8 19h5\"/>",
+  chevron: "<path d=\"m6 9 6 6 6-6\"/>",
+  menu: "<path d=\"M3 6h18M3 12h18M3 18h18\"/>",
+};
+
 const PATHS = {
   home: "M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z",
   user: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-8 9a8 8 0 0 1 16 0",
@@ -27,6 +55,17 @@ const PATHS = {
   trend: "m3 17 6-6 4 4 8-10M15 5h6v6",
   clock: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2",
   box: "m12 2 10 5-10 5L2 7ZM2 7v10l10 5 10-5V7M12 12v10",
+  megaphone: "",
+  handshake: "",
+  coins: "",
+  mail: "",
+  car: "",
+  calendar: "",
+  bank: "",
+  star: "",
+  file: "",
+  chevron: "",
+  menu: "",
   help: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM9.1 9a3 3 0 0 1 5.8 1c0 2-3 2-3 4m.1 3h.01",
 } as const;
 
@@ -34,8 +73,8 @@ export type IconName = keyof typeof PATHS;
 
 export function Icon({ name, size = 18, className = "" }: { name: IconName; size?: number; className?: string }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={`shrink-0 ${className}`}>
-      <path d={PATHS[name]} />
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={`shrink-0 ${className}`}>
+      {RAW[name] ? <g dangerouslySetInnerHTML={{ __html: RAW[name] }} /> : <path d={PATHS[name]} />}
     </svg>
   );
 }

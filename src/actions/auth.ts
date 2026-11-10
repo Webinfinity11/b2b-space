@@ -7,8 +7,11 @@ import { z } from "zod";
 import { ka } from "@/i18n/ka";
 import { audit, clientIp } from "@/lib/audit";
 import { db } from "@/lib/db";
-import { fail, invalid, zCheckbox, zEmail, zPassword, zPhone, zText, type FormState } from "@/lib/forms";
+import { fail, invalid, zCheckbox, zEmail, zOptionalText, zPassword, zPhone, zText, type FormState } from "@/lib/forms";
+import { DEFAULT_PERMISSIONS } from "@/lib/permissions";
+import { slugify } from "@/lib/slug";
 import { notify } from "@/lib/notify";
+import { emailEnabled, renderEmail, sendEmail } from "@/lib/email";
 import { rateLimit } from "@/lib/rate-limit";
 import { createSession, destroySession } from "@/lib/session";
 
@@ -30,33 +33,90 @@ const registerSchema = z
   })
   .refine((d) => d.password === d.passwordConfirm, { path: ["passwordConfirm"], error: ka.validation.passwordMismatch });
 
+const companySchema = z.object({
+  legalName: zText(2, 200),
+  registrationNumber: zText(3, 40),
+  categoryId: z.string({ error: ka.validation.chooseCategory }).min(1, { error: ka.validation.chooseCategory }),
+  city: zText(2, 80),
+  businessRole: z.enum(["BUYER", "SELLER", "BOTH"]),
+  size: z.enum(["SMALL", "MEDIUM", "LARGE"]),
+  direction: zOptionalText(120),
+  legalAddress: zOptionalText(300),
+});
+
+const errorsOf = (e: z.ZodError) => Object.fromEntries(e.issues.map((i) => [String(i.path[0]), i.message]));
+
+/**
+ * Registration is for companies only: the owner account and the company are created together and
+ * both wait for an administrator's approval. Invited employees (mode=invited) join their already
+ * approved company right away.
+ */
 export async function registerAction(_: FormState, formData: FormData): Promise<FormState> {
   const ip = (await clientIp()) ?? "unknown";
   if (!rateLimit(`register:${ip}`, 5, 15 * 60_000)) return fail(ka.auth.tooManyAttempts, formData);
+  const invitedMode = formData.get("mode") === "invited";
 
-  const parsed = registerSchema.safeParse(Object.fromEntries(formData));
-  if (!parsed.success) return invalid(parsed.error, formData);
+  const raw = Object.fromEntries(formData);
+  const parsed = registerSchema.safeParse(raw);
+  const company = invitedMode ? null : companySchema.safeParse(raw);
+  if (!parsed.success || (company && !company.success)) {
+    const errors = { ...(parsed.success ? {} : errorsOf(parsed.error)), ...(company && !company.success ? errorsOf(company.error) : {}) };
+    return fail(ka.validation.formErrors, formData, errors);
+  }
   const d = parsed.data;
 
   const exists = await db.user.findUnique({ where: { email: d.email }, select: { id: true } });
   if (exists) return fail(ka.validation.formErrors, formData, { email: ka.auth.emailTaken });
 
-  const user = await db.user.create({
-    data: {
-      firstName: d.firstName,
-      lastName: d.lastName,
-      email: d.email,
-      phone: d.phone,
-      passwordHash: await bcrypt.hash(d.password, 12),
-    },
-  });
-  await audit({ actorId: user.id, action: "auth.register", entityType: "User", entityId: user.id });
-
-  // Pending company invitations for this email become memberships right away.
   const invitations = await db.companyInvitation.findMany({
     where: { email: d.email, acceptedAt: null, revokedAt: null, expiresAt: { gt: new Date() } },
     include: { company: { select: { legalName: true, tradeName: true } } },
   });
+  if (invitedMode && invitations.length === 0) return fail(ka.sgba.noInvitation, formData);
+
+  const passwordHash = await bcrypt.hash(d.password, 12);
+  const userData = { firstName: d.firstName, lastName: d.lastName, email: d.email, phone: d.phone, passwordHash };
+
+  if (company?.success) {
+    const c = company.data;
+    const category = await db.category.findFirst({ where: { id: c.categoryId, isActive: true }, select: { id: true } });
+    if (!category) return fail(ka.validation.formErrors, formData, { categoryId: ka.validation.chooseCategory });
+    const dup = await db.company.findUnique({ where: { country_registrationNumber: { country: "GE", registrationNumber: c.registrationNumber } }, select: { id: true } });
+    if (dup) return fail(ka.validation.formErrors, formData, { registrationNumber: ka.companyForm.duplicate });
+
+    const slug = await uniqueCompanySlug(c.legalName);
+    const user = await db.$transaction(async (tx) => {
+      const u = await tx.user.create({ data: { ...userData, status: "PENDING" } });
+      await tx.company.create({
+        data: {
+          slug,
+          legalName: c.legalName,
+          registrationNumber: c.registrationNumber,
+          country: "GE",
+          city: c.city,
+          legalAddress: c.legalAddress ?? "",
+          businessRole: c.businessRole,
+          size: c.size,
+          direction: c.direction,
+          contactPerson: `${d.firstName} ${d.lastName}`,
+          contactEmail: d.email,
+          contactPhone: d.phone,
+          verificationStatus: "IN_REVIEW",
+          createdById: u.id,
+          categories: { create: [{ categoryId: c.categoryId }] },
+          members: { create: { userId: u.id, role: "OWNER", permissions: DEFAULT_PERMISSIONS.OWNER } },
+        },
+      });
+      return u;
+    });
+    await audit({ actorId: user.id, action: "auth.register", entityType: "User", entityId: user.id, metadata: { company: c.legalName } });
+    await notifyAdminsOfRegistration(`${c.legalName} — ${d.firstName} ${d.lastName}`, d.email);
+    redirect("/login?registered=1");
+  }
+
+  // Invited employee: active right away, joins the inviting companies.
+  const user = await db.user.create({ data: { ...userData, status: "ACTIVE" } });
+  await audit({ actorId: user.id, action: "auth.register", entityType: "User", entityId: user.id, metadata: { invited: true } });
   for (const inv of invitations) {
     await db.$transaction([
       db.companyMember.upsert({
@@ -71,7 +131,30 @@ export async function registerAction(_: FormState, formData: FormData): Promise<
   }
   const h = await headers();
   await createSession(user.id, { ip, userAgent: h.get("user-agent") });
-  redirect(safeNext(formData.get("next")) ?? "/app");
+  redirect("/app");
+}
+
+async function uniqueCompanySlug(base: string) {
+  const root = slugify(base) || "company";
+  for (let i = 0; i < 50; i++) {
+    const slug = i === 0 ? root : `${root}-${i + 1}`;
+    if (!(await db.company.findUnique({ where: { slug }, select: { id: true } }))) return slug;
+  }
+  return `${root}-${Date.now().toString(36)}`;
+}
+
+/** Emails platform admins that a new account is waiting for approval. */
+async function notifyAdminsOfRegistration(name: string, email: string) {
+  if (!emailEnabled()) return;
+  const admins = await db.user.findMany({ where: { platformRole: "ADMIN", status: "ACTIVE" }, select: { email: true } });
+  const { html, text } = renderEmail({
+    title: ka.approval.adminEmailTitle,
+    body: `${name} · ${email}`,
+    link: "/admin/users?status=PENDING",
+    button: ka.email.open,
+    footer: ka.email.footer,
+  });
+  await Promise.allSettled(admins.map((a) => sendEmail({ to: a.email, subject: ka.approval.adminEmailTitle, html, text })));
 }
 
 // Email for regular users; the platform admin may use a plain login name (ADMIN_EMAIL).
@@ -101,6 +184,8 @@ export async function loginAction(_: FormState, formData: FormData): Promise<For
     if (user) await audit({ actorId: user.id, action: "auth.login_failed", entityType: "User", entityId: user.id });
     return fail(ka.auth.invalidCredentials, formData);
   }
+  if (user.status === "PENDING") return fail(ka.auth.pendingApproval, formData);
+  if (user.status === "REJECTED") return fail(ka.auth.rejectedAccount, formData);
   if (user.status !== "ACTIVE") return fail(ka.auth.suspended, formData);
 
   const h = await headers();

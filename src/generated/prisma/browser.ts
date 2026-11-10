@@ -157,3 +157,28 @@ export type AuditLog = Prisma.AuditLogModel
  * 
  */
 export type PlatformSetting = Prisma.PlatformSettingModel
+/**
+ * Model Commission
+ * Platform commission, created when an invoice of a deal is fully paid.
+ */
+export type Commission = Prisma.CommissionModel
+/**
+ * Model CommissionRule
+ * Commission models shown in Finance (managed by admins).
+ */
+export type CommissionRule = Prisma.CommissionRuleModel
+/**
+ * Model CampaignPackage
+ * Paid campaign packages.
+ */
+export type CampaignPackage = Prisma.CampaignPackageModel
+/**
+ * Model CampaignRequest
+ * A company's application for a campaign (package or custom).
+ */
+export type CampaignRequest = Prisma.CampaignRequestModel
+/**
+ * Model CampaignRecipient
+ * A company that received a launched campaign (delivery + results).
+ */
+export type CampaignRecipient = Prisma.CampaignRecipientModel

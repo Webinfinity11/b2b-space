@@ -1,5 +1,4 @@
-import { SiteShell } from "@/components/site/SiteShell";
-
+/** Guest area (sign-in, company registration, legal pages): no workspace shell. */
 export default function SiteLayout({ children }: LayoutProps<"/">) {
-  return <SiteShell>{children}</SiteShell>;
+  return <div className="min-h-dvh bg-canvas">{children}</div>;
 }

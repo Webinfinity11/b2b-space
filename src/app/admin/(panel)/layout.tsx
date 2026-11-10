@@ -16,9 +16,18 @@ export const metadata: Metadata = {
  */
 export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   const admin = await requireAdmin();
-  const pending = await db.company.count({ where: { verificationStatus: "IN_REVIEW" } });
+  const [pending, pendingUsers, newCampaigns] = await Promise.all([
+    db.company.count({ where: { verificationStatus: "IN_REVIEW", createdBy: { status: { not: "PENDING" } } } }),
+    db.user.count({ where: { status: "PENDING" } }),
+    db.campaignRequest.count({ where: { status: "NEW" } }),
+  ]);
   const groups: NavGroup[] = [
-    { items: [{ href: "/admin", label: ka.admin.overview, icon: "home" }] },
+    {
+      items: [
+        { href: "/admin", label: ka.admin.overview, icon: "home" },
+        { href: "/admin/registrations", label: ka.sgba.approvalsTitle, badge: pendingUsers, icon: "inbox" },
+      ],
+    },
     {
       title: ka.admin.companies,
       items: [
@@ -32,12 +41,14 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
       items: [
         { href: "/admin/offers", label: ka.admin.offers, icon: "tag" },
         { href: "/admin/conversations", label: ka.admin.conversations, icon: "chat" },
+        { href: "/admin/campaigns", label: ka.sgba.campAdminTitle, badge: newCampaigns, icon: "trend" },
       ],
     },
     {
       title: ka.admin.financeGroup,
       items: [
         { href: "/admin/invoices", label: ka.admin.invoices, icon: "invoice" },
+        { href: "/admin/commissions", label: ka.sgba.commissionsAdmin, icon: "check" },
         { href: "/admin/finance", label: ka.admin.finance, icon: "chart" },
       ],
     },
@@ -60,7 +71,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
           searchAction="/admin/companies"
           notificationsHref={null}
           profileHref="/admin"
-          subtitle={ka.top.adminSubtitle}
+          label={ka.sgba.adminPanel}
           searchPlaceholder={ka.top.adminSearch}
         />
       }

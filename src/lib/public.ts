@@ -20,6 +20,9 @@ export const publicCompanySelect = {
   logoUrl: true,
   verificationStatus: true,
   customCategory: true,
+  businessRole: true,
+  size: true,
+  direction: true,
   categories: { select: { category: { select: { name: true, slug: true } } } },
 } satisfies Prisma.CompanySelect;
 
@@ -29,14 +32,13 @@ export function companyName(c: { tradeName: string | null; legalName: string }) 
   return c.tradeName || c.legalName;
 }
 
-/** Companies visible in the public catalog: everything except suspended / rejected. */
-const listedCompany: Prisma.CompanyWhereInput = {
-  verificationStatus: { in: ["PENDING", "IN_REVIEW", "VERIFIED"] },
-};
+/** Companies visible in the network: only those approved by an administrator. */
+const listedCompany: Prisma.CompanyWhereInput = { verificationStatus: "VERIFIED" };
 
-export async function getCategoryTree() {
+/** kind: "OFFER" (special-offer categories) or "INDUSTRY" (company industries). */
+export async function getCategoryTree(kind: "OFFER" | "INDUSTRY" = "INDUSTRY") {
   const all = await db.category.findMany({
-    where: { isActive: true },
+    where: { isActive: true, kind },
     orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
     select: { id: true, name: true, slug: true, parentId: true },
   });
@@ -46,9 +48,9 @@ export async function getCategoryTree() {
 
 export type CategoryNode = Awaited<ReturnType<typeof getCategoryTree>>[number];
 
-export async function getPopularCategories(limit = 8) {
+export async function getPopularCategories(limit = 8, kind: "OFFER" | "INDUSTRY" = "OFFER") {
   const cats = await db.category.findMany({
-    where: { isActive: true, parentId: null },
+    where: { isActive: true, parentId: null, kind },
     orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
     select: {
       id: true,
@@ -66,8 +68,11 @@ export type CompanyFilters = {
   city?: string;
   country?: string;
   verified?: boolean;
+  role?: "BUYER" | "SELLER" | "BOTH";
+  size?: "SMALL" | "MEDIUM" | "LARGE";
   sort?: "newest" | "name";
   page?: number;
+  pageSize?: number;
 };
 
 export const PAGE_SIZE = 12;
@@ -93,6 +98,9 @@ export async function searchCompanies(f: CompanyFilters) {
   if (f.city) and.push({ city: { equals: f.city, mode: "insensitive" } });
   if (f.country) and.push({ country: f.country });
   if (f.verified) and.push({ verificationStatus: "VERIFIED" });
+  if (f.role) and.push({ businessRole: f.role });
+  if (f.size) and.push({ size: f.size });
+  if (f.q) (and[1] as Prisma.CompanyWhereInput).OR!.push({ direction: { contains: f.q, mode: "insensitive" } });
 
   const page = Math.max(1, f.page ?? 1);
   const [total, items] = await Promise.all([
@@ -101,11 +109,11 @@ export async function searchCompanies(f: CompanyFilters) {
       where,
       select: publicCompanySelect,
       orderBy: f.sort === "name" ? [{ tradeName: "asc" }, { legalName: "asc" }] : [{ verificationStatus: "asc" }, { createdAt: "desc" }],
-      skip: (page - 1) * PAGE_SIZE,
-      take: PAGE_SIZE,
+      skip: (page - 1) * (f.pageSize ?? PAGE_SIZE),
+      take: f.pageSize ?? PAGE_SIZE,
     }),
   ]);
-  return { total, items, page, pages: Math.max(1, Math.ceil(total / PAGE_SIZE)) };
+  return { total, items, page, pages: Math.max(1, Math.ceil(total / (f.pageSize ?? PAGE_SIZE))) };
 }
 
 export async function getCompanyCities() {
@@ -169,6 +177,11 @@ const offerInternalSelect = {
   status: true,
   publishedAt: true,
   isAnonymous: true,
+  perk: true,
+  audience: true,
+  tag: true,
+  commissionPct: true,
+  commissionText: true,
   authorUserId: true,
   category: { select: { name: true, slug: true } },
   company: { select: { slug: true, legalName: true, tradeName: true, logoUrl: true, verificationStatus: true } },
@@ -177,7 +190,8 @@ const offerInternalSelect = {
 
 type OfferInternal = Prisma.OfferGetPayload<{ select: typeof offerInternalSelect }>;
 
-export type PublicOffer = Omit<OfferInternal, "company" | "author" | "authorUserId" | "priceMin" | "priceMax" | "quantity"> & {
+export type PublicOffer = Omit<OfferInternal, "company" | "author" | "authorUserId" | "priceMin" | "priceMax" | "quantity" | "commissionPct"> & {
+  commissionPct: string | null;
   priceMin: string | null;
   priceMax: string | null;
   quantity: string | null;
@@ -210,6 +224,7 @@ export function toPublicOffer(o: OfferInternal): PublicOffer {
     priceMin: o.priceMin?.toString() ?? null,
     priceMax: o.priceMax?.toString() ?? null,
     quantity: o.quantity?.toString() ?? null,
+    commissionPct: o.commissionPct?.toString() ?? null,
     publisher,
   };
 }
@@ -222,6 +237,8 @@ export type OfferFilters = {
   sort?: "newest" | "validUntil";
   page?: number;
   companyId?: string;
+  tag?: "MAIN_PARTNER" | "WOMEN_BUSINESS";
+  pageSize?: number;
   loggedIn: boolean;
 };
 
@@ -246,6 +263,7 @@ export async function searchOffers(f: OfferFilters) {
     });
   }
   if (f.type) and.push({ type: f.type });
+  if (f.tag) and.push({ tag: f.tag });
   if (f.city) and.push({ city: { equals: f.city, mode: "insensitive" } });
   if (f.companyId) and.push({ companyId: f.companyId, isAnonymous: false });
   if (f.category) {
@@ -260,11 +278,11 @@ export async function searchOffers(f: OfferFilters) {
       where,
       select: offerInternalSelect,
       orderBy: f.sort === "validUntil" ? [{ validUntil: { sort: "asc", nulls: "last" } }] : [{ publishedAt: "desc" }],
-      skip: (page - 1) * PAGE_SIZE,
-      take: PAGE_SIZE,
+      skip: (page - 1) * (f.pageSize ?? PAGE_SIZE),
+      take: f.pageSize ?? PAGE_SIZE,
     }),
   ]);
-  return { total, items: rows.map(toPublicOffer), page, pages: Math.max(1, Math.ceil(total / PAGE_SIZE)) };
+  return { total, items: rows.map(toPublicOffer), page, pages: Math.max(1, Math.ceil(total / (f.pageSize ?? PAGE_SIZE))) };
 }
 
 export async function getLatestOffers(limit = 6, loggedIn = false) {
@@ -356,7 +374,7 @@ export async function globalSearch(q: string, loggedIn: boolean, limit = 5) {
       take: limit,
     }),
     db.category.findMany({
-      where: { isActive: true, name: like },
+      where: { isActive: true, kind: "OFFER", name: like },
       select: { name: true, slug: true, parent: { select: { name: true } } },
       orderBy: { sortOrder: "asc" },
       take: limit,

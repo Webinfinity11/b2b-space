@@ -21,7 +21,10 @@ type Defaults = Partial<
     | "instagramUrl"
     | "contactPerson"
     | "contactEmail"
-    | "contactPhone",
+    | "contactPhone"
+    | "businessRole"
+    | "size"
+    | "direction",
     string | null
   >
 >;
@@ -86,6 +89,15 @@ export function CompanyFields({
                 </div>
               ))}
             </div>
+          </Field>
+          <Field label={ka.sgba.role} name="businessRole">
+            <Select name="businessRole" defaultValue={defaults.businessRole ?? "BOTH"} options={["BUYER", "SELLER", "BOTH"].map((r) => ({ value: r, label: ka.sgba.roles[r] }))} />
+          </Field>
+          <Field label={ka.sgba.size} name="size">
+            <Select name="size" defaultValue={defaults.size ?? "SMALL"} options={["SMALL", "MEDIUM", "LARGE"].map((r) => ({ value: r, label: ka.sgba.sizeFull[r] }))} />
+          </Field>
+          <Field label={ka.sgba.direction} name="direction" optional className="md:col-span-2">
+            <Input name="direction" defaultValue={defaults.direction} placeholder={ka.sgba.directionHint} maxLength={120} />
           </Field>
           <Field label={f.otherCategory} name="customCategory" optional hint={f.otherCategoryHint} className="md:col-span-2">
             <Input name="customCategory" defaultValue={defaults.customCategory} placeholder={f.otherCategoryPlaceholder} maxLength={80} />

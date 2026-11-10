@@ -67,7 +67,7 @@ export const getActiveMembership = cache(async (userId: string): Promise<Members
 export async function requireCompany(permission?: Permission | "owner") {
   const user = await requireUser("/company");
   const membership = await getActiveMembership(user.id);
-  if (!membership) redirect("/company/new");
+  if (!membership) redirect("/app");
   if (permission === "owner" ? membership.role !== "OWNER" : permission && !hasPermission(membership, permission)) notFound();
   return { user, membership };
 }
