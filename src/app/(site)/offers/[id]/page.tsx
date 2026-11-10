@@ -8,7 +8,7 @@ import { respondToOfferAction } from "@/actions/offers";
 import { db } from "@/lib/db";
 import { formatDate } from "@/lib/format";
 import { offerPriceLabel, quantityLabel } from "@/lib/offer-format";
-import { getPublicOffer } from "@/lib/public";
+import { getPublicOffer, searchOffers } from "@/lib/public";
 import { actingIdentities } from "@/lib/publishers";
 import { getCurrentUser } from "@/lib/session";
 import { Badge, VerifiedMark } from "@/components/ui/Badge";
@@ -16,6 +16,8 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Card, CardBody, CardHeader } from "@/components/ui/Card";
 import { ActionForm, Field, Select, SubmitButton, Textarea } from "@/components/ui/Form";
 import { CompanyLogo } from "@/components/site/CompanyLogo";
+import { OfferCard } from "@/components/site/OfferCard";
+import { Icon } from "@/components/ui/Icon";
 
 export async function generateMetadata({ params }: PageProps<"/offers/[id]">): Promise<Metadata> {
   const data = await getPublicOffer((await params).id, false);
@@ -54,8 +56,29 @@ export default async function OfferPage({ params }: PageProps<"/offers/[id]">) {
     }
   }
 
+  const pub = offer.publisher;
+  const fromCompany = pub.kind === "company" && internal.companyId;
+  const related = (
+    fromCompany
+      ? await searchOffers({ companyId: internal.companyId!, loggedIn: Boolean(user), page: 1 })
+      : offer.category
+        ? await searchOffers({ category: offer.category.slug, loggedIn: Boolean(user), page: 1 })
+        : { items: [] }
+  ).items
+    .filter((o) => o.id !== offer.id)
+    .slice(0, 4);
+  const images = restricted ? [] : attachments.filter((a) => a.isImage);
+  const files = restricted ? [] : attachments.filter((a) => !a.isImage);
+  const cover = images[0];
+  const showCta = respondState === "can" || respondState === "guest";
+
   return (
-    <div>
+    <div className={showCta ? "pb-20 lg:pb-0" : ""}>
+      {pub.kind === "company" && (
+        <Link href={`/companies/${pub.slug}`} className="mb-3 inline-flex items-center gap-2 text-sm text-accent-strong hover:underline">
+          <span aria-hidden="true">←</span> {pub.name}
+        </Link>
+      )}
       <nav className="mb-4 text-sm text-muted">
         <Link href="/offers" className="hover:text-ink">{ka.nav.offers}</Link>
         {offer.category && (
@@ -67,7 +90,12 @@ export default async function OfferPage({ params }: PageProps<"/offers/[id]">) {
       </nav>
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
         <div className="min-w-0 space-y-6">
-          <Card>
+          <Card className="overflow-hidden">
+            {cover && (
+              <a href={cover.url} target="_blank" className="block">
+                <img src={cover.url} alt={cover.fileName} className="aspect-[16/8] w-full object-cover" />
+              </a>
+            )}
             <CardBody className="space-y-5">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge tone={isRequest ? "warning" : "info"}>{isRequest ? ka.offer.typeRequest : ka.offer.typeOffer}</Badge>
@@ -75,22 +103,36 @@ export default async function OfferPage({ params }: PageProps<"/offers/[id]">) {
                 {offer.publishedAt && <span className="text-xs text-muted">{ka.offer.publishedAt}: {formatDate(offer.publishedAt)}</span>}
               </div>
               <h1 className="text-2xl font-semibold md:text-3xl">{offer.title}</h1>
+              <dl className="grid grid-cols-2 gap-3 2xl:grid-cols-4">
+                <Fact icon="tag" label={ka.offer.price} value={<span className="text-accent-strong">{offerPriceLabel(offer)}</span>} />
+                <Fact icon="box" label={ka.offer.quantity} value={quantityLabel(offer.quantity, offer.unit)} />
+                <Fact icon="pin" label={ka.offer.location} value={offer.city ?? ka.offer.notSpecified} />
+                <Fact icon="clock" label={ka.offer.validUntil} value={offer.validUntil ? formatDate(offer.validUntil) : ka.offer.notSpecified} />
+              </dl>
               {restricted ? (
                 <p className="rounded-lg bg-canvas px-4 py-3 text-sm text-muted">{ka.offer.registeredOnly}</p>
               ) : (
-                <div>
-                  <h2 className="mb-2 text-sm font-semibold text-muted">{ka.offer.description}</h2>
-                  <p className="whitespace-pre-line leading-relaxed">{offer.description}</p>
-                </div>
+                <>
+                  <div>
+                    <h2 className="mb-2 text-sm font-semibold text-muted">{ka.offer.description}</h2>
+                    <p className="whitespace-pre-line leading-relaxed">{offer.description}</p>
+                  </div>
+                  {offer.deliveryTerms && (
+                    <div>
+                      <h2 className="mb-2 text-sm font-semibold text-muted">{ka.offer.delivery}</h2>
+                      <p className="whitespace-pre-line leading-relaxed">{offer.deliveryTerms}</p>
+                    </div>
+                  )}
+                </>
               )}
             </CardBody>
           </Card>
 
-          {!restricted && attachments.length > 0 && (
+          {images.length + files.length > 1 && (
             <Card>
               <CardHeader title={ka.offer.attachments} />
-              <CardBody className="grid gap-3 sm:grid-cols-2">
-                {attachments.map((a) =>
+              <CardBody className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {[...images.slice(1), ...files].map((a) =>
                   a.isImage ? (
                     <a key={a.id} href={a.url} target="_blank">
                       <img src={a.url} alt={a.fileName} className="aspect-video w-full rounded-lg border border-line object-cover" loading="lazy" />
@@ -106,36 +148,9 @@ export default async function OfferPage({ params }: PageProps<"/offers/[id]">) {
           )}
         </div>
 
-        <aside className="space-y-6">
+        <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
           <Card>
-            <CardBody className="space-y-4 text-sm">
-              <Info label={ka.offer.price}><span className="text-lg font-semibold text-accent-strong">{offerPriceLabel(offer)}</span></Info>
-              <Info label={ka.offer.quantity}>{quantityLabel(offer.quantity, offer.unit)}</Info>
-              {offer.deliveryTerms && !restricted && <Info label={ka.offer.delivery}><span className="whitespace-pre-line">{offer.deliveryTerms}</span></Info>}
-              <Info label={ka.offer.location}>{offer.city ?? ka.offer.notSpecified}</Info>
-              <Info label={ka.offer.validUntil}>{offer.validUntil ? formatDate(offer.validUntil) : ka.offer.notSpecified}</Info>
-              <Info label={ka.offer.author}>
-                {offer.publisher.kind === "anonymous" ? (
-                  <span>
-                    <Badge tone="navy">{ka.offer.anonymous}</Badge>
-                    <span className="mt-1 block text-xs text-muted">{ka.offer.anonymousHint}</span>
-                  </span>
-                ) : offer.publisher.kind === "company" ? (
-                  <Link href={`/companies/${offer.publisher.slug}`} className="flex items-center gap-3 hover:underline">
-                    <CompanyLogo name={offer.publisher.name} url={offer.publisher.logoUrl} size={36} />
-                    <span>
-                      <span className="block font-medium">{offer.publisher.name}</span>
-                      {offer.publisher.verified && <VerifiedMark label={ka.company.verified} />}
-                    </span>
-                  </Link>
-                ) : (
-                  offer.publisher.name
-                )}
-              </Info>
-            </CardBody>
-          </Card>
-
-          <Card>
+            <div id="respond" className="scroll-mt-24" />
             <CardHeader title={ka.offer.respondTitle} />
             <CardBody>
               {respondState === "guest" && (
@@ -163,17 +178,72 @@ export default async function OfferPage({ params }: PageProps<"/offers/[id]">) {
               )}
             </CardBody>
           </Card>
+          <Card>
+            <CardHeader title={isRequest ? ka.offer.requestedBy : ka.offer.offeredBy} />
+            <CardBody className="space-y-3 text-sm">
+              {pub.kind === "anonymous" ? (
+                <div>
+                  <Badge tone="navy">{ka.offer.anonymous}</Badge>
+                  <p className="mt-2 text-xs text-muted">{ka.offer.anonymousHint}</p>
+                </div>
+              ) : pub.kind === "company" ? (
+                <>
+                  <Link href={`/companies/${pub.slug}`} className="flex items-center gap-3">
+                    <CompanyLogo name={pub.name} url={pub.logoUrl} size={48} />
+                    <span className="min-w-0">
+                      <span className="block font-semibold hover:underline">{pub.name}</span>
+                      {pub.verified && <VerifiedMark label={ka.company.verified} />}
+                    </span>
+                  </Link>
+                  <ButtonLink href={`/companies/${pub.slug}`} variant="secondary" className="w-full">{ka.offer.companyProfile}</ButtonLink>
+                </>
+              ) : (
+                <div className="flex items-center gap-3">
+                  <span className="grid size-12 place-items-center rounded-lg bg-accent/10 text-accent"><Icon name="user" /></span>
+                  <span className="font-semibold">{pub.name}</span>
+                </div>
+              )}
+              {offer.publishedAt && <p className="text-xs text-muted">{ka.offer.publishedAt}: {formatDate(offer.publishedAt)}</p>}
+            </CardBody>
+          </Card>
         </aside>
       </div>
+
+      {related.length > 0 && (
+        <section className="mt-10">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <h2 className="text-lg font-semibold">{fromCompany ? ka.offer.moreFromCompany : ka.offer.similar}</h2>
+            <Link
+              href={pub.kind === "company" ? `/companies/${pub.slug}#offers` : `/offers?category=${offer.category?.slug ?? ""}`}
+              className="text-sm text-accent-strong hover:underline"
+            >
+              {ka.home.viewAll}
+            </Link>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {related.map((o) => (
+              <OfferCard key={o.id} offer={o} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {showCta && (
+        <div className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-3 border-t border-line bg-surface/95 px-4 py-3 backdrop-blur lg:hidden">
+          <span className="min-w-0 truncate font-semibold text-accent-strong">{offerPriceLabel(offer)}</span>
+          <ButtonLink href={respondState === "guest" ? `/login?next=/offers/${offer.id}` : "#respond"}>{ka.offer.respondTitle}</ButtonLink>
+        </div>
+      )}
     </div>
   );
 }
 
-function Info({ label, children }: { label: string; children: ReactNode }) {
+function Fact({ icon, label, value }: { icon: "tag" | "box" | "pin" | "clock"; label: string; value: ReactNode }) {
   return (
-    <div>
-      <div className="mb-1 text-xs text-muted">{label}</div>
-      <div>{children}</div>
+    <div className="min-w-0 rounded-lg border border-line bg-canvas/40 px-3 py-2.5">
+      <dt className="flex items-center gap-1.5 text-[11px] text-muted"><Icon name={icon} size={13} /> {label}</dt>
+      <dd className="mt-1 break-words text-sm font-semibold">{value}</dd>
     </div>
   );
 }
+

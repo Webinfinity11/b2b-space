@@ -50,3 +50,4 @@ next-env.d.ts
 
 # local production builds
 /.next-prod
+/.next-build

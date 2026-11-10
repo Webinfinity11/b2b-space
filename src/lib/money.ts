@@ -11,3 +11,8 @@ export function formatAmount(n: number, currency?: string | null): string {
   const sym = currency ? (SYMBOLS[currency] ?? currency) : "";
   return `${sign}${grouped},${frac}${sym ? `\u00a0${sym}` : ""}`;
 }
+
+/** YYYY-MM-DD for "today" in Georgia (server runs in UTC). */
+export function todayInGeorgia(): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Tbilisi" }).format(new Date());
+}

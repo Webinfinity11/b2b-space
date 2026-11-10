@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { InvoiceStatus } from "@/generated/prisma/enums";
 import { ka } from "@/i18n/ka";
-import { cancelInvoiceAction, markInvoiceSentAction, markInvoiceViewed, recordPaymentAction } from "@/actions/invoices";
+import { cancelInvoiceAction, markInvoiceSentAction, markInvoiceViewed, markPaidInFullAction, recordPaymentAction } from "@/actions/invoices";
+import { todayInGeorgia } from "@/lib/money";
 import { getActiveMembership, requireUser } from "@/lib/authz";
 import { db } from "@/lib/db";
 import { formatDate, formatDateTime, formatMoney, formatNumber } from "@/lib/format";
@@ -39,7 +40,7 @@ export default async function InvoicePage({ params }: PageProps<"/app/invoices/[
   const remaining = Number(inv.total) - Number(inv.paidAmount);
   const i = ka.invoice;
   const t = ka.terms;
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayInGeorgia();
 
   return (
     <>
@@ -151,7 +152,15 @@ export default async function InvoicePage({ params }: PageProps<"/app/invoices/[
             <Card>
               <CardHeader title={i.recordPayment} text={i.paymentHint} />
               <CardBody className="space-y-4">
-                <ActionForm action={recordPaymentAction} className="space-y-3" resetOnSuccess>
+                {remaining > 0 && (
+                  <ActionForm action={markPaidInFullAction}>
+                    <input type="hidden" name="invoiceId" value={inv.id} />
+                    <SubmitButton className="w-full">{i.paidInFull(formatMoney(remaining, inv.currency))}</SubmitButton>
+                  </ActionForm>
+                )}
+                <details className="rounded-lg border border-line">
+                <summary className="cursor-pointer px-3 py-2 text-sm">{i.partialPayment}</summary>
+                <ActionForm action={recordPaymentAction} className="space-y-3 border-t border-line p-3" resetOnSuccess>
                   <input type="hidden" name="invoiceId" value={inv.id} />
                   <Field label={`${i.amount} (${inv.currency})`} name="amount">
                     <Input name="amount" inputMode="decimal" defaultValue={remaining > 0 ? remaining.toFixed(2) : ""} />
@@ -165,8 +174,9 @@ export default async function InvoicePage({ params }: PageProps<"/app/invoices/[
                   <Field label={i.reference} name="reference" optional>
                     <Input name="reference" maxLength={200} />
                   </Field>
-                  <SubmitButton className="w-full">{i.recordPayment}</SubmitButton>
+                  <SubmitButton variant="secondary" className="w-full">{i.recordPayment}</SubmitButton>
                 </ActionForm>
+                </details>
                 {inv.status === "ISSUED" && (
                   <ActionForm action={markInvoiceSentAction}>
                     <input type="hidden" name="invoiceId" value={inv.id} />

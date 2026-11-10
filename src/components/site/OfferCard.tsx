@@ -29,11 +29,11 @@ export function OfferCard({ offer }: { offer: PublicOffer }) {
           {[offer.category?.name, isRequest ? ka.offer.typeRequest : ka.offer.typeOffer].filter(Boolean).join(" · ")}
         </div>
         <div className="mt-2 flex items-center justify-between gap-2">
-          <span className="flex items-center gap-1 text-[11px] text-muted">
+          <span className="flex shrink-0 items-center gap-1 whitespace-nowrap text-[11px] text-muted">
             <Icon name="arrowUp" size={12} />
             {offer.validUntil ? formatDate(offer.validUntil) : offer.city ?? ka.offer.notSpecified}
           </span>
-          <span className="truncate text-sm font-bold tabular-nums">{offerPriceLabel(offer)}</span>
+          <span className="min-w-0 truncate text-sm font-bold tabular-nums">{offerPriceLabel(offer)}</span>
         </div>
       </div>
     </Link>

@@ -94,7 +94,7 @@ export default async function CompanyPage({ params }: PageProps<"/companies/[slu
             <section id="offers" className="scroll-mt-20">
               <h2 className="mb-4 text-lg font-semibold">{ka.company.activeOffers}</h2>
               {offers.items.length > 0 ? (
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 2xl:grid-cols-2">
                   {offers.items.map((o) => (
                     <OfferCard key={o.id} offer={o} />
                   ))}

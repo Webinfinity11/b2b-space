@@ -51,14 +51,14 @@ export default async function AdminInvoicesPage({ searchParams }: PageProps<"/ad
       <PageHeader title={ka.admin.invoices} text={ka.catalog.results(total)} />
       <form className="mb-4 flex flex-wrap items-end gap-2">
         <input name="q" defaultValue={q} placeholder={ka.admin.invoiceSearch} aria-label={ka.admin.invoiceSearch} className={`${controlClass} h-10 w-full sm:w-64`} />
-        <select name="status" defaultValue={status ?? ""} className={`${controlClass} h-10 w-auto`} aria-label={ka.common.status}>
+        <select name="status" defaultValue={status ?? ""} className={`${controlClass} h-10 w-full sm:w-auto!`} aria-label={ka.common.status}>
           <option value="">{ka.common.status}: {ka.invoice.filterAll}</option>
           {STATUSES.map((s) => (
             <option key={s} value={s}>{ka.enums.invoiceStatus[s]}</option>
           ))}
         </select>
         {CURRENCIES.length > 1 && (
-          <select name="currency" defaultValue={currency ?? ""} className={`${controlClass} h-10 w-auto`} aria-label={ka.terms.currency}>
+          <select name="currency" defaultValue={currency ?? ""} className={`${controlClass} h-10 w-full sm:w-auto!`} aria-label={ka.terms.currency}>
             <option value="">{ka.terms.currency}: {ka.invoice.filterAll}</option>
             {CURRENCIES.map((c) => (
               <option key={c} value={c}>{c}</option>

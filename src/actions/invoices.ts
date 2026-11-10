@@ -13,6 +13,7 @@ import { otherSideUserIds, requireDealContext } from "@/lib/deals";
 import { fail, type FormState } from "@/lib/forms";
 import { assertInvoiceManager, buildInvoiceSnapshot } from "@/lib/invoices";
 import { notify } from "@/lib/notify";
+import { todayInGeorgia } from "@/lib/money";
 
 const i18n = ka.invoice;
 
@@ -166,6 +167,20 @@ export async function recordPaymentAction(_: FormState, formData: FormData): Pro
   await audit({ actorId: user.id, action: "invoice.payment_recorded", entityType: "Invoice", entityId: inv.id, metadata: { amount: amount.toFixed(2), currency: inv.currency, status } });
   revalidatePath(`/app/invoices/${inv.id}`);
   return { ok: true, message: i18n.saved };
+}
+
+/** One click: records a payment for the whole remaining amount, dated today (Georgia). */
+export async function markPaidInFullAction(prev: FormState, formData: FormData): Promise<FormState> {
+  const { inv } = await assertInvoiceManager(String(formData.get("invoiceId")));
+  const remaining = inv.total.sub(inv.paidAmount);
+  if (remaining.lte(0)) return fail(ka.errors.forbidden);
+  const fd = new FormData();
+  fd.set("invoiceId", inv.id);
+  fd.set("amount", remaining.toFixed(2));
+  fd.set("paidAt", todayInGeorgia());
+  fd.set("method", String(formData.get("method") ?? ""));
+  fd.set("reference", "");
+  return recordPaymentAction(prev, fd);
 }
 
 /** Buyer opening an issued/sent invoice marks it as viewed (optional status from the brief). */
