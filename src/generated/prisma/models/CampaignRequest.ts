@@ -94,6 +94,7 @@ export type CampaignRequestCountAggregateOutputType = {
   sizes: number
   roles: number
   positions: number
+  positionIds: number
   perk: number
   ctaUrl: number
   fileUrl: number
@@ -177,6 +178,7 @@ export type CampaignRequestCountAggregateInputType = {
   sizes?: true
   roles?: true
   positions?: true
+  positionIds?: true
   perk?: true
   ctaUrl?: true
   fileUrl?: true
@@ -291,6 +293,7 @@ export type CampaignRequestGroupByOutputType = {
   sizes: string[]
   roles: string[]
   positions: string | null
+  positionIds: string[]
   perk: string | null
   ctaUrl: string | null
   fileUrl: string | null
@@ -341,6 +344,7 @@ export type CampaignRequestWhereInput = {
   sizes?: Prisma.StringNullableListFilter<"CampaignRequest">
   roles?: Prisma.StringNullableListFilter<"CampaignRequest">
   positions?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
+  positionIds?: Prisma.StringNullableListFilter<"CampaignRequest">
   perk?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
   ctaUrl?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
   fileUrl?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
@@ -371,6 +375,7 @@ export type CampaignRequestOrderByWithRelationInput = {
   sizes?: Prisma.SortOrder
   roles?: Prisma.SortOrder
   positions?: Prisma.SortOrderInput | Prisma.SortOrder
+  positionIds?: Prisma.SortOrder
   perk?: Prisma.SortOrderInput | Prisma.SortOrder
   ctaUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -404,6 +409,7 @@ export type CampaignRequestWhereUniqueInput = Prisma.AtLeast<{
   sizes?: Prisma.StringNullableListFilter<"CampaignRequest">
   roles?: Prisma.StringNullableListFilter<"CampaignRequest">
   positions?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
+  positionIds?: Prisma.StringNullableListFilter<"CampaignRequest">
   perk?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
   ctaUrl?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
   fileUrl?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
@@ -434,6 +440,7 @@ export type CampaignRequestOrderByWithAggregationInput = {
   sizes?: Prisma.SortOrder
   roles?: Prisma.SortOrder
   positions?: Prisma.SortOrderInput | Prisma.SortOrder
+  positionIds?: Prisma.SortOrder
   perk?: Prisma.SortOrderInput | Prisma.SortOrder
   ctaUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -469,6 +476,7 @@ export type CampaignRequestScalarWhereWithAggregatesInput = {
   sizes?: Prisma.StringNullableListFilter<"CampaignRequest">
   roles?: Prisma.StringNullableListFilter<"CampaignRequest">
   positions?: Prisma.StringNullableWithAggregatesFilter<"CampaignRequest"> | string | null
+  positionIds?: Prisma.StringNullableListFilter<"CampaignRequest">
   perk?: Prisma.StringNullableWithAggregatesFilter<"CampaignRequest"> | string | null
   ctaUrl?: Prisma.StringNullableWithAggregatesFilter<"CampaignRequest"> | string | null
   fileUrl?: Prisma.StringNullableWithAggregatesFilter<"CampaignRequest"> | string | null
@@ -494,6 +502,7 @@ export type CampaignRequestCreateInput = {
   sizes?: Prisma.CampaignRequestCreatesizesInput | string[]
   roles?: Prisma.CampaignRequestCreaterolesInput | string[]
   positions?: string | null
+  positionIds?: Prisma.CampaignRequestCreatepositionIdsInput | string[]
   perk?: string | null
   ctaUrl?: string | null
   fileUrl?: string | null
@@ -524,6 +533,7 @@ export type CampaignRequestUncheckedCreateInput = {
   sizes?: Prisma.CampaignRequestCreatesizesInput | string[]
   roles?: Prisma.CampaignRequestCreaterolesInput | string[]
   positions?: string | null
+  positionIds?: Prisma.CampaignRequestCreatepositionIdsInput | string[]
   perk?: string | null
   ctaUrl?: string | null
   fileUrl?: string | null
@@ -550,6 +560,7 @@ export type CampaignRequestUpdateInput = {
   sizes?: Prisma.CampaignRequestUpdatesizesInput | string[]
   roles?: Prisma.CampaignRequestUpdaterolesInput | string[]
   positions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionIds?: Prisma.CampaignRequestUpdatepositionIdsInput | string[]
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -580,6 +591,7 @@ export type CampaignRequestUncheckedUpdateInput = {
   sizes?: Prisma.CampaignRequestUpdatesizesInput | string[]
   roles?: Prisma.CampaignRequestUpdaterolesInput | string[]
   positions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionIds?: Prisma.CampaignRequestUpdatepositionIdsInput | string[]
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -608,6 +620,7 @@ export type CampaignRequestCreateManyInput = {
   sizes?: Prisma.CampaignRequestCreatesizesInput | string[]
   roles?: Prisma.CampaignRequestCreaterolesInput | string[]
   positions?: string | null
+  positionIds?: Prisma.CampaignRequestCreatepositionIdsInput | string[]
   perk?: string | null
   ctaUrl?: string | null
   fileUrl?: string | null
@@ -633,6 +646,7 @@ export type CampaignRequestUpdateManyMutationInput = {
   sizes?: Prisma.CampaignRequestUpdatesizesInput | string[]
   roles?: Prisma.CampaignRequestUpdaterolesInput | string[]
   positions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionIds?: Prisma.CampaignRequestUpdatepositionIdsInput | string[]
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -660,6 +674,7 @@ export type CampaignRequestUncheckedUpdateManyInput = {
   sizes?: Prisma.CampaignRequestUpdatesizesInput | string[]
   roles?: Prisma.CampaignRequestUpdaterolesInput | string[]
   positions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionIds?: Prisma.CampaignRequestUpdatepositionIdsInput | string[]
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -697,6 +712,7 @@ export type CampaignRequestCountOrderByAggregateInput = {
   sizes?: Prisma.SortOrder
   roles?: Prisma.SortOrder
   positions?: Prisma.SortOrder
+  positionIds?: Prisma.SortOrder
   perk?: Prisma.SortOrder
   ctaUrl?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
@@ -869,6 +885,10 @@ export type CampaignRequestCreaterolesInput = {
   set: string[]
 }
 
+export type CampaignRequestCreatepositionIdsInput = {
+  set: string[]
+}
+
 export type EnumCampaignRequestStatusFieldUpdateOperationsInput = {
   set?: $Enums.CampaignRequestStatus
 }
@@ -889,6 +909,11 @@ export type CampaignRequestUpdatesizesInput = {
 }
 
 export type CampaignRequestUpdaterolesInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type CampaignRequestUpdatepositionIdsInput = {
   set?: string[]
   push?: string | string[]
 }
@@ -919,6 +944,7 @@ export type CampaignRequestCreateWithoutCompanyInput = {
   sizes?: Prisma.CampaignRequestCreatesizesInput | string[]
   roles?: Prisma.CampaignRequestCreaterolesInput | string[]
   positions?: string | null
+  positionIds?: Prisma.CampaignRequestCreatepositionIdsInput | string[]
   perk?: string | null
   ctaUrl?: string | null
   fileUrl?: string | null
@@ -947,6 +973,7 @@ export type CampaignRequestUncheckedCreateWithoutCompanyInput = {
   sizes?: Prisma.CampaignRequestCreatesizesInput | string[]
   roles?: Prisma.CampaignRequestCreaterolesInput | string[]
   positions?: string | null
+  positionIds?: Prisma.CampaignRequestCreatepositionIdsInput | string[]
   perk?: string | null
   ctaUrl?: string | null
   fileUrl?: string | null
@@ -1004,6 +1031,7 @@ export type CampaignRequestScalarWhereInput = {
   sizes?: Prisma.StringNullableListFilter<"CampaignRequest">
   roles?: Prisma.StringNullableListFilter<"CampaignRequest">
   positions?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
+  positionIds?: Prisma.StringNullableListFilter<"CampaignRequest">
   perk?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
   ctaUrl?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
   fileUrl?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
@@ -1029,6 +1057,7 @@ export type CampaignRequestCreateWithoutPackageInput = {
   sizes?: Prisma.CampaignRequestCreatesizesInput | string[]
   roles?: Prisma.CampaignRequestCreaterolesInput | string[]
   positions?: string | null
+  positionIds?: Prisma.CampaignRequestCreatepositionIdsInput | string[]
   perk?: string | null
   ctaUrl?: string | null
   fileUrl?: string | null
@@ -1057,6 +1086,7 @@ export type CampaignRequestUncheckedCreateWithoutPackageInput = {
   sizes?: Prisma.CampaignRequestCreatesizesInput | string[]
   roles?: Prisma.CampaignRequestCreaterolesInput | string[]
   positions?: string | null
+  positionIds?: Prisma.CampaignRequestCreatepositionIdsInput | string[]
   perk?: string | null
   ctaUrl?: string | null
   fileUrl?: string | null
@@ -1109,6 +1139,7 @@ export type CampaignRequestCreateWithoutRecipientsInput = {
   sizes?: Prisma.CampaignRequestCreatesizesInput | string[]
   roles?: Prisma.CampaignRequestCreaterolesInput | string[]
   positions?: string | null
+  positionIds?: Prisma.CampaignRequestCreatepositionIdsInput | string[]
   perk?: string | null
   ctaUrl?: string | null
   fileUrl?: string | null
@@ -1138,6 +1169,7 @@ export type CampaignRequestUncheckedCreateWithoutRecipientsInput = {
   sizes?: Prisma.CampaignRequestCreatesizesInput | string[]
   roles?: Prisma.CampaignRequestCreaterolesInput | string[]
   positions?: string | null
+  positionIds?: Prisma.CampaignRequestCreatepositionIdsInput | string[]
   perk?: string | null
   ctaUrl?: string | null
   fileUrl?: string | null
@@ -1179,6 +1211,7 @@ export type CampaignRequestUpdateWithoutRecipientsInput = {
   sizes?: Prisma.CampaignRequestUpdatesizesInput | string[]
   roles?: Prisma.CampaignRequestUpdaterolesInput | string[]
   positions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionIds?: Prisma.CampaignRequestUpdatepositionIdsInput | string[]
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1208,6 +1241,7 @@ export type CampaignRequestUncheckedUpdateWithoutRecipientsInput = {
   sizes?: Prisma.CampaignRequestUpdatesizesInput | string[]
   roles?: Prisma.CampaignRequestUpdaterolesInput | string[]
   positions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionIds?: Prisma.CampaignRequestUpdatepositionIdsInput | string[]
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1234,6 +1268,7 @@ export type CampaignRequestCreateManyCompanyInput = {
   sizes?: Prisma.CampaignRequestCreatesizesInput | string[]
   roles?: Prisma.CampaignRequestCreaterolesInput | string[]
   positions?: string | null
+  positionIds?: Prisma.CampaignRequestCreatepositionIdsInput | string[]
   perk?: string | null
   ctaUrl?: string | null
   fileUrl?: string | null
@@ -1259,6 +1294,7 @@ export type CampaignRequestUpdateWithoutCompanyInput = {
   sizes?: Prisma.CampaignRequestUpdatesizesInput | string[]
   roles?: Prisma.CampaignRequestUpdaterolesInput | string[]
   positions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionIds?: Prisma.CampaignRequestUpdatepositionIdsInput | string[]
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1287,6 +1323,7 @@ export type CampaignRequestUncheckedUpdateWithoutCompanyInput = {
   sizes?: Prisma.CampaignRequestUpdatesizesInput | string[]
   roles?: Prisma.CampaignRequestUpdaterolesInput | string[]
   positions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionIds?: Prisma.CampaignRequestUpdatepositionIdsInput | string[]
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1314,6 +1351,7 @@ export type CampaignRequestUncheckedUpdateManyWithoutCompanyInput = {
   sizes?: Prisma.CampaignRequestUpdatesizesInput | string[]
   roles?: Prisma.CampaignRequestUpdaterolesInput | string[]
   positions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionIds?: Prisma.CampaignRequestUpdatepositionIdsInput | string[]
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1340,6 +1378,7 @@ export type CampaignRequestCreateManyPackageInput = {
   sizes?: Prisma.CampaignRequestCreatesizesInput | string[]
   roles?: Prisma.CampaignRequestCreaterolesInput | string[]
   positions?: string | null
+  positionIds?: Prisma.CampaignRequestCreatepositionIdsInput | string[]
   perk?: string | null
   ctaUrl?: string | null
   fileUrl?: string | null
@@ -1365,6 +1404,7 @@ export type CampaignRequestUpdateWithoutPackageInput = {
   sizes?: Prisma.CampaignRequestUpdatesizesInput | string[]
   roles?: Prisma.CampaignRequestUpdaterolesInput | string[]
   positions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionIds?: Prisma.CampaignRequestUpdatepositionIdsInput | string[]
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1393,6 +1433,7 @@ export type CampaignRequestUncheckedUpdateWithoutPackageInput = {
   sizes?: Prisma.CampaignRequestUpdatesizesInput | string[]
   roles?: Prisma.CampaignRequestUpdaterolesInput | string[]
   positions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionIds?: Prisma.CampaignRequestUpdatepositionIdsInput | string[]
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1420,6 +1461,7 @@ export type CampaignRequestUncheckedUpdateManyWithoutPackageInput = {
   sizes?: Prisma.CampaignRequestUpdatesizesInput | string[]
   roles?: Prisma.CampaignRequestUpdaterolesInput | string[]
   positions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionIds?: Prisma.CampaignRequestUpdatepositionIdsInput | string[]
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1478,6 +1520,7 @@ export type CampaignRequestSelect<ExtArgs extends runtime.Types.Extensions.Inter
   sizes?: boolean
   roles?: boolean
   positions?: boolean
+  positionIds?: boolean
   perk?: boolean
   ctaUrl?: boolean
   fileUrl?: boolean
@@ -1509,6 +1552,7 @@ export type CampaignRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   sizes?: boolean
   roles?: boolean
   positions?: boolean
+  positionIds?: boolean
   perk?: boolean
   ctaUrl?: boolean
   fileUrl?: boolean
@@ -1538,6 +1582,7 @@ export type CampaignRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   sizes?: boolean
   roles?: boolean
   positions?: boolean
+  positionIds?: boolean
   perk?: boolean
   ctaUrl?: boolean
   fileUrl?: boolean
@@ -1567,6 +1612,7 @@ export type CampaignRequestSelectScalar = {
   sizes?: boolean
   roles?: boolean
   positions?: boolean
+  positionIds?: boolean
   perk?: boolean
   ctaUrl?: boolean
   fileUrl?: boolean
@@ -1580,7 +1626,7 @@ export type CampaignRequestSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CampaignRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "packageId" | "companyId" | "userId" | "title" | "message" | "status" | "adminNote" | "industryIds" | "cities" | "sizes" | "roles" | "positions" | "perk" | "ctaUrl" | "fileUrl" | "fileName" | "startDate" | "price" | "paidAt" | "launchedAt" | "finishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["campaignRequest"]>
+export type CampaignRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "packageId" | "companyId" | "userId" | "title" | "message" | "status" | "adminNote" | "industryIds" | "cities" | "sizes" | "roles" | "positions" | "positionIds" | "perk" | "ctaUrl" | "fileUrl" | "fileName" | "startDate" | "price" | "paidAt" | "launchedAt" | "finishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["campaignRequest"]>
 export type CampaignRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   package?: boolean | Prisma.CampaignRequest$packageArgs<ExtArgs>
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
@@ -1620,6 +1666,10 @@ export type $CampaignRequestPayload<ExtArgs extends runtime.Types.Extensions.Int
     sizes: string[]
     roles: string[]
     positions: string | null
+    /**
+     * Target employees by position (Category kind POSITION ids). Empty = any position.
+     */
+    positionIds: string[]
     perk: string | null
     ctaUrl: string | null
     fileUrl: string | null
@@ -2073,6 +2123,7 @@ export interface CampaignRequestFieldRefs {
   readonly sizes: Prisma.FieldRef<"CampaignRequest", 'String[]'>
   readonly roles: Prisma.FieldRef<"CampaignRequest", 'String[]'>
   readonly positions: Prisma.FieldRef<"CampaignRequest", 'String'>
+  readonly positionIds: Prisma.FieldRef<"CampaignRequest", 'String[]'>
   readonly perk: Prisma.FieldRef<"CampaignRequest", 'String'>
   readonly ctaUrl: Prisma.FieldRef<"CampaignRequest", 'String'>
   readonly fileUrl: Prisma.FieldRef<"CampaignRequest", 'String'>

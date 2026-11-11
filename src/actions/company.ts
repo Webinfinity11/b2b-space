@@ -2,14 +2,16 @@
 
 import { createHash, randomBytes } from "node:crypto";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 import { ka } from "@/i18n/ka";
 import { Prisma } from "@/generated/prisma/client";
 import { audit } from "@/lib/audit";
-import { ForbiddenError, assertCompanyPermission } from "@/lib/authz";
+import { ForbiddenError, assertCompanyPermission, assertUser } from "@/lib/authz";
 import { db } from "@/lib/db";
 import { fail, invalid, zCheckbox, zEmail, zOptionalPhone, zOptionalText, zOptionalUrl, zText, type FormState } from "@/lib/forms";
 import { notify } from "@/lib/notify";
+import { readPeopleFields } from "@/lib/people";
 import { appUrl, emailEnabled, renderEmail, sendEmail } from "@/lib/email";
 import { DEFAULT_PERMISSIONS, sanitizePermissions } from "@/lib/permissions";
 import { IMAGE_TYPES, UploadError, deletePublicFile, filesFrom, storeFile } from "@/lib/storage";
@@ -47,7 +49,7 @@ async function parseCategories(formData: FormData): Promise<string[] | string> {
   const custom = String(formData.get("customCategory") ?? "").trim();
   if (ids.length === 0) return custom ? [] : ka.companyForm.chooseOrOther;
   if (ids.length > 5) return ka.companyForm.tooManyCategories;
-  const valid = await db.category.count({ where: { id: { in: ids }, isActive: true } });
+  const valid = await db.category.count({ where: { id: { in: ids }, kind: "INDUSTRY", isActive: true } });
   return valid === ids.length ? ids : ka.validation.chooseCategory;
 }
 
@@ -125,70 +127,82 @@ export async function addMemberAction(_: FormState, formData: FormData): Promise
   const companyId = String(formData.get("companyId"));
   const { user } = await assertCompanyPermission(companyId, "owner");
   const parsed = z
-    .object({ email: zEmail, role: z.enum(["OWNER", "EMPLOYEE", "FINANCE"], { error: ka.validation.required }) })
+    .object({
+      email: zEmail,
+      firstName: zOptionalText(60),
+      lastName: zOptionalText(60),
+      role: z.enum(["OWNER", "EMPLOYEE", "FINANCE"], { error: ka.validation.required }),
+    })
     .safeParse(Object.fromEntries(formData));
   if (!parsed.success) return invalid(parsed.error, formData);
+  const people = await readPeopleFields(formData);
+  if (!people) return fail(ka.validation.formErrors, formData, { positionId: ka.validation.required });
   // No manual selection → permissions follow the chosen role.
   const picked = sanitizePermissions(formData.getAll("permissions").map(String));
   const permissions = parsed.data.role === "OWNER" || picked.length === 0 ? DEFAULT_PERMISSIONS[parsed.data.role] : picked;
+  const email = parsed.data.email;
 
-  const target = await db.user.findUnique({ where: { email: parsed.data.email }, select: { id: true } });
-  if (!target) {
-    // Not registered yet → keep a pending invitation; it is applied automatically on registration.
-    const pending = await db.companyInvitation.findFirst({
-      where: { companyId, email: parsed.data.email, acceptedAt: null, revokedAt: null },
-    });
-    const expiresAt = new Date(Date.now() + 30 * 864e5);
-    // The link carries a one-time secret; only its hash is stored. Re-inviting issues a fresh link.
-    const token = randomBytes(24).toString("base64url");
-    const tokenHash = createHash("sha256").update(token).digest("hex");
-    if (pending) {
-      await db.companyInvitation.update({ where: { id: pending.id }, data: { role: parsed.data.role, permissions, expiresAt, tokenHash } });
-    } else {
-      await db.companyInvitation.create({
-        data: {
-          companyId,
-          email: parsed.data.email,
-          role: parsed.data.role,
-          permissions,
-          invitedById: user.id,
-          expiresAt,
-          tokenHash,
-        },
-      });
-    }
-    // Email the invitation with the employee registration link.
-    const path = `/register?invite=${token}`;
-    const link = `${appUrl()}${path}`;
-    if (emailEnabled()) {
-      const inviter = await db.company.findUniqueOrThrow({ where: { id: companyId }, select: { legalName: true, tradeName: true } });
-      const name = inviter.tradeName || inviter.legalName;
-      const { html, text } = renderEmail({ title: ka.sgba.inviteEmailTitle(name), body: ka.sgba.inviteEmailBody(name, parsed.data.email), link: path, button: ka.sgba.inviteEmailButton, footer: ka.email.footer });
-      await sendEmail({ to: parsed.data.email, subject: ka.sgba.inviteEmailTitle(name), html, text });
-    }
-    await audit({ actorId: user.id, action: "company.member_invited", entityType: "Company", entityId: companyId, metadata: { email: parsed.data.email, role: parsed.data.role } });
-    revalidatePath("/company/team");
-    return { ok: true, message: `${ka.team.invited(parsed.data.email)} ${ka.sgba.inviteLinkNote(link)}` };
+  const target = await db.user.findUnique({ where: { email }, select: { id: true } });
+  if (target) {
+    const existing = await db.companyMember.findUnique({ where: { companyId_userId: { companyId, userId: target.id } } });
+    if (existing?.status === "ACTIVE") return fail(ka.validation.formErrors, formData, { email: ka.team.alreadyMember });
   }
-  const existing = await db.companyMember.findUnique({ where: { companyId_userId: { companyId, userId: target.id } } });
-  if (existing?.status === "ACTIVE") return fail(ka.validation.formErrors, formData, { email: ka.team.alreadyMember });
 
-  await db.companyMember.upsert({
-    where: { companyId_userId: { companyId, userId: target.id } },
-    create: { companyId, userId: target.id, role: parsed.data.role, permissions },
-    update: { role: parsed.data.role, permissions, status: "ACTIVE" },
-  });
-  const company = await db.company.findUniqueOrThrow({ where: { id: companyId }, select: { legalName: true, tradeName: true } });
-  await notify([target.id], { type: "MEMBER_INVITED", title: ka.notifications.memberAdded(company.tradeName || company.legalName), link: "/company" });
-  await audit({
-    actorId: user.id,
-    action: "company.member_added",
-    entityType: "Company",
-    entityId: companyId,
-    metadata: { userId: target.id, role: parsed.data.role, permissions },
-  });
+  // Everyone — registered or not — joins only by accepting the invitation (secret one-time link;
+  // only its hash is stored). Re-inviting the same email replaces the pending invitation's link.
+  const token = randomBytes(24).toString("base64url");
+  const tokenHash = createHash("sha256").update(token).digest("hex");
+  const expiresAt = new Date(Date.now() + 30 * 864e5);
+  const data = {
+    role: parsed.data.role,
+    permissions,
+    expiresAt,
+    tokenHash,
+    firstName: parsed.data.firstName,
+    lastName: parsed.data.lastName,
+    positionId: people.positionId,
+    departmentId: people.departmentId,
+  };
+  const pending = await db.companyInvitation.findFirst({ where: { companyId, email, acceptedAt: null, revokedAt: null } });
+  if (pending) await db.companyInvitation.update({ where: { id: pending.id }, data });
+  else await db.companyInvitation.create({ data: { ...data, companyId, email, invitedById: user.id } });
+
+  const path = `/invite/${token}`;
+  const link = `${appUrl()}${path}`;
+  const inviter = await db.company.findUniqueOrThrow({ where: { id: companyId }, select: { legalName: true, tradeName: true } });
+  const name = inviter.tradeName || inviter.legalName;
+  if (target) await notify([target.id], { type: "MEMBER_INVITED", title: ka.team.inviteNotification(name), link: path });
+  if (emailEnabled()) {
+    const { html, text } = renderEmail({ title: ka.sgba.inviteEmailTitle(name), body: ka.sgba.inviteEmailBody(name, email), link: path, button: ka.sgba.inviteEmailButton, footer: ka.email.footer });
+    await sendEmail({ to: email, subject: ka.sgba.inviteEmailTitle(name), html, text });
+  }
+  await audit({ actorId: user.id, action: "company.member_invited", entityType: "Company", entityId: companyId, metadata: { email, role: parsed.data.role, registered: Boolean(target) } });
   revalidatePath("/company/team");
-  return { ok: true, message: ka.team.added };
+  return { ok: true, message: `${ka.team.invited(email)} ${ka.sgba.inviteLinkNote(link)}` };
+}
+
+/** The invited (logged-in) person accepts: membership is created with the invitation's role and job data. */
+export async function acceptInvitationAction(formData: FormData) {
+  const user = await assertUser();
+  const token = String(formData.get("token") ?? "");
+  const inv = await db.companyInvitation.findFirst({
+    where: { tokenHash: createHash("sha256").update(token).digest("hex"), acceptedAt: null, revokedAt: null, expiresAt: { gt: new Date() } },
+    include: { company: { select: { legalName: true, tradeName: true } } },
+  });
+  if (!inv || inv.email.toLowerCase() !== user.email.toLowerCase()) throw new ForbiddenError();
+  const job = { role: inv.role, permissions: inv.permissions, positionId: inv.positionId, departmentId: inv.departmentId };
+  await db.$transaction([
+    db.companyMember.upsert({
+      where: { companyId_userId: { companyId: inv.companyId, userId: user.id } },
+      create: { companyId: inv.companyId, userId: user.id, ...job },
+      update: { ...job, status: "ACTIVE" },
+    }),
+    db.companyInvitation.update({ where: { id: inv.id }, data: { acceptedAt: new Date() } }),
+  ]);
+  await audit({ actorId: user.id, action: "company.invitation_accepted", entityType: "Company", entityId: inv.companyId, metadata: { invitationId: inv.id } });
+  const owners = await db.companyMember.findMany({ where: { companyId: inv.companyId, role: "OWNER", status: "ACTIVE" }, select: { userId: true } });
+  await notify(owners.map((o) => o.userId).filter((id) => id !== user.id), { type: "MEMBER_INVITED", title: ka.team.inviteAccepted(`${user.firstName} ${user.lastName}`), link: "/company/team" });
+  redirect("/company/team");
 }
 
 async function ownerCount(companyId: string) {
@@ -208,7 +222,9 @@ export async function updateMemberAction(_: FormState, formData: FormData): Prom
   }
   const picked = sanitizePermissions(formData.getAll("permissions").map(String));
   const permissions = role === "OWNER" || picked.length === 0 ? DEFAULT_PERMISSIONS[role] : picked;
-  await db.companyMember.update({ where: { id: memberId }, data: { role, permissions } });
+  const people = await readPeopleFields(formData);
+  if (!people) return fail(ka.validation.formErrors, formData, { positionId: ka.validation.required });
+  await db.companyMember.update({ where: { id: memberId }, data: { role, permissions, ...people } });
   await audit({
     actorId: user.id,
     action: "company.member_updated",

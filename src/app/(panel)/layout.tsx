@@ -33,7 +33,7 @@ export default async function PanelLayout({ children }: LayoutProps<"/">) {
         { href: "/app/campaigns", label: n.campaigns, icon: "megaphone" },
         { href: "/app/notifications", label: n.messages, badge: unread, icon: "bell" },
         { href: "/app/conversations", label: n.deals, icon: "handshake" },
-        ...(owner ? [{ href: "/company/team", label: n.employees, icon: "users" as const }] : []),
+        ...(active ? [{ href: "/company/team", label: n.employees, icon: "users" as const }] : []),
         { href: "/app/invoices", label: n.documents, icon: "file" },
         ...(canFinance ? [{ href: "/app/finance", label: n.finance, icon: "coins" as const }] : []),
         { href: "/app/analytics", label: n.analytics, icon: "chart" },
@@ -56,7 +56,8 @@ export default async function PanelLayout({ children }: LayoutProps<"/">) {
   const companyLinks = [
     ...(active ? [{ href: `/companies/${active.company.slug}`, label: n.companyProfile }] : []),
     ...(active && hasPermission(active, "company.edit") ? [{ href: "/company/profile", label: ka.sgba.editProfile }] : []),
-    ...(owner ? [{ href: "/company/team", label: n.employees }, { href: "/company/settings", label: n.settings }] : []),
+    ...(active ? [{ href: "/company/team", label: n.employees }] : []),
+    ...(owner ? [{ href: "/company/settings", label: n.settings }] : []),
   ];
 
   return (

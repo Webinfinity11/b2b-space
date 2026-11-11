@@ -137,7 +137,7 @@ const categorySchema = z.object({
     .transform((s) => s || null),
   sortOrder: z.coerce.number({ error: ka.validation.number }).int().min(0).max(9999).default(0),
   isActive: zCheckbox,
-  kind: z.enum(["OFFER", "INDUSTRY"]).default("INDUSTRY"),
+  kind: z.enum(["OFFER", "INDUSTRY", "POSITION", "DEPARTMENT"]).default("INDUSTRY"),
 });
 
 export async function saveCategoryAction(_: FormState, formData: FormData): Promise<FormState> {
@@ -183,10 +183,10 @@ export async function deleteCategoryAction(_: FormState, formData: FormData): Pr
   const admin = await assertAdmin();
   const id = String(formData.get("id"));
   const moveTo = String(formData.get("moveTo") ?? "") || null;
-  const cat = await db.category.findUnique({ where: { id }, include: { _count: { select: { children: true, companies: true, offers: true } } } });
+  const cat = await db.category.findUnique({ where: { id }, include: { _count: { select: { children: true, companies: true, offers: true, positionMembers: true, departmentMembers: true } } } });
   if (!cat) return fail(ka.errors.generic);
   if (cat._count.children > 0) return fail(ka.admin.categoryHasChildren);
-  const used = cat._count.companies + cat._count.offers;
+  const used = cat._count.companies + cat._count.offers + cat._count.positionMembers + cat._count.departmentMembers;
   if (used > 0 && !moveTo) return fail(ka.sgba.catMoveRequired(used));
   if (moveTo) {
     const target = await db.category.findFirst({ where: { id: moveTo, kind: cat.kind, NOT: { id } }, select: { id: true } });
@@ -195,6 +195,8 @@ export async function deleteCategoryAction(_: FormState, formData: FormData): Pr
   await db.$transaction(async (tx) => {
     if (moveTo) {
       await tx.offer.updateMany({ where: { categoryId: id }, data: { categoryId: moveTo } });
+      await tx.companyMember.updateMany({ where: { positionId: id }, data: { positionId: moveTo } });
+      await tx.companyMember.updateMany({ where: { departmentId: id }, data: { departmentId: moveTo } });
       // Companies: move links, skipping ones already linked to the target.
       const links = await tx.companyCategory.findMany({ where: { categoryId: id }, select: { companyId: true } });
       const already = new Set((await tx.companyCategory.findMany({ where: { categoryId: moveTo, companyId: { in: links.map((l) => l.companyId) } }, select: { companyId: true } })).map((l) => l.companyId));
@@ -397,9 +399,13 @@ export async function adminCampaignAction(_: FormState, formData: FormData): Pro
   // Launch: deliver the offer to every company in the audience.
   let delivered = 0;
   if (op === "launch") {
-    const targets = await db.company.findMany({ where: audienceWhere(req), select: { id: true, members: { where: { status: "ACTIVE" }, select: { userId: true, role: true, permissions: true } } } });
+    const targets = await db.company.findMany({ where: audienceWhere(req), select: { id: true, members: { where: { status: "ACTIVE" }, select: { userId: true, role: true, permissions: true, positionId: true } } } });
     await db.campaignRecipient.createMany({ data: targets.map((t) => ({ requestId: id, companyId: t.id })), skipDuplicates: true });
-    const userIds = targets.flatMap((t) => t.members.filter((mm) => mm.role === "OWNER" || mm.permissions.includes("responses.manage")).map((mm) => mm.userId));
+    // Decision makers (owners / response handlers) plus the targeted positions get the offer.
+    const wantedPositions = new Set(req.positionIds);
+    const userIds = targets.flatMap((t) =>
+      t.members.filter((mm) => mm.role === "OWNER" || mm.permissions.includes("responses.manage") || (mm.positionId && wantedPositions.has(mm.positionId))).map((mm) => mm.userId),
+    );
     const sender = await db.company.findUnique({ where: { id: req.companyId }, select: { legalName: true, tradeName: true } });
     await notify(userIds, { type: "CAMPAIGN", title: ka.sgba.campDeliveredTitle(sender ? companyName(sender) : "", req.title), body: req.perk ?? undefined, link: `/app/campaigns/inbox/${id}` });
     delivered = targets.length;

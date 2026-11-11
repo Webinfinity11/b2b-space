@@ -8,6 +8,7 @@ import { db } from "@/lib/db";
 import { formatAmount } from "@/lib/money";
 import { param } from "@/lib/params";
 import { getCategoryTree } from "@/lib/public";
+import { getPeopleLists } from "@/lib/people";
 import { PageHeader } from "@/components/ui/Card";
 import { ActionForm, CheckboxGroup, Field, Input, SubmitButton, Textarea } from "@/components/ui/Form";
 
@@ -18,10 +19,11 @@ export default async function NewCampaignPage({ searchParams }: PageProps<"/app/
   const user = await requireUser("/app/campaigns/new");
   const m = await getActiveMembership(user.id);
   const packageId = param((await searchParams).package);
-  const [pkg, industries, total] = await Promise.all([
+  const [pkg, industries, total, people] = await Promise.all([
     packageId ? db.campaignPackage.findFirst({ where: { id: packageId, isActive: true } }) : null,
     getCategoryTree("INDUSTRY"),
     db.company.count({ where: { verificationStatus: "VERIFIED", id: { not: m?.companyId ?? "" } } }),
+    getPeopleLists(),
   ]);
   const c = ka.sgba;
 
@@ -56,8 +58,8 @@ export default async function NewCampaignPage({ searchParams }: PageProps<"/app/
             <Field label={c.role} name="roles" optional>
               <CheckboxGroup name="roles" columns={3} options={["BUYER", "SELLER", "BOTH"].map((s) => ({ value: s, label: c.roles[s] }))} />
             </Field>
-            <Field label={c.campPositions} name="positions" optional>
-              <Input name="positions" placeholder={c.campPositionsHint} maxLength={200} />
+            <Field label={c.campPositions} name="positionIds" optional hint={c.campPositionsHint}>
+              <CheckboxGroup name="positionIds" columns={2} options={people.positions.map((p) => ({ value: p.id, label: p.name }))} />
             </Field>
           </section>
 

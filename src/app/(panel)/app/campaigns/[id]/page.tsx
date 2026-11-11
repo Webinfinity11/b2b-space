@@ -21,8 +21,9 @@ export default async function CampaignRequestPage({ params, searchParams }: Page
   const r = await db.campaignRequest.findFirst({ where: { id, companyId: m?.companyId ?? "__none__" } });
   if (!r) notFound();
   const sent = param((await searchParams).sent) === "1";
-  const [industries, reach, recipients, views, replies] = await Promise.all([
+  const [industries, positions, reach, recipients, views, replies] = await Promise.all([
     r.industryIds.length ? db.category.findMany({ where: { id: { in: r.industryIds } }, select: { name: true } }) : [],
+    r.positionIds.length ? db.category.findMany({ where: { id: { in: r.positionIds } }, select: { name: true } }) : [],
     db.company.count({ where: audienceWhere(r) }),
     db.campaignRecipient.count({ where: { requestId: r.id } }),
     db.campaignRecipient.count({ where: { requestId: r.id, viewedAt: { not: null } } }),
@@ -41,6 +42,7 @@ export default async function CampaignRequestPage({ params, searchParams }: Page
       <CampaignDetail
         r={r}
         industries={industries.map((i) => i.name)}
+        positions={positions.map((p) => p.name)}
         reach={reach}
         results={["RUNNING", "DONE"].includes(r.status) ? { recipients, views, replies } : undefined}
       />

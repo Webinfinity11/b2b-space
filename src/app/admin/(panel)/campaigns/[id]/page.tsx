@@ -19,8 +19,9 @@ export default async function AdminCampaignPage({ params }: PageProps<"/admin/ca
   const { id } = await params;
   const r = await db.campaignRequest.findUnique({ where: { id }, include: { company: { select: { id: true, legalName: true, tradeName: true } }, package: { select: { title: true, priceFrom: true } } } });
   if (!r) notFound();
-  const [industries, reach, recipients, views, replies, requester] = await Promise.all([
+  const [industries, positions, reach, recipients, views, replies, requester] = await Promise.all([
     r.industryIds.length ? db.category.findMany({ where: { id: { in: r.industryIds } }, select: { name: true } }) : [],
+    r.positionIds.length ? db.category.findMany({ where: { id: { in: r.positionIds } }, select: { name: true } }) : [],
     db.company.count({ where: audienceWhere(r) }),
     db.campaignRecipient.count({ where: { requestId: id } }),
     db.campaignRecipient.count({ where: { requestId: id, viewedAt: { not: null } } }),
@@ -54,7 +55,8 @@ export default async function AdminCampaignPage({ params }: PageProps<"/admin/ca
         action={<Link href="/admin/campaigns" className="text-sm font-medium text-accent-strong hover:underline">← {c.campAdminTitle}</Link>}
       />
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
-        <CampaignDetail r={r} industries={industries.map((i) => i.name)} reach={reach} results={recipients ? { recipients, views, replies } : undefined} />
+        <CampaignDetail r={r} industries={industries.map((i) => i.name)}
+        positions={positions.map((p) => p.name)} reach={reach} results={recipients ? { recipients, views, replies } : undefined} />
         <aside className="space-y-4">
           <Card>
             <CardHeader title={c.applicant} />

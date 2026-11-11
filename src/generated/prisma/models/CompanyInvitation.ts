@@ -29,6 +29,10 @@ export type CompanyInvitationMinAggregateOutputType = {
   companyId: string | null
   email: string | null
   role: $Enums.MemberRole | null
+  firstName: string | null
+  lastName: string | null
+  positionId: string | null
+  departmentId: string | null
   tokenHash: string | null
   invitedById: string | null
   expiresAt: Date | null
@@ -42,6 +46,10 @@ export type CompanyInvitationMaxAggregateOutputType = {
   companyId: string | null
   email: string | null
   role: $Enums.MemberRole | null
+  firstName: string | null
+  lastName: string | null
+  positionId: string | null
+  departmentId: string | null
   tokenHash: string | null
   invitedById: string | null
   expiresAt: Date | null
@@ -56,6 +64,10 @@ export type CompanyInvitationCountAggregateOutputType = {
   email: number
   role: number
   permissions: number
+  firstName: number
+  lastName: number
+  positionId: number
+  departmentId: number
   tokenHash: number
   invitedById: number
   expiresAt: number
@@ -71,6 +83,10 @@ export type CompanyInvitationMinAggregateInputType = {
   companyId?: true
   email?: true
   role?: true
+  firstName?: true
+  lastName?: true
+  positionId?: true
+  departmentId?: true
   tokenHash?: true
   invitedById?: true
   expiresAt?: true
@@ -84,6 +100,10 @@ export type CompanyInvitationMaxAggregateInputType = {
   companyId?: true
   email?: true
   role?: true
+  firstName?: true
+  lastName?: true
+  positionId?: true
+  departmentId?: true
   tokenHash?: true
   invitedById?: true
   expiresAt?: true
@@ -98,6 +118,10 @@ export type CompanyInvitationCountAggregateInputType = {
   email?: true
   role?: true
   permissions?: true
+  firstName?: true
+  lastName?: true
+  positionId?: true
+  departmentId?: true
   tokenHash?: true
   invitedById?: true
   expiresAt?: true
@@ -185,6 +209,10 @@ export type CompanyInvitationGroupByOutputType = {
   email: string
   role: $Enums.MemberRole
   permissions: string[]
+  firstName: string | null
+  lastName: string | null
+  positionId: string | null
+  departmentId: string | null
   tokenHash: string
   invitedById: string
   expiresAt: Date
@@ -220,6 +248,10 @@ export type CompanyInvitationWhereInput = {
   email?: Prisma.StringFilter<"CompanyInvitation"> | string
   role?: Prisma.EnumMemberRoleFilter<"CompanyInvitation"> | $Enums.MemberRole
   permissions?: Prisma.StringNullableListFilter<"CompanyInvitation">
+  firstName?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
+  lastName?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
+  positionId?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
+  departmentId?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
   tokenHash?: Prisma.StringFilter<"CompanyInvitation"> | string
   invitedById?: Prisma.StringFilter<"CompanyInvitation"> | string
   expiresAt?: Prisma.DateTimeFilter<"CompanyInvitation"> | Date | string
@@ -236,6 +268,10 @@ export type CompanyInvitationOrderByWithRelationInput = {
   email?: Prisma.SortOrder
   role?: Prisma.SortOrder
   permissions?: Prisma.SortOrder
+  firstName?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastName?: Prisma.SortOrderInput | Prisma.SortOrder
+  positionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
   invitedById?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
@@ -256,6 +292,10 @@ export type CompanyInvitationWhereUniqueInput = Prisma.AtLeast<{
   email?: Prisma.StringFilter<"CompanyInvitation"> | string
   role?: Prisma.EnumMemberRoleFilter<"CompanyInvitation"> | $Enums.MemberRole
   permissions?: Prisma.StringNullableListFilter<"CompanyInvitation">
+  firstName?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
+  lastName?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
+  positionId?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
+  departmentId?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
   invitedById?: Prisma.StringFilter<"CompanyInvitation"> | string
   expiresAt?: Prisma.DateTimeFilter<"CompanyInvitation"> | Date | string
   acceptedAt?: Prisma.DateTimeNullableFilter<"CompanyInvitation"> | Date | string | null
@@ -271,6 +311,10 @@ export type CompanyInvitationOrderByWithAggregationInput = {
   email?: Prisma.SortOrder
   role?: Prisma.SortOrder
   permissions?: Prisma.SortOrder
+  firstName?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastName?: Prisma.SortOrderInput | Prisma.SortOrder
+  positionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
   invitedById?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
@@ -291,6 +335,10 @@ export type CompanyInvitationScalarWhereWithAggregatesInput = {
   email?: Prisma.StringWithAggregatesFilter<"CompanyInvitation"> | string
   role?: Prisma.EnumMemberRoleWithAggregatesFilter<"CompanyInvitation"> | $Enums.MemberRole
   permissions?: Prisma.StringNullableListFilter<"CompanyInvitation">
+  firstName?: Prisma.StringNullableWithAggregatesFilter<"CompanyInvitation"> | string | null
+  lastName?: Prisma.StringNullableWithAggregatesFilter<"CompanyInvitation"> | string | null
+  positionId?: Prisma.StringNullableWithAggregatesFilter<"CompanyInvitation"> | string | null
+  departmentId?: Prisma.StringNullableWithAggregatesFilter<"CompanyInvitation"> | string | null
   tokenHash?: Prisma.StringWithAggregatesFilter<"CompanyInvitation"> | string
   invitedById?: Prisma.StringWithAggregatesFilter<"CompanyInvitation"> | string
   expiresAt?: Prisma.DateTimeWithAggregatesFilter<"CompanyInvitation"> | Date | string
@@ -304,6 +352,10 @@ export type CompanyInvitationCreateInput = {
   email: string
   role?: $Enums.MemberRole
   permissions?: Prisma.CompanyInvitationCreatepermissionsInput | string[]
+  firstName?: string | null
+  lastName?: string | null
+  positionId?: string | null
+  departmentId?: string | null
   tokenHash: string
   expiresAt: Date | string
   acceptedAt?: Date | string | null
@@ -319,6 +371,10 @@ export type CompanyInvitationUncheckedCreateInput = {
   email: string
   role?: $Enums.MemberRole
   permissions?: Prisma.CompanyInvitationCreatepermissionsInput | string[]
+  firstName?: string | null
+  lastName?: string | null
+  positionId?: string | null
+  departmentId?: string | null
   tokenHash: string
   invitedById: string
   expiresAt: Date | string
@@ -332,6 +388,10 @@ export type CompanyInvitationUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   permissions?: Prisma.CompanyInvitationUpdatepermissionsInput | string[]
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -347,6 +407,10 @@ export type CompanyInvitationUncheckedUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   permissions?: Prisma.CompanyInvitationUpdatepermissionsInput | string[]
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   invitedById?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -361,6 +425,10 @@ export type CompanyInvitationCreateManyInput = {
   email: string
   role?: $Enums.MemberRole
   permissions?: Prisma.CompanyInvitationCreatepermissionsInput | string[]
+  firstName?: string | null
+  lastName?: string | null
+  positionId?: string | null
+  departmentId?: string | null
   tokenHash: string
   invitedById: string
   expiresAt: Date | string
@@ -374,6 +442,10 @@ export type CompanyInvitationUpdateManyMutationInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   permissions?: Prisma.CompanyInvitationUpdatepermissionsInput | string[]
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -387,6 +459,10 @@ export type CompanyInvitationUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   permissions?: Prisma.CompanyInvitationUpdatepermissionsInput | string[]
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   invitedById?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -411,6 +487,10 @@ export type CompanyInvitationCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   role?: Prisma.SortOrder
   permissions?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  lastName?: Prisma.SortOrder
+  positionId?: Prisma.SortOrder
+  departmentId?: Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
   invitedById?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
@@ -424,6 +504,10 @@ export type CompanyInvitationMaxOrderByAggregateInput = {
   companyId?: Prisma.SortOrder
   email?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  lastName?: Prisma.SortOrder
+  positionId?: Prisma.SortOrder
+  departmentId?: Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
   invitedById?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
@@ -437,6 +521,10 @@ export type CompanyInvitationMinOrderByAggregateInput = {
   companyId?: Prisma.SortOrder
   email?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  lastName?: Prisma.SortOrder
+  positionId?: Prisma.SortOrder
+  departmentId?: Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
   invitedById?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
@@ -543,6 +631,10 @@ export type CompanyInvitationCreateWithoutInvitedByInput = {
   email: string
   role?: $Enums.MemberRole
   permissions?: Prisma.CompanyInvitationCreatepermissionsInput | string[]
+  firstName?: string | null
+  lastName?: string | null
+  positionId?: string | null
+  departmentId?: string | null
   tokenHash: string
   expiresAt: Date | string
   acceptedAt?: Date | string | null
@@ -557,6 +649,10 @@ export type CompanyInvitationUncheckedCreateWithoutInvitedByInput = {
   email: string
   role?: $Enums.MemberRole
   permissions?: Prisma.CompanyInvitationCreatepermissionsInput | string[]
+  firstName?: string | null
+  lastName?: string | null
+  positionId?: string | null
+  departmentId?: string | null
   tokenHash: string
   expiresAt: Date | string
   acceptedAt?: Date | string | null
@@ -599,6 +695,10 @@ export type CompanyInvitationScalarWhereInput = {
   email?: Prisma.StringFilter<"CompanyInvitation"> | string
   role?: Prisma.EnumMemberRoleFilter<"CompanyInvitation"> | $Enums.MemberRole
   permissions?: Prisma.StringNullableListFilter<"CompanyInvitation">
+  firstName?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
+  lastName?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
+  positionId?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
+  departmentId?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
   tokenHash?: Prisma.StringFilter<"CompanyInvitation"> | string
   invitedById?: Prisma.StringFilter<"CompanyInvitation"> | string
   expiresAt?: Prisma.DateTimeFilter<"CompanyInvitation"> | Date | string
@@ -612,6 +712,10 @@ export type CompanyInvitationCreateWithoutCompanyInput = {
   email: string
   role?: $Enums.MemberRole
   permissions?: Prisma.CompanyInvitationCreatepermissionsInput | string[]
+  firstName?: string | null
+  lastName?: string | null
+  positionId?: string | null
+  departmentId?: string | null
   tokenHash: string
   expiresAt: Date | string
   acceptedAt?: Date | string | null
@@ -625,6 +729,10 @@ export type CompanyInvitationUncheckedCreateWithoutCompanyInput = {
   email: string
   role?: $Enums.MemberRole
   permissions?: Prisma.CompanyInvitationCreatepermissionsInput | string[]
+  firstName?: string | null
+  lastName?: string | null
+  positionId?: string | null
+  departmentId?: string | null
   tokenHash: string
   invitedById: string
   expiresAt: Date | string
@@ -665,6 +773,10 @@ export type CompanyInvitationCreateManyInvitedByInput = {
   email: string
   role?: $Enums.MemberRole
   permissions?: Prisma.CompanyInvitationCreatepermissionsInput | string[]
+  firstName?: string | null
+  lastName?: string | null
+  positionId?: string | null
+  departmentId?: string | null
   tokenHash: string
   expiresAt: Date | string
   acceptedAt?: Date | string | null
@@ -677,6 +789,10 @@ export type CompanyInvitationUpdateWithoutInvitedByInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   permissions?: Prisma.CompanyInvitationUpdatepermissionsInput | string[]
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -691,6 +807,10 @@ export type CompanyInvitationUncheckedUpdateWithoutInvitedByInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   permissions?: Prisma.CompanyInvitationUpdatepermissionsInput | string[]
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -704,6 +824,10 @@ export type CompanyInvitationUncheckedUpdateManyWithoutInvitedByInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   permissions?: Prisma.CompanyInvitationUpdatepermissionsInput | string[]
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -716,6 +840,10 @@ export type CompanyInvitationCreateManyCompanyInput = {
   email: string
   role?: $Enums.MemberRole
   permissions?: Prisma.CompanyInvitationCreatepermissionsInput | string[]
+  firstName?: string | null
+  lastName?: string | null
+  positionId?: string | null
+  departmentId?: string | null
   tokenHash: string
   invitedById: string
   expiresAt: Date | string
@@ -729,6 +857,10 @@ export type CompanyInvitationUpdateWithoutCompanyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   permissions?: Prisma.CompanyInvitationUpdatepermissionsInput | string[]
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -742,6 +874,10 @@ export type CompanyInvitationUncheckedUpdateWithoutCompanyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   permissions?: Prisma.CompanyInvitationUpdatepermissionsInput | string[]
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   invitedById?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -755,6 +891,10 @@ export type CompanyInvitationUncheckedUpdateManyWithoutCompanyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   permissions?: Prisma.CompanyInvitationUpdatepermissionsInput | string[]
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   invitedById?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -771,6 +911,10 @@ export type CompanyInvitationSelect<ExtArgs extends runtime.Types.Extensions.Int
   email?: boolean
   role?: boolean
   permissions?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  positionId?: boolean
+  departmentId?: boolean
   tokenHash?: boolean
   invitedById?: boolean
   expiresAt?: boolean
@@ -787,6 +931,10 @@ export type CompanyInvitationSelectCreateManyAndReturn<ExtArgs extends runtime.T
   email?: boolean
   role?: boolean
   permissions?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  positionId?: boolean
+  departmentId?: boolean
   tokenHash?: boolean
   invitedById?: boolean
   expiresAt?: boolean
@@ -803,6 +951,10 @@ export type CompanyInvitationSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   email?: boolean
   role?: boolean
   permissions?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  positionId?: boolean
+  departmentId?: boolean
   tokenHash?: boolean
   invitedById?: boolean
   expiresAt?: boolean
@@ -819,6 +971,10 @@ export type CompanyInvitationSelectScalar = {
   email?: boolean
   role?: boolean
   permissions?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  positionId?: boolean
+  departmentId?: boolean
   tokenHash?: boolean
   invitedById?: boolean
   expiresAt?: boolean
@@ -827,7 +983,7 @@ export type CompanyInvitationSelectScalar = {
   createdAt?: boolean
 }
 
-export type CompanyInvitationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "email" | "role" | "permissions" | "tokenHash" | "invitedById" | "expiresAt" | "acceptedAt" | "revokedAt" | "createdAt", ExtArgs["result"]["companyInvitation"]>
+export type CompanyInvitationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "email" | "role" | "permissions" | "firstName" | "lastName" | "positionId" | "departmentId" | "tokenHash" | "invitedById" | "expiresAt" | "acceptedAt" | "revokedAt" | "createdAt", ExtArgs["result"]["companyInvitation"]>
 export type CompanyInvitationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   invitedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -853,6 +1009,10 @@ export type $CompanyInvitationPayload<ExtArgs extends runtime.Types.Extensions.I
     email: string
     role: $Enums.MemberRole
     permissions: string[]
+    firstName: string | null
+    lastName: string | null
+    positionId: string | null
+    departmentId: string | null
     tokenHash: string
     invitedById: string
     expiresAt: Date
@@ -1289,6 +1449,10 @@ export interface CompanyInvitationFieldRefs {
   readonly email: Prisma.FieldRef<"CompanyInvitation", 'String'>
   readonly role: Prisma.FieldRef<"CompanyInvitation", 'MemberRole'>
   readonly permissions: Prisma.FieldRef<"CompanyInvitation", 'String[]'>
+  readonly firstName: Prisma.FieldRef<"CompanyInvitation", 'String'>
+  readonly lastName: Prisma.FieldRef<"CompanyInvitation", 'String'>
+  readonly positionId: Prisma.FieldRef<"CompanyInvitation", 'String'>
+  readonly departmentId: Prisma.FieldRef<"CompanyInvitation", 'String'>
   readonly tokenHash: Prisma.FieldRef<"CompanyInvitation", 'String'>
   readonly invitedById: Prisma.FieldRef<"CompanyInvitation", 'String'>
   readonly expiresAt: Prisma.FieldRef<"CompanyInvitation", 'DateTime'>

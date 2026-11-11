@@ -45,6 +45,8 @@ export async function requestCampaignAction(_: FormState, formData: FormData): P
 
   const list = (k: string, allowed?: string[]) => [...new Set(formData.getAll(k).map(String))].filter((v) => v && (!allowed || allowed.includes(v)));
   const industryIds = list("industryIds");
+  const positionIds = list("positionIds");
+  if (positionIds.length && (await db.category.count({ where: { id: { in: positionIds }, kind: "POSITION" } })) !== positionIds.length) return fail(ka.errors.generic);
   if (industryIds.length && (await db.category.count({ where: { id: { in: industryIds }, kind: "INDUSTRY" } })) !== industryIds.length) return fail(ka.errors.generic);
 
   let file: { url: string; name: string } | null = null;
@@ -70,6 +72,7 @@ export async function requestCampaignAction(_: FormState, formData: FormData): P
       perk: d.perk,
       ctaUrl: d.ctaUrl,
       positions: d.positions,
+      positionIds,
       startDate: d.startDate,
       industryIds,
       cities: list("cities"),

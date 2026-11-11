@@ -252,6 +252,8 @@ export type CategoryWhereInput = {
   children?: Prisma.CategoryListRelationFilter
   companies?: Prisma.CompanyCategoryListRelationFilter
   offers?: Prisma.OfferListRelationFilter
+  positionMembers?: Prisma.CompanyMemberListRelationFilter
+  departmentMembers?: Prisma.CompanyMemberListRelationFilter
 }
 
 export type CategoryOrderByWithRelationInput = {
@@ -268,6 +270,8 @@ export type CategoryOrderByWithRelationInput = {
   children?: Prisma.CategoryOrderByRelationAggregateInput
   companies?: Prisma.CompanyCategoryOrderByRelationAggregateInput
   offers?: Prisma.OfferOrderByRelationAggregateInput
+  positionMembers?: Prisma.CompanyMemberOrderByRelationAggregateInput
+  departmentMembers?: Prisma.CompanyMemberOrderByRelationAggregateInput
 }
 
 export type CategoryWhereUniqueInput = Prisma.AtLeast<{
@@ -287,6 +291,8 @@ export type CategoryWhereUniqueInput = Prisma.AtLeast<{
   children?: Prisma.CategoryListRelationFilter
   companies?: Prisma.CompanyCategoryListRelationFilter
   offers?: Prisma.OfferListRelationFilter
+  positionMembers?: Prisma.CompanyMemberListRelationFilter
+  departmentMembers?: Prisma.CompanyMemberListRelationFilter
 }, "id" | "slug">
 
 export type CategoryOrderByWithAggregationInput = {
@@ -334,6 +340,8 @@ export type CategoryCreateInput = {
   children?: Prisma.CategoryCreateNestedManyWithoutParentInput
   companies?: Prisma.CompanyCategoryCreateNestedManyWithoutCategoryInput
   offers?: Prisma.OfferCreateNestedManyWithoutCategoryInput
+  positionMembers?: Prisma.CompanyMemberCreateNestedManyWithoutPositionInput
+  departmentMembers?: Prisma.CompanyMemberCreateNestedManyWithoutDepartmentInput
 }
 
 export type CategoryUncheckedCreateInput = {
@@ -349,6 +357,8 @@ export type CategoryUncheckedCreateInput = {
   children?: Prisma.CategoryUncheckedCreateNestedManyWithoutParentInput
   companies?: Prisma.CompanyCategoryUncheckedCreateNestedManyWithoutCategoryInput
   offers?: Prisma.OfferUncheckedCreateNestedManyWithoutCategoryInput
+  positionMembers?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutPositionInput
+  departmentMembers?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type CategoryUpdateInput = {
@@ -364,6 +374,8 @@ export type CategoryUpdateInput = {
   children?: Prisma.CategoryUpdateManyWithoutParentNestedInput
   companies?: Prisma.CompanyCategoryUpdateManyWithoutCategoryNestedInput
   offers?: Prisma.OfferUpdateManyWithoutCategoryNestedInput
+  positionMembers?: Prisma.CompanyMemberUpdateManyWithoutPositionNestedInput
+  departmentMembers?: Prisma.CompanyMemberUpdateManyWithoutDepartmentNestedInput
 }
 
 export type CategoryUncheckedUpdateInput = {
@@ -379,6 +391,8 @@ export type CategoryUncheckedUpdateInput = {
   children?: Prisma.CategoryUncheckedUpdateManyWithoutParentNestedInput
   companies?: Prisma.CompanyCategoryUncheckedUpdateManyWithoutCategoryNestedInput
   offers?: Prisma.OfferUncheckedUpdateManyWithoutCategoryNestedInput
+  positionMembers?: Prisma.CompanyMemberUncheckedUpdateManyWithoutPositionNestedInput
+  departmentMembers?: Prisma.CompanyMemberUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type CategoryCreateManyInput = {
@@ -560,6 +574,38 @@ export type CategoryUpdateOneRequiredWithoutCompaniesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CategoryUpdateToOneWithWhereWithoutCompaniesInput, Prisma.CategoryUpdateWithoutCompaniesInput>, Prisma.CategoryUncheckedUpdateWithoutCompaniesInput>
 }
 
+export type CategoryCreateNestedOneWithoutPositionMembersInput = {
+  create?: Prisma.XOR<Prisma.CategoryCreateWithoutPositionMembersInput, Prisma.CategoryUncheckedCreateWithoutPositionMembersInput>
+  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutPositionMembersInput
+  connect?: Prisma.CategoryWhereUniqueInput
+}
+
+export type CategoryCreateNestedOneWithoutDepartmentMembersInput = {
+  create?: Prisma.XOR<Prisma.CategoryCreateWithoutDepartmentMembersInput, Prisma.CategoryUncheckedCreateWithoutDepartmentMembersInput>
+  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutDepartmentMembersInput
+  connect?: Prisma.CategoryWhereUniqueInput
+}
+
+export type CategoryUpdateOneWithoutPositionMembersNestedInput = {
+  create?: Prisma.XOR<Prisma.CategoryCreateWithoutPositionMembersInput, Prisma.CategoryUncheckedCreateWithoutPositionMembersInput>
+  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutPositionMembersInput
+  upsert?: Prisma.CategoryUpsertWithoutPositionMembersInput
+  disconnect?: Prisma.CategoryWhereInput | boolean
+  delete?: Prisma.CategoryWhereInput | boolean
+  connect?: Prisma.CategoryWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CategoryUpdateToOneWithWhereWithoutPositionMembersInput, Prisma.CategoryUpdateWithoutPositionMembersInput>, Prisma.CategoryUncheckedUpdateWithoutPositionMembersInput>
+}
+
+export type CategoryUpdateOneWithoutDepartmentMembersNestedInput = {
+  create?: Prisma.XOR<Prisma.CategoryCreateWithoutDepartmentMembersInput, Prisma.CategoryUncheckedCreateWithoutDepartmentMembersInput>
+  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutDepartmentMembersInput
+  upsert?: Prisma.CategoryUpsertWithoutDepartmentMembersInput
+  disconnect?: Prisma.CategoryWhereInput | boolean
+  delete?: Prisma.CategoryWhereInput | boolean
+  connect?: Prisma.CategoryWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CategoryUpdateToOneWithWhereWithoutDepartmentMembersInput, Prisma.CategoryUpdateWithoutDepartmentMembersInput>, Prisma.CategoryUncheckedUpdateWithoutDepartmentMembersInput>
+}
+
 export type CategoryCreateNestedOneWithoutOffersInput = {
   create?: Prisma.XOR<Prisma.CategoryCreateWithoutOffersInput, Prisma.CategoryUncheckedCreateWithoutOffersInput>
   connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutOffersInput
@@ -588,6 +634,8 @@ export type CategoryCreateWithoutChildrenInput = {
   parent?: Prisma.CategoryCreateNestedOneWithoutChildrenInput
   companies?: Prisma.CompanyCategoryCreateNestedManyWithoutCategoryInput
   offers?: Prisma.OfferCreateNestedManyWithoutCategoryInput
+  positionMembers?: Prisma.CompanyMemberCreateNestedManyWithoutPositionInput
+  departmentMembers?: Prisma.CompanyMemberCreateNestedManyWithoutDepartmentInput
 }
 
 export type CategoryUncheckedCreateWithoutChildrenInput = {
@@ -602,6 +650,8 @@ export type CategoryUncheckedCreateWithoutChildrenInput = {
   updatedAt?: Date | string
   companies?: Prisma.CompanyCategoryUncheckedCreateNestedManyWithoutCategoryInput
   offers?: Prisma.OfferUncheckedCreateNestedManyWithoutCategoryInput
+  positionMembers?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutPositionInput
+  departmentMembers?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type CategoryCreateOrConnectWithoutChildrenInput = {
@@ -621,6 +671,8 @@ export type CategoryCreateWithoutParentInput = {
   children?: Prisma.CategoryCreateNestedManyWithoutParentInput
   companies?: Prisma.CompanyCategoryCreateNestedManyWithoutCategoryInput
   offers?: Prisma.OfferCreateNestedManyWithoutCategoryInput
+  positionMembers?: Prisma.CompanyMemberCreateNestedManyWithoutPositionInput
+  departmentMembers?: Prisma.CompanyMemberCreateNestedManyWithoutDepartmentInput
 }
 
 export type CategoryUncheckedCreateWithoutParentInput = {
@@ -635,6 +687,8 @@ export type CategoryUncheckedCreateWithoutParentInput = {
   children?: Prisma.CategoryUncheckedCreateNestedManyWithoutParentInput
   companies?: Prisma.CompanyCategoryUncheckedCreateNestedManyWithoutCategoryInput
   offers?: Prisma.OfferUncheckedCreateNestedManyWithoutCategoryInput
+  positionMembers?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutPositionInput
+  departmentMembers?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type CategoryCreateOrConnectWithoutParentInput = {
@@ -670,6 +724,8 @@ export type CategoryUpdateWithoutChildrenInput = {
   parent?: Prisma.CategoryUpdateOneWithoutChildrenNestedInput
   companies?: Prisma.CompanyCategoryUpdateManyWithoutCategoryNestedInput
   offers?: Prisma.OfferUpdateManyWithoutCategoryNestedInput
+  positionMembers?: Prisma.CompanyMemberUpdateManyWithoutPositionNestedInput
+  departmentMembers?: Prisma.CompanyMemberUpdateManyWithoutDepartmentNestedInput
 }
 
 export type CategoryUncheckedUpdateWithoutChildrenInput = {
@@ -684,6 +740,8 @@ export type CategoryUncheckedUpdateWithoutChildrenInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   companies?: Prisma.CompanyCategoryUncheckedUpdateManyWithoutCategoryNestedInput
   offers?: Prisma.OfferUncheckedUpdateManyWithoutCategoryNestedInput
+  positionMembers?: Prisma.CompanyMemberUncheckedUpdateManyWithoutPositionNestedInput
+  departmentMembers?: Prisma.CompanyMemberUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type CategoryUpsertWithWhereUniqueWithoutParentInput = {
@@ -729,6 +787,8 @@ export type CategoryCreateWithoutCompaniesInput = {
   parent?: Prisma.CategoryCreateNestedOneWithoutChildrenInput
   children?: Prisma.CategoryCreateNestedManyWithoutParentInput
   offers?: Prisma.OfferCreateNestedManyWithoutCategoryInput
+  positionMembers?: Prisma.CompanyMemberCreateNestedManyWithoutPositionInput
+  departmentMembers?: Prisma.CompanyMemberCreateNestedManyWithoutDepartmentInput
 }
 
 export type CategoryUncheckedCreateWithoutCompaniesInput = {
@@ -743,6 +803,8 @@ export type CategoryUncheckedCreateWithoutCompaniesInput = {
   updatedAt?: Date | string
   children?: Prisma.CategoryUncheckedCreateNestedManyWithoutParentInput
   offers?: Prisma.OfferUncheckedCreateNestedManyWithoutCategoryInput
+  positionMembers?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutPositionInput
+  departmentMembers?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type CategoryCreateOrConnectWithoutCompaniesInput = {
@@ -773,6 +835,8 @@ export type CategoryUpdateWithoutCompaniesInput = {
   parent?: Prisma.CategoryUpdateOneWithoutChildrenNestedInput
   children?: Prisma.CategoryUpdateManyWithoutParentNestedInput
   offers?: Prisma.OfferUpdateManyWithoutCategoryNestedInput
+  positionMembers?: Prisma.CompanyMemberUpdateManyWithoutPositionNestedInput
+  departmentMembers?: Prisma.CompanyMemberUpdateManyWithoutDepartmentNestedInput
 }
 
 export type CategoryUncheckedUpdateWithoutCompaniesInput = {
@@ -787,6 +851,168 @@ export type CategoryUncheckedUpdateWithoutCompaniesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   children?: Prisma.CategoryUncheckedUpdateManyWithoutParentNestedInput
   offers?: Prisma.OfferUncheckedUpdateManyWithoutCategoryNestedInput
+  positionMembers?: Prisma.CompanyMemberUncheckedUpdateManyWithoutPositionNestedInput
+  departmentMembers?: Prisma.CompanyMemberUncheckedUpdateManyWithoutDepartmentNestedInput
+}
+
+export type CategoryCreateWithoutPositionMembersInput = {
+  id?: string
+  name: string
+  slug: string
+  kind?: string
+  sortOrder?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  parent?: Prisma.CategoryCreateNestedOneWithoutChildrenInput
+  children?: Prisma.CategoryCreateNestedManyWithoutParentInput
+  companies?: Prisma.CompanyCategoryCreateNestedManyWithoutCategoryInput
+  offers?: Prisma.OfferCreateNestedManyWithoutCategoryInput
+  departmentMembers?: Prisma.CompanyMemberCreateNestedManyWithoutDepartmentInput
+}
+
+export type CategoryUncheckedCreateWithoutPositionMembersInput = {
+  id?: string
+  name: string
+  slug: string
+  kind?: string
+  parentId?: string | null
+  sortOrder?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  children?: Prisma.CategoryUncheckedCreateNestedManyWithoutParentInput
+  companies?: Prisma.CompanyCategoryUncheckedCreateNestedManyWithoutCategoryInput
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutCategoryInput
+  departmentMembers?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutDepartmentInput
+}
+
+export type CategoryCreateOrConnectWithoutPositionMembersInput = {
+  where: Prisma.CategoryWhereUniqueInput
+  create: Prisma.XOR<Prisma.CategoryCreateWithoutPositionMembersInput, Prisma.CategoryUncheckedCreateWithoutPositionMembersInput>
+}
+
+export type CategoryCreateWithoutDepartmentMembersInput = {
+  id?: string
+  name: string
+  slug: string
+  kind?: string
+  sortOrder?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  parent?: Prisma.CategoryCreateNestedOneWithoutChildrenInput
+  children?: Prisma.CategoryCreateNestedManyWithoutParentInput
+  companies?: Prisma.CompanyCategoryCreateNestedManyWithoutCategoryInput
+  offers?: Prisma.OfferCreateNestedManyWithoutCategoryInput
+  positionMembers?: Prisma.CompanyMemberCreateNestedManyWithoutPositionInput
+}
+
+export type CategoryUncheckedCreateWithoutDepartmentMembersInput = {
+  id?: string
+  name: string
+  slug: string
+  kind?: string
+  parentId?: string | null
+  sortOrder?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  children?: Prisma.CategoryUncheckedCreateNestedManyWithoutParentInput
+  companies?: Prisma.CompanyCategoryUncheckedCreateNestedManyWithoutCategoryInput
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutCategoryInput
+  positionMembers?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutPositionInput
+}
+
+export type CategoryCreateOrConnectWithoutDepartmentMembersInput = {
+  where: Prisma.CategoryWhereUniqueInput
+  create: Prisma.XOR<Prisma.CategoryCreateWithoutDepartmentMembersInput, Prisma.CategoryUncheckedCreateWithoutDepartmentMembersInput>
+}
+
+export type CategoryUpsertWithoutPositionMembersInput = {
+  update: Prisma.XOR<Prisma.CategoryUpdateWithoutPositionMembersInput, Prisma.CategoryUncheckedUpdateWithoutPositionMembersInput>
+  create: Prisma.XOR<Prisma.CategoryCreateWithoutPositionMembersInput, Prisma.CategoryUncheckedCreateWithoutPositionMembersInput>
+  where?: Prisma.CategoryWhereInput
+}
+
+export type CategoryUpdateToOneWithWhereWithoutPositionMembersInput = {
+  where?: Prisma.CategoryWhereInput
+  data: Prisma.XOR<Prisma.CategoryUpdateWithoutPositionMembersInput, Prisma.CategoryUncheckedUpdateWithoutPositionMembersInput>
+}
+
+export type CategoryUpdateWithoutPositionMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parent?: Prisma.CategoryUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.CategoryUpdateManyWithoutParentNestedInput
+  companies?: Prisma.CompanyCategoryUpdateManyWithoutCategoryNestedInput
+  offers?: Prisma.OfferUpdateManyWithoutCategoryNestedInput
+  departmentMembers?: Prisma.CompanyMemberUpdateManyWithoutDepartmentNestedInput
+}
+
+export type CategoryUncheckedUpdateWithoutPositionMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.CategoryUncheckedUpdateManyWithoutParentNestedInput
+  companies?: Prisma.CompanyCategoryUncheckedUpdateManyWithoutCategoryNestedInput
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutCategoryNestedInput
+  departmentMembers?: Prisma.CompanyMemberUncheckedUpdateManyWithoutDepartmentNestedInput
+}
+
+export type CategoryUpsertWithoutDepartmentMembersInput = {
+  update: Prisma.XOR<Prisma.CategoryUpdateWithoutDepartmentMembersInput, Prisma.CategoryUncheckedUpdateWithoutDepartmentMembersInput>
+  create: Prisma.XOR<Prisma.CategoryCreateWithoutDepartmentMembersInput, Prisma.CategoryUncheckedCreateWithoutDepartmentMembersInput>
+  where?: Prisma.CategoryWhereInput
+}
+
+export type CategoryUpdateToOneWithWhereWithoutDepartmentMembersInput = {
+  where?: Prisma.CategoryWhereInput
+  data: Prisma.XOR<Prisma.CategoryUpdateWithoutDepartmentMembersInput, Prisma.CategoryUncheckedUpdateWithoutDepartmentMembersInput>
+}
+
+export type CategoryUpdateWithoutDepartmentMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parent?: Prisma.CategoryUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.CategoryUpdateManyWithoutParentNestedInput
+  companies?: Prisma.CompanyCategoryUpdateManyWithoutCategoryNestedInput
+  offers?: Prisma.OfferUpdateManyWithoutCategoryNestedInput
+  positionMembers?: Prisma.CompanyMemberUpdateManyWithoutPositionNestedInput
+}
+
+export type CategoryUncheckedUpdateWithoutDepartmentMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.CategoryUncheckedUpdateManyWithoutParentNestedInput
+  companies?: Prisma.CompanyCategoryUncheckedUpdateManyWithoutCategoryNestedInput
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutCategoryNestedInput
+  positionMembers?: Prisma.CompanyMemberUncheckedUpdateManyWithoutPositionNestedInput
 }
 
 export type CategoryCreateWithoutOffersInput = {
@@ -801,6 +1027,8 @@ export type CategoryCreateWithoutOffersInput = {
   parent?: Prisma.CategoryCreateNestedOneWithoutChildrenInput
   children?: Prisma.CategoryCreateNestedManyWithoutParentInput
   companies?: Prisma.CompanyCategoryCreateNestedManyWithoutCategoryInput
+  positionMembers?: Prisma.CompanyMemberCreateNestedManyWithoutPositionInput
+  departmentMembers?: Prisma.CompanyMemberCreateNestedManyWithoutDepartmentInput
 }
 
 export type CategoryUncheckedCreateWithoutOffersInput = {
@@ -815,6 +1043,8 @@ export type CategoryUncheckedCreateWithoutOffersInput = {
   updatedAt?: Date | string
   children?: Prisma.CategoryUncheckedCreateNestedManyWithoutParentInput
   companies?: Prisma.CompanyCategoryUncheckedCreateNestedManyWithoutCategoryInput
+  positionMembers?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutPositionInput
+  departmentMembers?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type CategoryCreateOrConnectWithoutOffersInput = {
@@ -845,6 +1075,8 @@ export type CategoryUpdateWithoutOffersInput = {
   parent?: Prisma.CategoryUpdateOneWithoutChildrenNestedInput
   children?: Prisma.CategoryUpdateManyWithoutParentNestedInput
   companies?: Prisma.CompanyCategoryUpdateManyWithoutCategoryNestedInput
+  positionMembers?: Prisma.CompanyMemberUpdateManyWithoutPositionNestedInput
+  departmentMembers?: Prisma.CompanyMemberUpdateManyWithoutDepartmentNestedInput
 }
 
 export type CategoryUncheckedUpdateWithoutOffersInput = {
@@ -859,6 +1091,8 @@ export type CategoryUncheckedUpdateWithoutOffersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   children?: Prisma.CategoryUncheckedUpdateManyWithoutParentNestedInput
   companies?: Prisma.CompanyCategoryUncheckedUpdateManyWithoutCategoryNestedInput
+  positionMembers?: Prisma.CompanyMemberUncheckedUpdateManyWithoutPositionNestedInput
+  departmentMembers?: Prisma.CompanyMemberUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type CategoryCreateManyParentInput = {
@@ -884,6 +1118,8 @@ export type CategoryUpdateWithoutParentInput = {
   children?: Prisma.CategoryUpdateManyWithoutParentNestedInput
   companies?: Prisma.CompanyCategoryUpdateManyWithoutCategoryNestedInput
   offers?: Prisma.OfferUpdateManyWithoutCategoryNestedInput
+  positionMembers?: Prisma.CompanyMemberUpdateManyWithoutPositionNestedInput
+  departmentMembers?: Prisma.CompanyMemberUpdateManyWithoutDepartmentNestedInput
 }
 
 export type CategoryUncheckedUpdateWithoutParentInput = {
@@ -898,6 +1134,8 @@ export type CategoryUncheckedUpdateWithoutParentInput = {
   children?: Prisma.CategoryUncheckedUpdateManyWithoutParentNestedInput
   companies?: Prisma.CompanyCategoryUncheckedUpdateManyWithoutCategoryNestedInput
   offers?: Prisma.OfferUncheckedUpdateManyWithoutCategoryNestedInput
+  positionMembers?: Prisma.CompanyMemberUncheckedUpdateManyWithoutPositionNestedInput
+  departmentMembers?: Prisma.CompanyMemberUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type CategoryUncheckedUpdateManyWithoutParentInput = {
@@ -920,12 +1158,16 @@ export type CategoryCountOutputType = {
   children: number
   companies: number
   offers: number
+  positionMembers: number
+  departmentMembers: number
 }
 
 export type CategoryCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   children?: boolean | CategoryCountOutputTypeCountChildrenArgs
   companies?: boolean | CategoryCountOutputTypeCountCompaniesArgs
   offers?: boolean | CategoryCountOutputTypeCountOffersArgs
+  positionMembers?: boolean | CategoryCountOutputTypeCountPositionMembersArgs
+  departmentMembers?: boolean | CategoryCountOutputTypeCountDepartmentMembersArgs
 }
 
 /**
@@ -959,6 +1201,20 @@ export type CategoryCountOutputTypeCountOffersArgs<ExtArgs extends runtime.Types
   where?: Prisma.OfferWhereInput
 }
 
+/**
+ * CategoryCountOutputType without action
+ */
+export type CategoryCountOutputTypeCountPositionMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CompanyMemberWhereInput
+}
+
+/**
+ * CategoryCountOutputType without action
+ */
+export type CategoryCountOutputTypeCountDepartmentMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CompanyMemberWhereInput
+}
+
 
 export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -974,6 +1230,8 @@ export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   children?: boolean | Prisma.Category$childrenArgs<ExtArgs>
   companies?: boolean | Prisma.Category$companiesArgs<ExtArgs>
   offers?: boolean | Prisma.Category$offersArgs<ExtArgs>
+  positionMembers?: boolean | Prisma.Category$positionMembersArgs<ExtArgs>
+  departmentMembers?: boolean | Prisma.Category$departmentMembersArgs<ExtArgs>
   _count?: boolean | Prisma.CategoryCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["category"]>
 
@@ -1021,6 +1279,8 @@ export type CategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   children?: boolean | Prisma.Category$childrenArgs<ExtArgs>
   companies?: boolean | Prisma.Category$companiesArgs<ExtArgs>
   offers?: boolean | Prisma.Category$offersArgs<ExtArgs>
+  positionMembers?: boolean | Prisma.Category$positionMembersArgs<ExtArgs>
+  departmentMembers?: boolean | Prisma.Category$departmentMembersArgs<ExtArgs>
   _count?: boolean | Prisma.CategoryCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CategoryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1037,13 +1297,15 @@ export type $CategoryPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     children: Prisma.$CategoryPayload<ExtArgs>[]
     companies: Prisma.$CompanyCategoryPayload<ExtArgs>[]
     offers: Prisma.$OfferPayload<ExtArgs>[]
+    positionMembers: Prisma.$CompanyMemberPayload<ExtArgs>[]
+    departmentMembers: Prisma.$CompanyMemberPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
     slug: string
     /**
-     * OFFER = special-offer category; INDUSTRY = company industry.
+     * OFFER = special-offer category; INDUSTRY = company industry; POSITION / DEPARTMENT = employee lists.
      */
     kind: string
     parentId: string | null
@@ -1449,6 +1711,8 @@ export interface Prisma__CategoryClient<T, Null = never, ExtArgs extends runtime
   children<T extends Prisma.Category$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   companies<T extends Prisma.Category$companiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$companiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanyCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   offers<T extends Prisma.Category$offersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$offersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  positionMembers<T extends Prisma.Category$positionMembersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$positionMembersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanyMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  departmentMembers<T extends Prisma.Category$departmentMembersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$departmentMembersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanyMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1976,6 +2240,54 @@ export type Category$offersArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.OfferScalarFieldEnum | Prisma.OfferScalarFieldEnum[]
+}
+
+/**
+ * Category.positionMembers
+ */
+export type Category$positionMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CompanyMember
+   */
+  select?: Prisma.CompanyMemberSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CompanyMember
+   */
+  omit?: Prisma.CompanyMemberOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyMemberInclude<ExtArgs> | null
+  where?: Prisma.CompanyMemberWhereInput
+  orderBy?: Prisma.CompanyMemberOrderByWithRelationInput | Prisma.CompanyMemberOrderByWithRelationInput[]
+  cursor?: Prisma.CompanyMemberWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CompanyMemberScalarFieldEnum | Prisma.CompanyMemberScalarFieldEnum[]
+}
+
+/**
+ * Category.departmentMembers
+ */
+export type Category$departmentMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CompanyMember
+   */
+  select?: Prisma.CompanyMemberSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CompanyMember
+   */
+  omit?: Prisma.CompanyMemberOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyMemberInclude<ExtArgs> | null
+  where?: Prisma.CompanyMemberWhereInput
+  orderBy?: Prisma.CompanyMemberOrderByWithRelationInput | Prisma.CompanyMemberOrderByWithRelationInput[]
+  cursor?: Prisma.CompanyMemberWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CompanyMemberScalarFieldEnum | Prisma.CompanyMemberScalarFieldEnum[]
 }
 
 /**

@@ -83,7 +83,7 @@ export async function registerAction(_: FormState, formData: FormData): Promise<
 
   if (company?.success) {
     const c = company.data;
-    const category = await db.category.findFirst({ where: { id: c.categoryId, isActive: true }, select: { id: true } });
+    const category = await db.category.findFirst({ where: { id: c.categoryId, kind: "INDUSTRY", isActive: true }, select: { id: true } });
     if (!category) return fail(ka.validation.formErrors, formData, { categoryId: ka.validation.chooseCategory });
     const dup = await db.company.findUnique({ where: { country_registrationNumber: { country: "GE", registrationNumber: c.registrationNumber } }, select: { id: true } });
     if (dup) return fail(ka.validation.formErrors, formData, { registrationNumber: ka.companyForm.duplicate });
@@ -125,8 +125,8 @@ export async function registerAction(_: FormState, formData: FormData): Promise<
     await db.$transaction([
       db.companyMember.upsert({
         where: { companyId_userId: { companyId: inv.companyId, userId: user.id } },
-        create: { companyId: inv.companyId, userId: user.id, role: inv.role, permissions: inv.permissions },
-        update: { role: inv.role, permissions: inv.permissions, status: "ACTIVE" },
+        create: { companyId: inv.companyId, userId: user.id, role: inv.role, permissions: inv.permissions, positionId: inv.positionId, departmentId: inv.departmentId },
+        update: { role: inv.role, permissions: inv.permissions, positionId: inv.positionId, departmentId: inv.departmentId, status: "ACTIVE" },
       }),
       db.companyInvitation.update({ where: { id: inv.id }, data: { acceptedAt: new Date() } }),
     ]);

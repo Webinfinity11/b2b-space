@@ -205,7 +205,9 @@ export const CompanyMemberScalarFieldEnum = {
   permissions: 'permissions',
   status: 'status',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  positionId: 'positionId',
+  departmentId: 'departmentId'
 } as const
 
 export type CompanyMemberScalarFieldEnum = (typeof CompanyMemberScalarFieldEnum)[keyof typeof CompanyMemberScalarFieldEnum]
@@ -217,6 +219,10 @@ export const CompanyInvitationScalarFieldEnum = {
   email: 'email',
   role: 'role',
   permissions: 'permissions',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  positionId: 'positionId',
+  departmentId: 'departmentId',
   tokenHash: 'tokenHash',
   invitedById: 'invitedById',
   expiresAt: 'expiresAt',
@@ -630,6 +636,7 @@ export const CampaignRequestScalarFieldEnum = {
   sizes: 'sizes',
   roles: 'roles',
   positions: 'positions',
+  positionIds: 'positionIds',
   perk: 'perk',
   ctaUrl: 'ctaUrl',
   fileUrl: 'fileUrl',

@@ -8,7 +8,8 @@ import { formatDate } from "@/lib/format";
 import { PERMISSIONS } from "@/lib/permissions";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardBody, CardHeader, PageHeader } from "@/components/ui/Card";
-import { ActionForm, CheckboxGroup, Field, Input, SubmitButton } from "@/components/ui/Form";
+import { ActionForm, CheckboxGroup, Field, Input, Select, SubmitButton } from "@/components/ui/Form";
+import { getPeopleLists, type PeopleLists } from "@/lib/people";
 import { RolePicker } from "@/components/panel/RolePicker";
 
 export const metadata: Metadata = { title: ka.team.title };
@@ -16,21 +17,28 @@ export const metadata: Metadata = { title: ka.team.title };
 const permissionOptions = PERMISSIONS.map((p) => ({ value: p, label: ka.permissions[p] }));
 
 export default async function TeamPage() {
-  const { user, membership } = await requireCompany("owner");
+  // Everyone in the company sees the team; only owners manage it.
+  const { user, membership } = await requireCompany();
+  const isOwner = membership.role === "OWNER";
+  const lists = await getPeopleLists();
   const members = await db.companyMember.findMany({
     where: { companyId: membership.companyId, status: "ACTIVE" },
-    include: { user: { select: { firstName: true, lastName: true, email: true } } },
+    include: {
+      user: { select: { firstName: true, lastName: true, email: true, phone: true } },
+      position: { select: { name: true } },
+      department: { select: { name: true } },
+    },
     orderBy: [{ role: "asc" }, { createdAt: "asc" }],
   });
-  const invitations = await db.companyInvitation.findMany({
+  const invitations = !isOwner ? [] : await db.companyInvitation.findMany({
     where: { companyId: membership.companyId, acceptedAt: null, revokedAt: null, expiresAt: { gt: new Date() } },
     orderBy: { createdAt: "desc" },
   });
 
   return (
     <>
-      <PageHeader title={ka.team.title} text={ka.team.text} />
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_400px]">
+      <PageHeader title={ka.team.title} text={isOwner ? ka.team.text : ka.team.readOnlyNote} />
+      <div className={`grid gap-6 ${isOwner ? "xl:grid-cols-[minmax(0,1fr)_400px]" : ""}`}>
         <div className="space-y-4">
           <h2 className="text-sm font-semibold text-muted">
             {ka.team.members} ({members.length})
@@ -48,7 +56,8 @@ export default async function TeamPage() {
                         <span className="font-medium">{m.user.firstName} {m.user.lastName}</span>
                         {m.userId === user.id && <Badge tone="info">{ka.team.you}</Badge>}
                       </div>
-                      <p className="text-sm text-muted">{m.user.email}</p>
+                      <p className="text-sm text-secondary">{[m.position?.name, m.department?.name].filter(Boolean).join(" · ") || ka.team.notSet}</p>
+                      <p className="text-xs text-muted">{[m.user.email, m.user.phone].filter(Boolean).join(" · ")}</p>
                     </div>
                   </div>
                   <div className="text-right">
@@ -57,12 +66,13 @@ export default async function TeamPage() {
                   </div>
                 </div>
                 <p className="mt-3 text-xs text-muted">{ka.team.roleHelp[m.role]}</p>
-                {m.userId !== user.id && (
+                {isOwner && (
                   <details className="mt-3 rounded-lg border border-line">
                     <summary className="cursor-pointer px-3 py-2 text-sm text-accent-strong">{ka.team.edit}</summary>
                     <div className="border-t border-line p-3">
                       <ActionForm action={updateMemberAction} className="space-y-3">
                         <input type="hidden" name="memberId" value={m.id} />
+                        <JobFields lists={lists} position={m.positionId} department={m.departmentId} />
                         <RolePicker name="role" defaultValue={m.role} idPrefix={m.id} />
                         <details className="rounded-lg bg-canvas p-3">
                           <summary className="cursor-pointer text-xs text-muted">{ka.team.customPermissions}</summary>
@@ -71,10 +81,10 @@ export default async function TeamPage() {
                         </details>
                         <SubmitButton size="sm">{ka.common.save}</SubmitButton>
                       </ActionForm>
-                      <ActionForm action={removeMemberAction} className="mt-3 border-t border-line pt-3">
+                      {m.userId !== user.id && <ActionForm action={removeMemberAction} className="mt-3 border-t border-line pt-3">
                         <input type="hidden" name="memberId" value={m.id} />
                         <SubmitButton size="sm" variant="ghost" className="text-danger">{ka.common.remove}</SubmitButton>
-                      </ActionForm>
+                      </ActionForm>}
                     </div>
                   </details>
                 )}
@@ -90,7 +100,8 @@ export default async function TeamPage() {
                   {invitations.map((inv) => (
                     <li key={inv.id} className="flex flex-wrap items-center justify-between gap-2 py-2.5 first:pt-0 last:pb-0">
                       <span className="text-sm">
-                        <span className="font-medium">{inv.email}</span>
+                        <span className="font-medium">{[inv.firstName, inv.lastName].filter(Boolean).join(" ") || inv.email}</span>
+                        {(inv.firstName || inv.lastName) && <span className="text-muted"> · {inv.email}</span>}
                         <span className="text-muted"> · {ka.enums.memberRole[inv.role]} · {ka.team.expires}: {formatDate(inv.expiresAt)}</span>
                       </span>
                       <form action={revokeInvitationAction}>
@@ -105,7 +116,7 @@ export default async function TeamPage() {
           )}
         </div>
 
-        <div className="space-y-4">
+        {isOwner && <div className="space-y-4">
           <Card className="h-fit border-accent/50">
             <CardHeader title={ka.team.add} />
             <CardBody className="space-y-4">
@@ -120,9 +131,18 @@ export default async function TeamPage() {
               </ol>
               <ActionForm action={addMemberAction} resetOnSuccess className="space-y-4">
                 <input type="hidden" name="companyId" value={membership.companyId} />
+                <div className="grid grid-cols-2 gap-3">
+                  <Field label={ka.team.firstName} name="firstName" optional>
+                    <Input name="firstName" maxLength={60} />
+                  </Field>
+                  <Field label={ka.team.lastName} name="lastName" optional>
+                    <Input name="lastName" maxLength={60} />
+                  </Field>
+                </div>
                 <Field label={ka.auth.email} name="email">
                   <Input name="email" type="email" placeholder="name@company.ge" required />
                 </Field>
+                <JobFields lists={lists} />
                 <Field label={ka.team.role} name="role">
                   <RolePicker name="role" defaultValue="EMPLOYEE" idPrefix="new" />
                 </Field>
@@ -135,8 +155,22 @@ export default async function TeamPage() {
               </ActionForm>
             </CardBody>
           </Card>
-        </div>
+        </div>}
       </div>
     </>
+  );
+}
+
+/** Position and department from the admin-managed lists — no free text, so campaigns can target them. */
+function JobFields({ lists, position, department }: { lists: PeopleLists; position?: string | null; department?: string | null }) {
+  return (
+    <div className="space-y-3">
+      <Field label={ka.team.position} name="positionId" optional>
+        <Select name="positionId" defaultValue={position ?? ""} placeholder={ka.team.choosePosition} options={lists.positions.map((p) => ({ value: p.id, label: p.name }))} />
+      </Field>
+      <Field label={ka.team.department} name="departmentId" optional hint={ka.team.listHint}>
+        <Select name="departmentId" defaultValue={department ?? ""} placeholder={ka.team.chooseDepartment} options={lists.departments.map((p) => ({ value: p.id, label: p.name }))} />
+      </Field>
+    </div>
   );
 }

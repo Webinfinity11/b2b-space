@@ -32,6 +32,8 @@ export type CompanyMemberMinAggregateOutputType = {
   status: $Enums.MemberStatus | null
   createdAt: Date | null
   updatedAt: Date | null
+  positionId: string | null
+  departmentId: string | null
 }
 
 export type CompanyMemberMaxAggregateOutputType = {
@@ -42,6 +44,8 @@ export type CompanyMemberMaxAggregateOutputType = {
   status: $Enums.MemberStatus | null
   createdAt: Date | null
   updatedAt: Date | null
+  positionId: string | null
+  departmentId: string | null
 }
 
 export type CompanyMemberCountAggregateOutputType = {
@@ -53,6 +57,8 @@ export type CompanyMemberCountAggregateOutputType = {
   status: number
   createdAt: number
   updatedAt: number
+  positionId: number
+  departmentId: number
   _all: number
 }
 
@@ -65,6 +71,8 @@ export type CompanyMemberMinAggregateInputType = {
   status?: true
   createdAt?: true
   updatedAt?: true
+  positionId?: true
+  departmentId?: true
 }
 
 export type CompanyMemberMaxAggregateInputType = {
@@ -75,6 +83,8 @@ export type CompanyMemberMaxAggregateInputType = {
   status?: true
   createdAt?: true
   updatedAt?: true
+  positionId?: true
+  departmentId?: true
 }
 
 export type CompanyMemberCountAggregateInputType = {
@@ -86,6 +96,8 @@ export type CompanyMemberCountAggregateInputType = {
   status?: true
   createdAt?: true
   updatedAt?: true
+  positionId?: true
+  departmentId?: true
   _all?: true
 }
 
@@ -170,6 +182,8 @@ export type CompanyMemberGroupByOutputType = {
   status: $Enums.MemberStatus
   createdAt: Date
   updatedAt: Date
+  positionId: string | null
+  departmentId: string | null
   _count: CompanyMemberCountAggregateOutputType | null
   _min: CompanyMemberMinAggregateOutputType | null
   _max: CompanyMemberMaxAggregateOutputType | null
@@ -202,8 +216,12 @@ export type CompanyMemberWhereInput = {
   status?: Prisma.EnumMemberStatusFilter<"CompanyMember"> | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFilter<"CompanyMember"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CompanyMember"> | Date | string
+  positionId?: Prisma.StringNullableFilter<"CompanyMember"> | string | null
+  departmentId?: Prisma.StringNullableFilter<"CompanyMember"> | string | null
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  position?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null
+  department?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null
 }
 
 export type CompanyMemberOrderByWithRelationInput = {
@@ -215,8 +233,12 @@ export type CompanyMemberOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  positionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   company?: Prisma.CompanyOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
+  position?: Prisma.CategoryOrderByWithRelationInput
+  department?: Prisma.CategoryOrderByWithRelationInput
 }
 
 export type CompanyMemberWhereUniqueInput = Prisma.AtLeast<{
@@ -232,8 +254,12 @@ export type CompanyMemberWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumMemberStatusFilter<"CompanyMember"> | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFilter<"CompanyMember"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CompanyMember"> | Date | string
+  positionId?: Prisma.StringNullableFilter<"CompanyMember"> | string | null
+  departmentId?: Prisma.StringNullableFilter<"CompanyMember"> | string | null
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  position?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null
+  department?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null
 }, "id" | "companyId_userId">
 
 export type CompanyMemberOrderByWithAggregationInput = {
@@ -245,6 +271,8 @@ export type CompanyMemberOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  positionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.CompanyMemberCountOrderByAggregateInput
   _max?: Prisma.CompanyMemberMaxOrderByAggregateInput
   _min?: Prisma.CompanyMemberMinOrderByAggregateInput
@@ -262,6 +290,8 @@ export type CompanyMemberScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumMemberStatusWithAggregatesFilter<"CompanyMember"> | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CompanyMember"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CompanyMember"> | Date | string
+  positionId?: Prisma.StringNullableWithAggregatesFilter<"CompanyMember"> | string | null
+  departmentId?: Prisma.StringNullableWithAggregatesFilter<"CompanyMember"> | string | null
 }
 
 export type CompanyMemberCreateInput = {
@@ -273,6 +303,8 @@ export type CompanyMemberCreateInput = {
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutMembersInput
   user: Prisma.UserCreateNestedOneWithoutMembershipsInput
+  position?: Prisma.CategoryCreateNestedOneWithoutPositionMembersInput
+  department?: Prisma.CategoryCreateNestedOneWithoutDepartmentMembersInput
 }
 
 export type CompanyMemberUncheckedCreateInput = {
@@ -284,6 +316,8 @@ export type CompanyMemberUncheckedCreateInput = {
   status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  positionId?: string | null
+  departmentId?: string | null
 }
 
 export type CompanyMemberUpdateInput = {
@@ -295,6 +329,8 @@ export type CompanyMemberUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutMembersNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutMembershipsNestedInput
+  position?: Prisma.CategoryUpdateOneWithoutPositionMembersNestedInput
+  department?: Prisma.CategoryUpdateOneWithoutDepartmentMembersNestedInput
 }
 
 export type CompanyMemberUncheckedUpdateInput = {
@@ -306,6 +342,8 @@ export type CompanyMemberUncheckedUpdateInput = {
   status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CompanyMemberCreateManyInput = {
@@ -317,6 +355,8 @@ export type CompanyMemberCreateManyInput = {
   status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  positionId?: string | null
+  departmentId?: string | null
 }
 
 export type CompanyMemberUpdateManyMutationInput = {
@@ -337,6 +377,8 @@ export type CompanyMemberUncheckedUpdateManyInput = {
   status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CompanyMemberListRelationFilter = {
@@ -371,6 +413,8 @@ export type CompanyMemberCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  positionId?: Prisma.SortOrder
+  departmentId?: Prisma.SortOrder
 }
 
 export type CompanyMemberMaxOrderByAggregateInput = {
@@ -381,6 +425,8 @@ export type CompanyMemberMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  positionId?: Prisma.SortOrder
+  departmentId?: Prisma.SortOrder
 }
 
 export type CompanyMemberMinOrderByAggregateInput = {
@@ -391,6 +437,8 @@ export type CompanyMemberMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  positionId?: Prisma.SortOrder
+  departmentId?: Prisma.SortOrder
 }
 
 export type CompanyMemberCreateNestedManyWithoutUserInput = {
@@ -432,6 +480,90 @@ export type CompanyMemberUncheckedUpdateManyWithoutUserNestedInput = {
   connect?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
   update?: Prisma.CompanyMemberUpdateWithWhereUniqueWithoutUserInput | Prisma.CompanyMemberUpdateWithWhereUniqueWithoutUserInput[]
   updateMany?: Prisma.CompanyMemberUpdateManyWithWhereWithoutUserInput | Prisma.CompanyMemberUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.CompanyMemberScalarWhereInput | Prisma.CompanyMemberScalarWhereInput[]
+}
+
+export type CompanyMemberCreateNestedManyWithoutPositionInput = {
+  create?: Prisma.XOR<Prisma.CompanyMemberCreateWithoutPositionInput, Prisma.CompanyMemberUncheckedCreateWithoutPositionInput> | Prisma.CompanyMemberCreateWithoutPositionInput[] | Prisma.CompanyMemberUncheckedCreateWithoutPositionInput[]
+  connectOrCreate?: Prisma.CompanyMemberCreateOrConnectWithoutPositionInput | Prisma.CompanyMemberCreateOrConnectWithoutPositionInput[]
+  createMany?: Prisma.CompanyMemberCreateManyPositionInputEnvelope
+  connect?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+}
+
+export type CompanyMemberCreateNestedManyWithoutDepartmentInput = {
+  create?: Prisma.XOR<Prisma.CompanyMemberCreateWithoutDepartmentInput, Prisma.CompanyMemberUncheckedCreateWithoutDepartmentInput> | Prisma.CompanyMemberCreateWithoutDepartmentInput[] | Prisma.CompanyMemberUncheckedCreateWithoutDepartmentInput[]
+  connectOrCreate?: Prisma.CompanyMemberCreateOrConnectWithoutDepartmentInput | Prisma.CompanyMemberCreateOrConnectWithoutDepartmentInput[]
+  createMany?: Prisma.CompanyMemberCreateManyDepartmentInputEnvelope
+  connect?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+}
+
+export type CompanyMemberUncheckedCreateNestedManyWithoutPositionInput = {
+  create?: Prisma.XOR<Prisma.CompanyMemberCreateWithoutPositionInput, Prisma.CompanyMemberUncheckedCreateWithoutPositionInput> | Prisma.CompanyMemberCreateWithoutPositionInput[] | Prisma.CompanyMemberUncheckedCreateWithoutPositionInput[]
+  connectOrCreate?: Prisma.CompanyMemberCreateOrConnectWithoutPositionInput | Prisma.CompanyMemberCreateOrConnectWithoutPositionInput[]
+  createMany?: Prisma.CompanyMemberCreateManyPositionInputEnvelope
+  connect?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+}
+
+export type CompanyMemberUncheckedCreateNestedManyWithoutDepartmentInput = {
+  create?: Prisma.XOR<Prisma.CompanyMemberCreateWithoutDepartmentInput, Prisma.CompanyMemberUncheckedCreateWithoutDepartmentInput> | Prisma.CompanyMemberCreateWithoutDepartmentInput[] | Prisma.CompanyMemberUncheckedCreateWithoutDepartmentInput[]
+  connectOrCreate?: Prisma.CompanyMemberCreateOrConnectWithoutDepartmentInput | Prisma.CompanyMemberCreateOrConnectWithoutDepartmentInput[]
+  createMany?: Prisma.CompanyMemberCreateManyDepartmentInputEnvelope
+  connect?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+}
+
+export type CompanyMemberUpdateManyWithoutPositionNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyMemberCreateWithoutPositionInput, Prisma.CompanyMemberUncheckedCreateWithoutPositionInput> | Prisma.CompanyMemberCreateWithoutPositionInput[] | Prisma.CompanyMemberUncheckedCreateWithoutPositionInput[]
+  connectOrCreate?: Prisma.CompanyMemberCreateOrConnectWithoutPositionInput | Prisma.CompanyMemberCreateOrConnectWithoutPositionInput[]
+  upsert?: Prisma.CompanyMemberUpsertWithWhereUniqueWithoutPositionInput | Prisma.CompanyMemberUpsertWithWhereUniqueWithoutPositionInput[]
+  createMany?: Prisma.CompanyMemberCreateManyPositionInputEnvelope
+  set?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+  disconnect?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+  delete?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+  connect?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+  update?: Prisma.CompanyMemberUpdateWithWhereUniqueWithoutPositionInput | Prisma.CompanyMemberUpdateWithWhereUniqueWithoutPositionInput[]
+  updateMany?: Prisma.CompanyMemberUpdateManyWithWhereWithoutPositionInput | Prisma.CompanyMemberUpdateManyWithWhereWithoutPositionInput[]
+  deleteMany?: Prisma.CompanyMemberScalarWhereInput | Prisma.CompanyMemberScalarWhereInput[]
+}
+
+export type CompanyMemberUpdateManyWithoutDepartmentNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyMemberCreateWithoutDepartmentInput, Prisma.CompanyMemberUncheckedCreateWithoutDepartmentInput> | Prisma.CompanyMemberCreateWithoutDepartmentInput[] | Prisma.CompanyMemberUncheckedCreateWithoutDepartmentInput[]
+  connectOrCreate?: Prisma.CompanyMemberCreateOrConnectWithoutDepartmentInput | Prisma.CompanyMemberCreateOrConnectWithoutDepartmentInput[]
+  upsert?: Prisma.CompanyMemberUpsertWithWhereUniqueWithoutDepartmentInput | Prisma.CompanyMemberUpsertWithWhereUniqueWithoutDepartmentInput[]
+  createMany?: Prisma.CompanyMemberCreateManyDepartmentInputEnvelope
+  set?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+  disconnect?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+  delete?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+  connect?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+  update?: Prisma.CompanyMemberUpdateWithWhereUniqueWithoutDepartmentInput | Prisma.CompanyMemberUpdateWithWhereUniqueWithoutDepartmentInput[]
+  updateMany?: Prisma.CompanyMemberUpdateManyWithWhereWithoutDepartmentInput | Prisma.CompanyMemberUpdateManyWithWhereWithoutDepartmentInput[]
+  deleteMany?: Prisma.CompanyMemberScalarWhereInput | Prisma.CompanyMemberScalarWhereInput[]
+}
+
+export type CompanyMemberUncheckedUpdateManyWithoutPositionNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyMemberCreateWithoutPositionInput, Prisma.CompanyMemberUncheckedCreateWithoutPositionInput> | Prisma.CompanyMemberCreateWithoutPositionInput[] | Prisma.CompanyMemberUncheckedCreateWithoutPositionInput[]
+  connectOrCreate?: Prisma.CompanyMemberCreateOrConnectWithoutPositionInput | Prisma.CompanyMemberCreateOrConnectWithoutPositionInput[]
+  upsert?: Prisma.CompanyMemberUpsertWithWhereUniqueWithoutPositionInput | Prisma.CompanyMemberUpsertWithWhereUniqueWithoutPositionInput[]
+  createMany?: Prisma.CompanyMemberCreateManyPositionInputEnvelope
+  set?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+  disconnect?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+  delete?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+  connect?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+  update?: Prisma.CompanyMemberUpdateWithWhereUniqueWithoutPositionInput | Prisma.CompanyMemberUpdateWithWhereUniqueWithoutPositionInput[]
+  updateMany?: Prisma.CompanyMemberUpdateManyWithWhereWithoutPositionInput | Prisma.CompanyMemberUpdateManyWithWhereWithoutPositionInput[]
+  deleteMany?: Prisma.CompanyMemberScalarWhereInput | Prisma.CompanyMemberScalarWhereInput[]
+}
+
+export type CompanyMemberUncheckedUpdateManyWithoutDepartmentNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyMemberCreateWithoutDepartmentInput, Prisma.CompanyMemberUncheckedCreateWithoutDepartmentInput> | Prisma.CompanyMemberCreateWithoutDepartmentInput[] | Prisma.CompanyMemberUncheckedCreateWithoutDepartmentInput[]
+  connectOrCreate?: Prisma.CompanyMemberCreateOrConnectWithoutDepartmentInput | Prisma.CompanyMemberCreateOrConnectWithoutDepartmentInput[]
+  upsert?: Prisma.CompanyMemberUpsertWithWhereUniqueWithoutDepartmentInput | Prisma.CompanyMemberUpsertWithWhereUniqueWithoutDepartmentInput[]
+  createMany?: Prisma.CompanyMemberCreateManyDepartmentInputEnvelope
+  set?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+  disconnect?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+  delete?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+  connect?: Prisma.CompanyMemberWhereUniqueInput | Prisma.CompanyMemberWhereUniqueInput[]
+  update?: Prisma.CompanyMemberUpdateWithWhereUniqueWithoutDepartmentInput | Prisma.CompanyMemberUpdateWithWhereUniqueWithoutDepartmentInput[]
+  updateMany?: Prisma.CompanyMemberUpdateManyWithWhereWithoutDepartmentInput | Prisma.CompanyMemberUpdateManyWithWhereWithoutDepartmentInput[]
   deleteMany?: Prisma.CompanyMemberScalarWhereInput | Prisma.CompanyMemberScalarWhereInput[]
 }
 
@@ -502,6 +634,8 @@ export type CompanyMemberCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutMembersInput
+  position?: Prisma.CategoryCreateNestedOneWithoutPositionMembersInput
+  department?: Prisma.CategoryCreateNestedOneWithoutDepartmentMembersInput
 }
 
 export type CompanyMemberUncheckedCreateWithoutUserInput = {
@@ -512,6 +646,8 @@ export type CompanyMemberUncheckedCreateWithoutUserInput = {
   status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  positionId?: string | null
+  departmentId?: string | null
 }
 
 export type CompanyMemberCreateOrConnectWithoutUserInput = {
@@ -552,6 +688,108 @@ export type CompanyMemberScalarWhereInput = {
   status?: Prisma.EnumMemberStatusFilter<"CompanyMember"> | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFilter<"CompanyMember"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CompanyMember"> | Date | string
+  positionId?: Prisma.StringNullableFilter<"CompanyMember"> | string | null
+  departmentId?: Prisma.StringNullableFilter<"CompanyMember"> | string | null
+}
+
+export type CompanyMemberCreateWithoutPositionInput = {
+  id?: string
+  role?: $Enums.MemberRole
+  permissions?: Prisma.CompanyMemberCreatepermissionsInput | string[]
+  status?: $Enums.MemberStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.CompanyCreateNestedOneWithoutMembersInput
+  user: Prisma.UserCreateNestedOneWithoutMembershipsInput
+  department?: Prisma.CategoryCreateNestedOneWithoutDepartmentMembersInput
+}
+
+export type CompanyMemberUncheckedCreateWithoutPositionInput = {
+  id?: string
+  companyId: string
+  userId: string
+  role?: $Enums.MemberRole
+  permissions?: Prisma.CompanyMemberCreatepermissionsInput | string[]
+  status?: $Enums.MemberStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  departmentId?: string | null
+}
+
+export type CompanyMemberCreateOrConnectWithoutPositionInput = {
+  where: Prisma.CompanyMemberWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyMemberCreateWithoutPositionInput, Prisma.CompanyMemberUncheckedCreateWithoutPositionInput>
+}
+
+export type CompanyMemberCreateManyPositionInputEnvelope = {
+  data: Prisma.CompanyMemberCreateManyPositionInput | Prisma.CompanyMemberCreateManyPositionInput[]
+  skipDuplicates?: boolean
+}
+
+export type CompanyMemberCreateWithoutDepartmentInput = {
+  id?: string
+  role?: $Enums.MemberRole
+  permissions?: Prisma.CompanyMemberCreatepermissionsInput | string[]
+  status?: $Enums.MemberStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.CompanyCreateNestedOneWithoutMembersInput
+  user: Prisma.UserCreateNestedOneWithoutMembershipsInput
+  position?: Prisma.CategoryCreateNestedOneWithoutPositionMembersInput
+}
+
+export type CompanyMemberUncheckedCreateWithoutDepartmentInput = {
+  id?: string
+  companyId: string
+  userId: string
+  role?: $Enums.MemberRole
+  permissions?: Prisma.CompanyMemberCreatepermissionsInput | string[]
+  status?: $Enums.MemberStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  positionId?: string | null
+}
+
+export type CompanyMemberCreateOrConnectWithoutDepartmentInput = {
+  where: Prisma.CompanyMemberWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyMemberCreateWithoutDepartmentInput, Prisma.CompanyMemberUncheckedCreateWithoutDepartmentInput>
+}
+
+export type CompanyMemberCreateManyDepartmentInputEnvelope = {
+  data: Prisma.CompanyMemberCreateManyDepartmentInput | Prisma.CompanyMemberCreateManyDepartmentInput[]
+  skipDuplicates?: boolean
+}
+
+export type CompanyMemberUpsertWithWhereUniqueWithoutPositionInput = {
+  where: Prisma.CompanyMemberWhereUniqueInput
+  update: Prisma.XOR<Prisma.CompanyMemberUpdateWithoutPositionInput, Prisma.CompanyMemberUncheckedUpdateWithoutPositionInput>
+  create: Prisma.XOR<Prisma.CompanyMemberCreateWithoutPositionInput, Prisma.CompanyMemberUncheckedCreateWithoutPositionInput>
+}
+
+export type CompanyMemberUpdateWithWhereUniqueWithoutPositionInput = {
+  where: Prisma.CompanyMemberWhereUniqueInput
+  data: Prisma.XOR<Prisma.CompanyMemberUpdateWithoutPositionInput, Prisma.CompanyMemberUncheckedUpdateWithoutPositionInput>
+}
+
+export type CompanyMemberUpdateManyWithWhereWithoutPositionInput = {
+  where: Prisma.CompanyMemberScalarWhereInput
+  data: Prisma.XOR<Prisma.CompanyMemberUpdateManyMutationInput, Prisma.CompanyMemberUncheckedUpdateManyWithoutPositionInput>
+}
+
+export type CompanyMemberUpsertWithWhereUniqueWithoutDepartmentInput = {
+  where: Prisma.CompanyMemberWhereUniqueInput
+  update: Prisma.XOR<Prisma.CompanyMemberUpdateWithoutDepartmentInput, Prisma.CompanyMemberUncheckedUpdateWithoutDepartmentInput>
+  create: Prisma.XOR<Prisma.CompanyMemberCreateWithoutDepartmentInput, Prisma.CompanyMemberUncheckedCreateWithoutDepartmentInput>
+}
+
+export type CompanyMemberUpdateWithWhereUniqueWithoutDepartmentInput = {
+  where: Prisma.CompanyMemberWhereUniqueInput
+  data: Prisma.XOR<Prisma.CompanyMemberUpdateWithoutDepartmentInput, Prisma.CompanyMemberUncheckedUpdateWithoutDepartmentInput>
+}
+
+export type CompanyMemberUpdateManyWithWhereWithoutDepartmentInput = {
+  where: Prisma.CompanyMemberScalarWhereInput
+  data: Prisma.XOR<Prisma.CompanyMemberUpdateManyMutationInput, Prisma.CompanyMemberUncheckedUpdateManyWithoutDepartmentInput>
 }
 
 export type CompanyMemberCreateWithoutCompanyInput = {
@@ -562,6 +800,8 @@ export type CompanyMemberCreateWithoutCompanyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutMembershipsInput
+  position?: Prisma.CategoryCreateNestedOneWithoutPositionMembersInput
+  department?: Prisma.CategoryCreateNestedOneWithoutDepartmentMembersInput
 }
 
 export type CompanyMemberUncheckedCreateWithoutCompanyInput = {
@@ -572,6 +812,8 @@ export type CompanyMemberUncheckedCreateWithoutCompanyInput = {
   status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  positionId?: string | null
+  departmentId?: string | null
 }
 
 export type CompanyMemberCreateOrConnectWithoutCompanyInput = {
@@ -608,6 +850,8 @@ export type CompanyMemberCreateManyUserInput = {
   status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  positionId?: string | null
+  departmentId?: string | null
 }
 
 export type CompanyMemberUpdateWithoutUserInput = {
@@ -618,6 +862,8 @@ export type CompanyMemberUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutMembersNestedInput
+  position?: Prisma.CategoryUpdateOneWithoutPositionMembersNestedInput
+  department?: Prisma.CategoryUpdateOneWithoutDepartmentMembersNestedInput
 }
 
 export type CompanyMemberUncheckedUpdateWithoutUserInput = {
@@ -628,6 +874,8 @@ export type CompanyMemberUncheckedUpdateWithoutUserInput = {
   status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CompanyMemberUncheckedUpdateManyWithoutUserInput = {
@@ -638,6 +886,104 @@ export type CompanyMemberUncheckedUpdateManyWithoutUserInput = {
   status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type CompanyMemberCreateManyPositionInput = {
+  id?: string
+  companyId: string
+  userId: string
+  role?: $Enums.MemberRole
+  permissions?: Prisma.CompanyMemberCreatepermissionsInput | string[]
+  status?: $Enums.MemberStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  departmentId?: string | null
+}
+
+export type CompanyMemberCreateManyDepartmentInput = {
+  id?: string
+  companyId: string
+  userId: string
+  role?: $Enums.MemberRole
+  permissions?: Prisma.CompanyMemberCreatepermissionsInput | string[]
+  status?: $Enums.MemberStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  positionId?: string | null
+}
+
+export type CompanyMemberUpdateWithoutPositionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
+  permissions?: Prisma.CompanyMemberUpdatepermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneRequiredWithoutMembersNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutMembershipsNestedInput
+  department?: Prisma.CategoryUpdateOneWithoutDepartmentMembersNestedInput
+}
+
+export type CompanyMemberUncheckedUpdateWithoutPositionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
+  permissions?: Prisma.CompanyMemberUpdatepermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type CompanyMemberUncheckedUpdateManyWithoutPositionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
+  permissions?: Prisma.CompanyMemberUpdatepermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type CompanyMemberUpdateWithoutDepartmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
+  permissions?: Prisma.CompanyMemberUpdatepermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneRequiredWithoutMembersNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutMembershipsNestedInput
+  position?: Prisma.CategoryUpdateOneWithoutPositionMembersNestedInput
+}
+
+export type CompanyMemberUncheckedUpdateWithoutDepartmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
+  permissions?: Prisma.CompanyMemberUpdatepermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type CompanyMemberUncheckedUpdateManyWithoutDepartmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
+  permissions?: Prisma.CompanyMemberUpdatepermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CompanyMemberCreateManyCompanyInput = {
@@ -648,6 +994,8 @@ export type CompanyMemberCreateManyCompanyInput = {
   status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  positionId?: string | null
+  departmentId?: string | null
 }
 
 export type CompanyMemberUpdateWithoutCompanyInput = {
@@ -658,6 +1006,8 @@ export type CompanyMemberUpdateWithoutCompanyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutMembershipsNestedInput
+  position?: Prisma.CategoryUpdateOneWithoutPositionMembersNestedInput
+  department?: Prisma.CategoryUpdateOneWithoutDepartmentMembersNestedInput
 }
 
 export type CompanyMemberUncheckedUpdateWithoutCompanyInput = {
@@ -668,6 +1018,8 @@ export type CompanyMemberUncheckedUpdateWithoutCompanyInput = {
   status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CompanyMemberUncheckedUpdateManyWithoutCompanyInput = {
@@ -678,6 +1030,8 @@ export type CompanyMemberUncheckedUpdateManyWithoutCompanyInput = {
   status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -691,8 +1045,12 @@ export type CompanyMemberSelect<ExtArgs extends runtime.Types.Extensions.Interna
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  positionId?: boolean
+  departmentId?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  position?: boolean | Prisma.CompanyMember$positionArgs<ExtArgs>
+  department?: boolean | Prisma.CompanyMember$departmentArgs<ExtArgs>
 }, ExtArgs["result"]["companyMember"]>
 
 export type CompanyMemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -704,8 +1062,12 @@ export type CompanyMemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  positionId?: boolean
+  departmentId?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  position?: boolean | Prisma.CompanyMember$positionArgs<ExtArgs>
+  department?: boolean | Prisma.CompanyMember$departmentArgs<ExtArgs>
 }, ExtArgs["result"]["companyMember"]>
 
 export type CompanyMemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -717,8 +1079,12 @@ export type CompanyMemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  positionId?: boolean
+  departmentId?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  position?: boolean | Prisma.CompanyMember$positionArgs<ExtArgs>
+  department?: boolean | Prisma.CompanyMember$departmentArgs<ExtArgs>
 }, ExtArgs["result"]["companyMember"]>
 
 export type CompanyMemberSelectScalar = {
@@ -730,20 +1096,28 @@ export type CompanyMemberSelectScalar = {
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  positionId?: boolean
+  departmentId?: boolean
 }
 
-export type CompanyMemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "userId" | "role" | "permissions" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["companyMember"]>
+export type CompanyMemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "userId" | "role" | "permissions" | "status" | "createdAt" | "updatedAt" | "positionId" | "departmentId", ExtArgs["result"]["companyMember"]>
 export type CompanyMemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  position?: boolean | Prisma.CompanyMember$positionArgs<ExtArgs>
+  department?: boolean | Prisma.CompanyMember$departmentArgs<ExtArgs>
 }
 export type CompanyMemberIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  position?: boolean | Prisma.CompanyMember$positionArgs<ExtArgs>
+  department?: boolean | Prisma.CompanyMember$departmentArgs<ExtArgs>
 }
 export type CompanyMemberIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  position?: boolean | Prisma.CompanyMember$positionArgs<ExtArgs>
+  department?: boolean | Prisma.CompanyMember$departmentArgs<ExtArgs>
 }
 
 export type $CompanyMemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -751,6 +1125,8 @@ export type $CompanyMemberPayload<ExtArgs extends runtime.Types.Extensions.Inter
   objects: {
     company: Prisma.$CompanyPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
+    position: Prisma.$CategoryPayload<ExtArgs> | null
+    department: Prisma.$CategoryPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -764,6 +1140,11 @@ export type $CompanyMemberPayload<ExtArgs extends runtime.Types.Extensions.Inter
     status: $Enums.MemberStatus
     createdAt: Date
     updatedAt: Date
+    /**
+     * Job title and department, chosen from admin-managed lists (Category kind POSITION / DEPARTMENT).
+     */
+    positionId: string | null
+    departmentId: string | null
   }, ExtArgs["result"]["companyMember"]>
   composites: {}
 }
@@ -1160,6 +1541,8 @@ export interface Prisma__CompanyMemberClient<T, Null = never, ExtArgs extends ru
   readonly [Symbol.toStringTag]: "PrismaPromise"
   company<T extends Prisma.CompanyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyDefaultArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  position<T extends Prisma.CompanyMember$positionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyMember$positionArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  department<T extends Prisma.CompanyMember$departmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyMember$departmentArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1197,6 +1580,8 @@ export interface CompanyMemberFieldRefs {
   readonly status: Prisma.FieldRef<"CompanyMember", 'MemberStatus'>
   readonly createdAt: Prisma.FieldRef<"CompanyMember", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CompanyMember", 'DateTime'>
+  readonly positionId: Prisma.FieldRef<"CompanyMember", 'String'>
+  readonly departmentId: Prisma.FieldRef<"CompanyMember", 'String'>
 }
     
 
@@ -1595,6 +1980,44 @@ export type CompanyMemberDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many CompanyMembers to delete.
    */
   limit?: number
+}
+
+/**
+ * CompanyMember.position
+ */
+export type CompanyMember$positionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Category
+   */
+  select?: Prisma.CategorySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Category
+   */
+  omit?: Prisma.CategoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CategoryInclude<ExtArgs> | null
+  where?: Prisma.CategoryWhereInput
+}
+
+/**
+ * CompanyMember.department
+ */
+export type CompanyMember$departmentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Category
+   */
+  select?: Prisma.CategorySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Category
+   */
+  omit?: Prisma.CategoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CategoryInclude<ExtArgs> | null
+  where?: Prisma.CategoryWhereInput
 }
 
 /**

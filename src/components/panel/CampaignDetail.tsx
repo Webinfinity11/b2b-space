@@ -43,7 +43,7 @@ export function CampaignStepper({ status }: { status: string }) {
 }
 
 /** Audience + offer + price + results of one campaign application. */
-export function CampaignDetail({ r, industries, reach, results }: { r: Req; industries: string[]; reach: number; results?: { recipients: number; views: number; replies: number } }) {
+export function CampaignDetail({ r, industries, positions = [], reach, results }: { r: Req; industries: string[]; positions?: string[]; reach: number; results?: { recipients: number; views: number; replies: number } }) {
   const c = ka.sgba;
   const chips = (items: string[]) =>
     items.length ? items.map((x) => <span key={x} className="rounded-full bg-chip px-2.5 py-1 text-xs">{x}</span>) : <span className="text-xs text-muted">{ka.sgba.all}</span>;
@@ -82,7 +82,11 @@ export function CampaignDetail({ r, industries, reach, results }: { r: Req; indu
             <div><dt className="mb-1 text-xs text-muted">{c.city}</dt><dd className="flex flex-wrap gap-1.5">{chips(r.cities)}</dd></div>
             <div><dt className="mb-1 text-xs text-muted">{c.size}</dt><dd className="flex flex-wrap gap-1.5">{chips(r.sizes.map((s) => c.sizeFull[s]))}</dd></div>
             <div><dt className="mb-1 text-xs text-muted">{c.role}</dt><dd className="flex flex-wrap gap-1.5">{chips(r.roles.map((s) => c.roles[s]))}</dd></div>
-            {r.positions && <div><dt className="text-xs text-muted">{c.campPositions}</dt><dd>{r.positions}</dd></div>}
+            {positions.length > 0 ? (
+              <div><dt className="mb-1 text-xs text-muted">{c.campPositions}</dt><dd className="flex flex-wrap gap-1.5">{chips(positions)}</dd></div>
+            ) : r.positions ? (
+              <div><dt className="text-xs text-muted">{c.campPositions}</dt><dd>{r.positions}</dd></div>
+            ) : null}
             {r.startDate && <div><dt className="text-xs text-muted">{c.campStart}</dt><dd>{formatDate(r.startDate)}</dd></div>}
           </dl>
         </div>

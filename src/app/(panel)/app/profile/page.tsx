@@ -75,7 +75,10 @@ export default async function ProfilePage() {
                 <ul className="divide-y divide-line">
                   {memberships.map((m) => (
                     <li key={m.id} className="flex flex-wrap items-center justify-between gap-2 py-2.5 first:pt-0 last:pb-0">
-                      <span className="text-sm font-medium">{companyName(m.company)}</span>
+                      <span>
+                        <span className="block text-sm font-medium">{companyName(m.company)}</span>
+                        <span className="block text-xs text-muted">{[m.position?.name, m.department?.name].filter(Boolean).join(" · ") || ka.team.notSet}</span>
+                      </span>
                       <span className="flex gap-2">
                         <Badge>{ka.enums.memberRole[m.role]}</Badge>
                         <VerificationBadge status={m.company.verificationStatus} />

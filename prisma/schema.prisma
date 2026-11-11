@@ -23,20 +23,20 @@ enum UserStatus {
 }
 
 model User {
-  id              String       @id @default(cuid())
-  firstName       String
-  lastName        String
-  email           String       @unique
-  phone           String?
-  passwordHash    String
-  platformRole    PlatformRole @default(USER)
-  status          UserStatus   @default(ACTIVE)
-  emailVerifiedAt DateTime?
-  phoneVerifiedAt DateTime?
-  lastLoginAt     DateTime?
-  emailNotifications Boolean @default(true)
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  id                 String       @id @default(cuid())
+  firstName          String
+  lastName           String
+  email              String       @unique
+  phone              String?
+  passwordHash       String
+  platformRole       PlatformRole @default(USER)
+  status             UserStatus   @default(ACTIVE)
+  emailVerifiedAt    DateTime?
+  phoneVerifiedAt    DateTime?
+  lastLoginAt        DateTime?
+  emailNotifications Boolean      @default(true)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
 
   sessions              Session[]
   memberships           CompanyMember[]
@@ -123,7 +123,7 @@ model Category {
   id        String   @id @default(cuid())
   name      String
   slug      String   @unique
-  /// OFFER = special-offer category; INDUSTRY = company industry.
+  /// OFFER = special-offer category; INDUSTRY = company industry; POSITION / DEPARTMENT = employee lists.
   kind      String   @default("INDUSTRY")
   parentId  String?
   sortOrder Int      @default(0)
@@ -131,10 +131,12 @@ model Category {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  parent    Category?         @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
-  children  Category[]        @relation("CategoryTree")
-  companies CompanyCategory[]
-  offers    Offer[]
+  parent            Category?         @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children          Category[]        @relation("CategoryTree")
+  companies         CompanyCategory[]
+  offers            Offer[]
+  positionMembers   CompanyMember[]   @relation("MemberPosition")
+  departmentMembers CompanyMember[]   @relation("MemberDepartment")
 
   @@index([parentId])
   @@index([isActive, sortOrder])
@@ -175,7 +177,7 @@ model Company {
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
 
-  createdBy             User                   @relation("CompanyCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+  createdBy             User                      @relation("CompanyCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
   categories            CompanyCategory[]
   members               CompanyMember[]
   invitations           CompanyInvitation[]
@@ -185,11 +187,11 @@ model Company {
   offers                Offer[]
   responses             OfferResponse[]
   participations        ConversationParticipant[]
-  dealsAsSeller         DealTerms[]            @relation("DealSellerCompany")
-  dealsAsBuyer          DealTerms[]            @relation("DealBuyerCompany")
+  dealsAsSeller         DealTerms[]               @relation("DealSellerCompany")
+  dealsAsBuyer          DealTerms[]               @relation("DealBuyerCompany")
   approvals             DealApproval[]
-  invoicesAsSeller      Invoice[]              @relation("InvoiceSellerCompany")
-  invoicesAsBuyer       Invoice[]              @relation("InvoiceBuyerCompany")
+  invoicesAsSeller      Invoice[]                 @relation("InvoiceSellerCompany")
+  invoicesAsBuyer       Invoice[]                 @relation("InvoiceBuyerCompany")
   commissions           Commission[]
   campaignRequests      CampaignRequest[]
   campaignInbox         CampaignRecipient[]
@@ -222,25 +224,36 @@ model CompanyMember {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
-  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Job title and department, chosen from admin-managed lists (Category kind POSITION / DEPARTMENT).
+  positionId   String?
+  departmentId String?
+
+  company    Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  position   Category? @relation("MemberPosition", fields: [positionId], references: [id], onDelete: SetNull)
+  department Category? @relation("MemberDepartment", fields: [departmentId], references: [id], onDelete: SetNull)
 
   @@unique([companyId, userId])
+  @@index([positionId])
   @@index([userId])
 }
 
 model CompanyInvitation {
-  id          String     @id @default(cuid())
-  companyId   String
-  email       String
-  role        MemberRole @default(EMPLOYEE)
-  permissions String[]   @default([])
-  tokenHash   String     @unique
-  invitedById String
-  expiresAt   DateTime
-  acceptedAt  DateTime?
-  revokedAt   DateTime?
-  createdAt   DateTime   @default(now())
+  id           String     @id @default(cuid())
+  companyId    String
+  email        String
+  role         MemberRole @default(EMPLOYEE)
+  permissions  String[]   @default([])
+  firstName    String?
+  lastName     String?
+  positionId   String?
+  departmentId String?
+  tokenHash    String     @unique
+  invitedById  String
+  expiresAt    DateTime
+  acceptedAt   DateTime?
+  revokedAt    DateTime?
+  createdAt    DateTime   @default(now())
 
   company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
   invitedBy User    @relation(fields: [invitedById], references: [id], onDelete: Restrict)
@@ -336,47 +349,47 @@ enum OfferStatus {
 }
 
 model Offer {
-  id            String          @id @default(cuid())
-  type          OfferType
-  title         String
-  description   String
-  categoryId    String?
-  itemKind      ItemKind        @default(PRODUCT)
-  priceType     PriceType       @default(NONE)
-  priceMin      Decimal?        @db.Decimal(18, 2)
-  priceMax      Decimal?        @db.Decimal(18, 2)
-  currency      String?
-  quantity      Decimal?        @db.Decimal(18, 3)
-  unit          String?
-  deliveryTerms String?
-  country       String?         @default("GE")
-  city          String?
-  validUntil    DateTime?
-  authorUserId  String
-  companyId     String?
+  id             String          @id @default(cuid())
+  type           OfferType
+  title          String
+  description    String
+  categoryId     String?
+  itemKind       ItemKind        @default(PRODUCT)
+  priceType      PriceType       @default(NONE)
+  priceMin       Decimal?        @db.Decimal(18, 2)
+  priceMax       Decimal?        @db.Decimal(18, 2)
+  currency       String?
+  quantity       Decimal?        @db.Decimal(18, 3)
+  unit           String?
+  deliveryTerms  String?
+  country        String?         @default("GE")
+  city           String?
+  validUntil     DateTime?
+  authorUserId   String
+  companyId      String?
   /// When true the public site/API never exposes author or company identity.
-  isAnonymous   Boolean         @default(false)
+  isAnonymous    Boolean         @default(false)
   /// Special member condition shown in green, e.g. "−20%".
-  perk          String?
+  perk           String?
   /// Who the offer is for.
-  audience      String?
+  audience       String?
   /// Badge set by platform admins (მთავარი პარტნიორი, …).
-  badgeId       String?
+  badgeId        String?
   /// Platform commission for deals from this offer (percent) and its display text.
-  commissionPct  Decimal?       @db.Decimal(5, 2)
+  commissionPct  Decimal?        @db.Decimal(5, 2)
   commissionText String?
-  visibility    OfferVisibility @default(PUBLIC)
-  status        OfferStatus     @default(DRAFT)
-  publishedAt   DateTime?
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  visibility     OfferVisibility @default(PUBLIC)
+  status         OfferStatus     @default(DRAFT)
+  publishedAt    DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 
-  category    Category?         @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  badge       OfferBadge?       @relation(fields: [badgeId], references: [id], onDelete: SetNull)
-  author      User              @relation(fields: [authorUserId], references: [id], onDelete: Restrict)
-  company     Company?          @relation(fields: [companyId], references: [id], onDelete: Restrict)
-  attachments OfferAttachment[]
-  responses   OfferResponse[]
+  category      Category?         @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  badge         OfferBadge?       @relation(fields: [badgeId], references: [id], onDelete: SetNull)
+  author        User              @relation(fields: [authorUserId], references: [id], onDelete: Restrict)
+  company       Company?          @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  attachments   OfferAttachment[]
+  responses     OfferResponse[]
   conversations Conversation[]
 
   @@index([status, type, publishedAt])
@@ -387,15 +400,15 @@ model Offer {
 }
 
 model OfferAttachment {
-  id         String   @id @default(cuid())
-  offerId    String
-  url        String
-  fileName   String
-  mimeType   String
-  sizeBytes  Int
-  isImage    Boolean  @default(false)
-  sortOrder  Int      @default(0)
-  createdAt  DateTime @default(now())
+  id        String   @id @default(cuid())
+  offerId   String
+  url       String
+  fileName  String
+  mimeType  String
+  sizeBytes Int
+  isImage   Boolean  @default(false)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
 
   offer Offer @relation(fields: [offerId], references: [id], onDelete: Cascade)
 
@@ -433,19 +446,19 @@ model OfferResponse {
 // ─────────────────────────────── Conversations ───────────────────────────────
 
 model Conversation {
-  id            String    @id @default(cuid())
+  id            String           @id @default(cuid())
   offerId       String?
-  responseId    String?   @unique
+  responseId    String?          @unique
   subject       String
-  stage         DealStage @default(INTEREST)
-  amount        Decimal?  @db.Decimal(18, 2)
+  stage         DealStage        @default(INTEREST)
+  amount        Decimal?         @db.Decimal(18, 2)
   /// Commission percent for this deal (falls back to the offer's).
-  commissionPct Decimal?  @db.Decimal(5, 2)
+  commissionPct Decimal?         @db.Decimal(5, 2)
   /// Direct chats (no offer): which side sells. null = the contacted company (AUTHOR) sells.
   sellerSide    ParticipantSide?
-  lastMessageAt DateTime  @default(now())
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  lastMessageAt DateTime         @default(now())
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
 
   offer        Offer?                    @relation(fields: [offerId], references: [id], onDelete: SetNull)
   response     OfferResponse?            @relation(fields: [responseId], references: [id], onDelete: SetNull)
@@ -545,44 +558,44 @@ model DealTerms {
 
 /// Immutable once sent for approval — every change creates a new version.
 model DealTermsVersion {
-  id               String     @id @default(cuid())
-  dealTermsId      String
-  versionNumber    Int
-  status           DealStatus @default(DRAFT)
-  currency         String
-  discountAmount   Decimal    @default(0) @db.Decimal(18, 2)
-  taxRatePercent   Decimal?   @db.Decimal(5, 2)
-  taxAmount        Decimal    @default(0) @db.Decimal(18, 2)
-  deliveryTerms    String?
-  deliveryCost     Decimal    @default(0) @db.Decimal(18, 2)
-  subtotal         Decimal    @db.Decimal(18, 2)
-  total            Decimal    @db.Decimal(18, 2)
-  paymentTerms     String?
-  validUntil       DateTime?
-  notes            String?
-  createdById      String
-  createdAt        DateTime   @default(now())
+  id             String     @id @default(cuid())
+  dealTermsId    String
+  versionNumber  Int
+  status         DealStatus @default(DRAFT)
+  currency       String
+  discountAmount Decimal    @default(0) @db.Decimal(18, 2)
+  taxRatePercent Decimal?   @db.Decimal(5, 2)
+  taxAmount      Decimal    @default(0) @db.Decimal(18, 2)
+  deliveryTerms  String?
+  deliveryCost   Decimal    @default(0) @db.Decimal(18, 2)
+  subtotal       Decimal    @db.Decimal(18, 2)
+  total          Decimal    @db.Decimal(18, 2)
+  paymentTerms   String?
+  validUntil     DateTime?
+  notes          String?
+  createdById    String
+  createdAt      DateTime   @default(now())
 
-  dealTerms      DealTerms       @relation("DealVersions", fields: [dealTermsId], references: [id], onDelete: Cascade)
-  currentOf      DealTerms?      @relation("DealCurrentVersion")
-  createdBy      User            @relation(fields: [createdById], references: [id], onDelete: Restrict)
-  items          DealTermsItem[]
-  approvals      DealApproval[]
-  invoice        Invoice?
+  dealTerms DealTerms       @relation("DealVersions", fields: [dealTermsId], references: [id], onDelete: Cascade)
+  currentOf DealTerms?      @relation("DealCurrentVersion")
+  createdBy User            @relation(fields: [createdById], references: [id], onDelete: Restrict)
+  items     DealTermsItem[]
+  approvals DealApproval[]
+  invoice   Invoice?
 
   @@unique([dealTermsId, versionNumber])
 }
 
 model DealTermsItem {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   versionId   String
   name        String
   description String?
-  quantity    Decimal  @db.Decimal(18, 3)
+  quantity    Decimal @db.Decimal(18, 3)
   unit        String
-  unitPrice   Decimal  @db.Decimal(18, 2)
-  lineTotal   Decimal  @db.Decimal(18, 2)
-  sortOrder   Int      @default(0)
+  unitPrice   Decimal @db.Decimal(18, 2)
+  lineTotal   Decimal @db.Decimal(18, 2)
+  sortOrder   Int     @default(0)
 
   version DealTermsVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
 
@@ -864,32 +877,34 @@ enum CampaignRequestStatus {
 
 /// A company's application for a campaign (package or custom).
 model CampaignRequest {
-  id        String                @id @default(cuid())
-  packageId String?
-  companyId String
-  userId    String
-  title     String
-  message   String?
-  status    CampaignRequestStatus @default(NEW)
-  adminNote String?
+  id          String                @id @default(cuid())
+  packageId   String?
+  companyId   String
+  userId      String
+  title       String
+  message     String?
+  status      CampaignRequestStatus @default(NEW)
+  adminNote   String?
   /// Audience filters (empty = all).
-  industryIds String[]  @default([])
-  cities      String[]  @default([])
-  sizes       String[]  @default([])
-  roles       String[]  @default([])
+  industryIds String[]              @default([])
+  cities      String[]              @default([])
+  sizes       String[]              @default([])
+  roles       String[]              @default([])
   positions   String?
+  /// Target employees by position (Category kind POSITION ids). Empty = any position.
+  positionIds String[]              @default([])
   perk        String?
   ctaUrl      String?
   fileUrl     String?
   fileName    String?
   startDate   DateTime?
   /// Final price set by the admin.
-  price       Decimal?  @db.Decimal(18, 2)
+  price       Decimal?              @db.Decimal(18, 2)
   paidAt      DateTime?
   launchedAt  DateTime?
   finishedAt  DateTime?
-  createdAt DateTime              @default(now())
-  updatedAt DateTime              @updatedAt
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
 
   package    CampaignPackage?    @relation(fields: [packageId], references: [id], onDelete: SetNull)
   company    Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)

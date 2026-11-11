@@ -44,7 +44,11 @@ export async function assertAdmin(): Promise<CurrentUser> {
 export const getMemberships = cache(async (userId: string) => {
   return db.companyMember.findMany({
     where: { userId, status: "ACTIVE" },
-    include: { company: { select: { id: true, slug: true, legalName: true, tradeName: true, logoUrl: true, verificationStatus: true } } },
+    include: {
+      company: { select: { id: true, slug: true, legalName: true, tradeName: true, logoUrl: true, verificationStatus: true } },
+      position: { select: { name: true } },
+      department: { select: { name: true } },
+    },
     orderBy: { createdAt: "asc" },
   });
 });

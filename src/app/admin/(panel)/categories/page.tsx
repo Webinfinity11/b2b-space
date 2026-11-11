@@ -18,12 +18,14 @@ export const metadata: Metadata = { title: ka.admin.categories };
  */
 export default async function AdminCategoriesPage({ searchParams }: PageProps<"/admin/categories">) {
   await requireAdmin();
-  const kind = param((await searchParams).kind) === "INDUSTRY" ? "INDUSTRY" : "OFFER";
+  const KINDS = ["OFFER", "INDUSTRY", "POSITION", "DEPARTMENT"] as const;
+  const wanted = param((await searchParams).kind);
+  const kind = KINDS.find((k) => k === wanted) ?? "OFFER";
   const [all, counts] = await Promise.all([
     db.category.findMany({
       where: { kind },
       orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
-      include: { _count: { select: { companies: true, offers: true } } },
+      include: { _count: { select: { companies: true, offers: true, positionMembers: true, departmentMembers: true } } },
     }),
     db.category.groupBy({ by: ["kind"], _count: true }),
   ]);
@@ -31,6 +33,8 @@ export default async function AdminCategoriesPage({ searchParams }: PageProps<"/
   const tabs = [
     { value: "OFFER", label: s.kindOffer },
     { value: "INDUSTRY", label: s.kindIndustry },
+    { value: "POSITION", label: s.kindPosition },
+    { value: "DEPARTMENT", label: s.kindDepartment },
   ];
   const count = (k: string) => counts.find((c) => c.kind === k)?._count ?? 0;
 
@@ -67,7 +71,8 @@ export default async function AdminCategoriesPage({ searchParams }: PageProps<"/
           <SortableList
             onReorder={reorderCategoriesAction}
             items={all.map((c) => {
-              const used = c.kind === "OFFER" ? c._count.offers : c._count.companies;
+              const members = c._count.positionMembers + c._count.departmentMembers;
+              const used = c.kind === "OFFER" ? c._count.offers : c.kind === "INDUSTRY" ? c._count.companies : members;
               const others = all.filter((x) => x.id !== c.id).map((x) => ({ value: x.id, label: x.name }));
               return {
                 id: c.id,
@@ -76,7 +81,7 @@ export default async function AdminCategoriesPage({ searchParams }: PageProps<"/
                     <summary className="flex cursor-pointer list-none flex-wrap items-center gap-3 py-3 pr-2">
                       <span className={`font-medium ${c.isActive ? "text-ink" : "text-muted line-through"}`}>{c.name}</span>
                       <span className="rounded-full bg-chip px-2 py-0.5 text-[11px] text-secondary">
-                        {c.kind === "OFFER" ? s.catUsedOffers(c._count.offers) : s.catUsedCompanies(c._count.companies)}
+                        {c.kind === "OFFER" ? s.catUsedOffers(c._count.offers) : c.kind === "INDUSTRY" ? s.catUsedCompanies(c._count.companies) : s.catUsedMembers(members)}
                       </span>
                       <span className="ml-auto text-xs font-medium text-accent group-open:hidden">{ka.common.edit}</span>
                     </summary>
