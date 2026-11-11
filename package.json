@@ -45,6 +45,7 @@
     "dotenv": "^18.0.10",
     "eslint": "^9",
     "eslint-config-next": "16.4.4",
+    "railway": "^3.16.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
