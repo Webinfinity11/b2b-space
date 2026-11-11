@@ -1,6 +1,5 @@
 "use server";
 
-import { createHash } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -71,10 +70,9 @@ export async function registerAction(_: FormState, formData: FormData): Promise<
   const exists = await db.user.findUnique({ where: { email: d.email }, select: { id: true } });
   if (exists) return fail(ka.validation.formErrors, formData, { email: ka.auth.emailTaken });
 
-  // An employee joins only through the secret link from their invitation, for the invited email.
-  const inviteToken = String(formData.get("invite") ?? "");
-  const invitations = !invitedMode || !inviteToken ? [] : await db.companyInvitation.findMany({
-    where: { email: d.email, tokenHash: createHash("sha256").update(inviteToken).digest("hex"), acceptedAt: null, revokedAt: null, expiresAt: { gt: new Date() } },
+  // Pending invitations for this email are applied on registration — with or without the link.
+  const invitations = await db.companyInvitation.findMany({
+    where: { email: d.email, acceptedAt: null, revokedAt: null, expiresAt: { gt: new Date() } },
     include: { company: { select: { legalName: true, tradeName: true } } },
   });
   if (invitedMode && invitations.length === 0) return fail(ka.sgba.noInvitation, formData);
@@ -115,6 +113,8 @@ export async function registerAction(_: FormState, formData: FormData): Promise<
       return u;
     });
     await audit({ actorId: user.id, action: "auth.register", entityType: "User", entityId: user.id, metadata: { company: c.legalName } });
+    // Invited elsewhere too? Those memberships are ready once the account is approved.
+    await applyInvitations(user.id, `${d.firstName} ${d.lastName}`, invitations);
     await notifyAdminsOfRegistration(`${c.legalName} — ${d.firstName} ${d.lastName}`, d.email);
     redirect("/login?registered=1");
   }
@@ -122,18 +122,7 @@ export async function registerAction(_: FormState, formData: FormData): Promise<
   // Invited employee: active right away, joins the inviting companies.
   const user = await db.user.create({ data: { ...userData, status: "ACTIVE" } });
   await audit({ actorId: user.id, action: "auth.register", entityType: "User", entityId: user.id, metadata: { invited: true } });
-  for (const inv of invitations) {
-    await db.$transaction([
-      db.companyMember.upsert({
-        where: { companyId_userId: { companyId: inv.companyId, userId: user.id } },
-        create: { companyId: inv.companyId, userId: user.id, role: inv.role, permissions: inv.permissions, positionId: inv.positionId, departmentId: inv.departmentId },
-        update: { role: inv.role, permissions: inv.permissions, positionId: inv.positionId, departmentId: inv.departmentId, status: "ACTIVE" },
-      }),
-      db.companyInvitation.update({ where: { id: inv.id }, data: { acceptedAt: new Date() } }),
-    ]);
-    await notify([user.id], { type: "MEMBER_INVITED", title: ka.notifications.memberAdded(inv.company.tradeName || inv.company.legalName), link: "/company" });
-    await audit({ actorId: user.id, action: "company.invitation_accepted", entityType: "Company", entityId: inv.companyId, metadata: { invitationId: inv.id } });
-  }
+  await applyInvitations(user.id, `${d.firstName} ${d.lastName}`, invitations);
   const h = await headers();
   await createSession(user.id, { ip, userAgent: h.get("user-agent") });
   redirect("/app");
@@ -247,4 +236,33 @@ export async function resetPasswordAction(_: FormState, formData: FormData): Pro
   ]);
   await audit({ actorId: reset.user.id, action: "auth.password_reset", entityType: "User", entityId: reset.user.id });
   redirect("/login?reset=1");
+}
+
+type PendingInvitation = {
+  id: string;
+  companyId: string;
+  role: "OWNER" | "EMPLOYEE" | "FINANCE";
+  permissions: string[];
+  positionId: string | null;
+  departmentId: string | null;
+  company: { legalName: string; tradeName: string | null };
+};
+
+/** Turns pending invitations into memberships (with the role and job data the owner chose); the link stops working. */
+async function applyInvitations(userId: string, name: string, invitations: PendingInvitation[]) {
+  for (const inv of invitations) {
+    const job = { role: inv.role, permissions: inv.permissions, positionId: inv.positionId, departmentId: inv.departmentId };
+    await db.$transaction([
+      db.companyMember.upsert({
+        where: { companyId_userId: { companyId: inv.companyId, userId } },
+        create: { companyId: inv.companyId, userId, ...job },
+        update: { ...job, status: "ACTIVE" },
+      }),
+      db.companyInvitation.update({ where: { id: inv.id }, data: { acceptedAt: new Date(), token: null } }),
+    ]);
+    await notify([userId], { type: "MEMBER_INVITED", title: ka.notifications.memberAdded(inv.company.tradeName || inv.company.legalName), link: "/company" });
+    const owners = await db.companyMember.findMany({ where: { companyId: inv.companyId, role: "OWNER", status: "ACTIVE", NOT: { userId } }, select: { userId: true } });
+    await notify(owners.map((o) => o.userId), { type: "MEMBER_INVITED", title: ka.team.inviteAccepted(name), link: "/company/team" });
+    await audit({ actorId: userId, action: "company.invitation_accepted", entityType: "Company", entityId: inv.companyId, metadata: { invitationId: inv.id } });
+  }
 }

@@ -12,7 +12,7 @@ import { db } from "@/lib/db";
 import { fail, invalid, zCheckbox, zEmail, zOptionalPhone, zOptionalText, zOptionalUrl, zText, type FormState } from "@/lib/forms";
 import { notify } from "@/lib/notify";
 import { readPeopleFields } from "@/lib/people";
-import { appUrl, emailEnabled, renderEmail, sendEmail } from "@/lib/email";
+import { emailEnabled, renderEmail, sendEmail } from "@/lib/email";
 import { DEFAULT_PERMISSIONS, sanitizePermissions } from "@/lib/permissions";
 import { DOCUMENT_TYPES, IMAGE_TYPES, UploadError, VIDEO_MAX_MB, VIDEO_TYPES, deletePublicFile, filesFrom, storeFile } from "@/lib/storage";
 import { videoEmbedUrl } from "@/lib/video";
@@ -162,6 +162,7 @@ export async function addMemberAction(_: FormState, formData: FormData): Promise
     permissions,
     expiresAt,
     tokenHash,
+    token,
     firstName: parsed.data.firstName,
     lastName: parsed.data.lastName,
     positionId: people.positionId,
@@ -172,7 +173,6 @@ export async function addMemberAction(_: FormState, formData: FormData): Promise
   else await db.companyInvitation.create({ data: { ...data, companyId, email, invitedById: user.id } });
 
   const path = `/invite/${token}`;
-  const link = `${appUrl()}${path}`;
   const inviter = await db.company.findUniqueOrThrow({ where: { id: companyId }, select: { legalName: true, tradeName: true } });
   const name = inviter.tradeName || inviter.legalName;
   if (target) await notify([target.id], { type: "MEMBER_INVITED", title: ka.team.inviteNotification(name), link: path });
@@ -182,7 +182,7 @@ export async function addMemberAction(_: FormState, formData: FormData): Promise
   }
   await audit({ actorId: user.id, action: "company.member_invited", entityType: "Company", entityId: companyId, metadata: { email, role: parsed.data.role, registered: Boolean(target) } });
   revalidatePath("/company/team");
-  return { ok: true, message: `${ka.team.invited(email)} ${ka.sgba.inviteLinkNote(link)}` };
+  return { ok: true, message: ka.team.invited(email) };
 }
 
 /** The invited (logged-in) person accepts: membership is created with the invitation's role and job data. */
@@ -201,7 +201,7 @@ export async function acceptInvitationAction(formData: FormData) {
       create: { companyId: inv.companyId, userId: user.id, ...job },
       update: { ...job, status: "ACTIVE" },
     }),
-    db.companyInvitation.update({ where: { id: inv.id }, data: { acceptedAt: new Date() } }),
+    db.companyInvitation.update({ where: { id: inv.id }, data: { acceptedAt: new Date(), token: null } }),
   ]);
   await audit({ actorId: user.id, action: "company.invitation_accepted", entityType: "Company", entityId: inv.companyId, metadata: { invitationId: inv.id } });
   const owners = await db.companyMember.findMany({ where: { companyId: inv.companyId, role: "OWNER", status: "ACTIVE" }, select: { userId: true } });

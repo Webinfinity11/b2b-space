@@ -226,6 +226,7 @@ export const CompanyInvitationScalarFieldEnum = {
   positionId: 'positionId',
   departmentId: 'departmentId',
   tokenHash: 'tokenHash',
+  token: 'token',
   invitedById: 'invitedById',
   expiresAt: 'expiresAt',
   acceptedAt: 'acceptedAt',

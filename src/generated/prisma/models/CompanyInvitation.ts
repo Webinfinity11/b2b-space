@@ -34,6 +34,7 @@ export type CompanyInvitationMinAggregateOutputType = {
   positionId: string | null
   departmentId: string | null
   tokenHash: string | null
+  token: string | null
   invitedById: string | null
   expiresAt: Date | null
   acceptedAt: Date | null
@@ -51,6 +52,7 @@ export type CompanyInvitationMaxAggregateOutputType = {
   positionId: string | null
   departmentId: string | null
   tokenHash: string | null
+  token: string | null
   invitedById: string | null
   expiresAt: Date | null
   acceptedAt: Date | null
@@ -69,6 +71,7 @@ export type CompanyInvitationCountAggregateOutputType = {
   positionId: number
   departmentId: number
   tokenHash: number
+  token: number
   invitedById: number
   expiresAt: number
   acceptedAt: number
@@ -88,6 +91,7 @@ export type CompanyInvitationMinAggregateInputType = {
   positionId?: true
   departmentId?: true
   tokenHash?: true
+  token?: true
   invitedById?: true
   expiresAt?: true
   acceptedAt?: true
@@ -105,6 +109,7 @@ export type CompanyInvitationMaxAggregateInputType = {
   positionId?: true
   departmentId?: true
   tokenHash?: true
+  token?: true
   invitedById?: true
   expiresAt?: true
   acceptedAt?: true
@@ -123,6 +128,7 @@ export type CompanyInvitationCountAggregateInputType = {
   positionId?: true
   departmentId?: true
   tokenHash?: true
+  token?: true
   invitedById?: true
   expiresAt?: true
   acceptedAt?: true
@@ -214,6 +220,7 @@ export type CompanyInvitationGroupByOutputType = {
   positionId: string | null
   departmentId: string | null
   tokenHash: string
+  token: string | null
   invitedById: string
   expiresAt: Date
   acceptedAt: Date | null
@@ -253,6 +260,7 @@ export type CompanyInvitationWhereInput = {
   positionId?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
   departmentId?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
   tokenHash?: Prisma.StringFilter<"CompanyInvitation"> | string
+  token?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
   invitedById?: Prisma.StringFilter<"CompanyInvitation"> | string
   expiresAt?: Prisma.DateTimeFilter<"CompanyInvitation"> | Date | string
   acceptedAt?: Prisma.DateTimeNullableFilter<"CompanyInvitation"> | Date | string | null
@@ -273,6 +281,7 @@ export type CompanyInvitationOrderByWithRelationInput = {
   positionId?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
+  token?: Prisma.SortOrderInput | Prisma.SortOrder
   invitedById?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   acceptedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -296,6 +305,7 @@ export type CompanyInvitationWhereUniqueInput = Prisma.AtLeast<{
   lastName?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
   positionId?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
   departmentId?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
+  token?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
   invitedById?: Prisma.StringFilter<"CompanyInvitation"> | string
   expiresAt?: Prisma.DateTimeFilter<"CompanyInvitation"> | Date | string
   acceptedAt?: Prisma.DateTimeNullableFilter<"CompanyInvitation"> | Date | string | null
@@ -316,6 +326,7 @@ export type CompanyInvitationOrderByWithAggregationInput = {
   positionId?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
+  token?: Prisma.SortOrderInput | Prisma.SortOrder
   invitedById?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   acceptedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -340,6 +351,7 @@ export type CompanyInvitationScalarWhereWithAggregatesInput = {
   positionId?: Prisma.StringNullableWithAggregatesFilter<"CompanyInvitation"> | string | null
   departmentId?: Prisma.StringNullableWithAggregatesFilter<"CompanyInvitation"> | string | null
   tokenHash?: Prisma.StringWithAggregatesFilter<"CompanyInvitation"> | string
+  token?: Prisma.StringNullableWithAggregatesFilter<"CompanyInvitation"> | string | null
   invitedById?: Prisma.StringWithAggregatesFilter<"CompanyInvitation"> | string
   expiresAt?: Prisma.DateTimeWithAggregatesFilter<"CompanyInvitation"> | Date | string
   acceptedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CompanyInvitation"> | Date | string | null
@@ -357,6 +369,7 @@ export type CompanyInvitationCreateInput = {
   positionId?: string | null
   departmentId?: string | null
   tokenHash: string
+  token?: string | null
   expiresAt: Date | string
   acceptedAt?: Date | string | null
   revokedAt?: Date | string | null
@@ -376,6 +389,7 @@ export type CompanyInvitationUncheckedCreateInput = {
   positionId?: string | null
   departmentId?: string | null
   tokenHash: string
+  token?: string | null
   invitedById: string
   expiresAt: Date | string
   acceptedAt?: Date | string | null
@@ -393,6 +407,7 @@ export type CompanyInvitationUpdateInput = {
   positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -412,6 +427,7 @@ export type CompanyInvitationUncheckedUpdateInput = {
   positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitedById?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -430,6 +446,7 @@ export type CompanyInvitationCreateManyInput = {
   positionId?: string | null
   departmentId?: string | null
   tokenHash: string
+  token?: string | null
   invitedById: string
   expiresAt: Date | string
   acceptedAt?: Date | string | null
@@ -447,6 +464,7 @@ export type CompanyInvitationUpdateManyMutationInput = {
   positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -464,6 +482,7 @@ export type CompanyInvitationUncheckedUpdateManyInput = {
   positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitedById?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -492,6 +511,7 @@ export type CompanyInvitationCountOrderByAggregateInput = {
   positionId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
+  token?: Prisma.SortOrder
   invitedById?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   acceptedAt?: Prisma.SortOrder
@@ -509,6 +529,7 @@ export type CompanyInvitationMaxOrderByAggregateInput = {
   positionId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
+  token?: Prisma.SortOrder
   invitedById?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   acceptedAt?: Prisma.SortOrder
@@ -526,6 +547,7 @@ export type CompanyInvitationMinOrderByAggregateInput = {
   positionId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
+  token?: Prisma.SortOrder
   invitedById?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   acceptedAt?: Prisma.SortOrder
@@ -636,6 +658,7 @@ export type CompanyInvitationCreateWithoutInvitedByInput = {
   positionId?: string | null
   departmentId?: string | null
   tokenHash: string
+  token?: string | null
   expiresAt: Date | string
   acceptedAt?: Date | string | null
   revokedAt?: Date | string | null
@@ -654,6 +677,7 @@ export type CompanyInvitationUncheckedCreateWithoutInvitedByInput = {
   positionId?: string | null
   departmentId?: string | null
   tokenHash: string
+  token?: string | null
   expiresAt: Date | string
   acceptedAt?: Date | string | null
   revokedAt?: Date | string | null
@@ -700,6 +724,7 @@ export type CompanyInvitationScalarWhereInput = {
   positionId?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
   departmentId?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
   tokenHash?: Prisma.StringFilter<"CompanyInvitation"> | string
+  token?: Prisma.StringNullableFilter<"CompanyInvitation"> | string | null
   invitedById?: Prisma.StringFilter<"CompanyInvitation"> | string
   expiresAt?: Prisma.DateTimeFilter<"CompanyInvitation"> | Date | string
   acceptedAt?: Prisma.DateTimeNullableFilter<"CompanyInvitation"> | Date | string | null
@@ -717,6 +742,7 @@ export type CompanyInvitationCreateWithoutCompanyInput = {
   positionId?: string | null
   departmentId?: string | null
   tokenHash: string
+  token?: string | null
   expiresAt: Date | string
   acceptedAt?: Date | string | null
   revokedAt?: Date | string | null
@@ -734,6 +760,7 @@ export type CompanyInvitationUncheckedCreateWithoutCompanyInput = {
   positionId?: string | null
   departmentId?: string | null
   tokenHash: string
+  token?: string | null
   invitedById: string
   expiresAt: Date | string
   acceptedAt?: Date | string | null
@@ -778,6 +805,7 @@ export type CompanyInvitationCreateManyInvitedByInput = {
   positionId?: string | null
   departmentId?: string | null
   tokenHash: string
+  token?: string | null
   expiresAt: Date | string
   acceptedAt?: Date | string | null
   revokedAt?: Date | string | null
@@ -794,6 +822,7 @@ export type CompanyInvitationUpdateWithoutInvitedByInput = {
   positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -812,6 +841,7 @@ export type CompanyInvitationUncheckedUpdateWithoutInvitedByInput = {
   positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -829,6 +859,7 @@ export type CompanyInvitationUncheckedUpdateManyWithoutInvitedByInput = {
   positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -845,6 +876,7 @@ export type CompanyInvitationCreateManyCompanyInput = {
   positionId?: string | null
   departmentId?: string | null
   tokenHash: string
+  token?: string | null
   invitedById: string
   expiresAt: Date | string
   acceptedAt?: Date | string | null
@@ -862,6 +894,7 @@ export type CompanyInvitationUpdateWithoutCompanyInput = {
   positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -879,6 +912,7 @@ export type CompanyInvitationUncheckedUpdateWithoutCompanyInput = {
   positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitedById?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -896,6 +930,7 @@ export type CompanyInvitationUncheckedUpdateManyWithoutCompanyInput = {
   positionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitedById?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -916,6 +951,7 @@ export type CompanyInvitationSelect<ExtArgs extends runtime.Types.Extensions.Int
   positionId?: boolean
   departmentId?: boolean
   tokenHash?: boolean
+  token?: boolean
   invitedById?: boolean
   expiresAt?: boolean
   acceptedAt?: boolean
@@ -936,6 +972,7 @@ export type CompanyInvitationSelectCreateManyAndReturn<ExtArgs extends runtime.T
   positionId?: boolean
   departmentId?: boolean
   tokenHash?: boolean
+  token?: boolean
   invitedById?: boolean
   expiresAt?: boolean
   acceptedAt?: boolean
@@ -956,6 +993,7 @@ export type CompanyInvitationSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   positionId?: boolean
   departmentId?: boolean
   tokenHash?: boolean
+  token?: boolean
   invitedById?: boolean
   expiresAt?: boolean
   acceptedAt?: boolean
@@ -976,6 +1014,7 @@ export type CompanyInvitationSelectScalar = {
   positionId?: boolean
   departmentId?: boolean
   tokenHash?: boolean
+  token?: boolean
   invitedById?: boolean
   expiresAt?: boolean
   acceptedAt?: boolean
@@ -983,7 +1022,7 @@ export type CompanyInvitationSelectScalar = {
   createdAt?: boolean
 }
 
-export type CompanyInvitationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "email" | "role" | "permissions" | "firstName" | "lastName" | "positionId" | "departmentId" | "tokenHash" | "invitedById" | "expiresAt" | "acceptedAt" | "revokedAt" | "createdAt", ExtArgs["result"]["companyInvitation"]>
+export type CompanyInvitationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "email" | "role" | "permissions" | "firstName" | "lastName" | "positionId" | "departmentId" | "tokenHash" | "token" | "invitedById" | "expiresAt" | "acceptedAt" | "revokedAt" | "createdAt", ExtArgs["result"]["companyInvitation"]>
 export type CompanyInvitationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   invitedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1014,6 +1053,10 @@ export type $CompanyInvitationPayload<ExtArgs extends runtime.Types.Extensions.I
     positionId: string | null
     departmentId: string | null
     tokenHash: string
+    /**
+     * Raw link token, kept so the owner can copy the invite link again until it is accepted.
+     */
+    token: string | null
     invitedById: string
     expiresAt: Date
     acceptedAt: Date | null
@@ -1454,6 +1497,7 @@ export interface CompanyInvitationFieldRefs {
   readonly positionId: Prisma.FieldRef<"CompanyInvitation", 'String'>
   readonly departmentId: Prisma.FieldRef<"CompanyInvitation", 'String'>
   readonly tokenHash: Prisma.FieldRef<"CompanyInvitation", 'String'>
+  readonly token: Prisma.FieldRef<"CompanyInvitation", 'String'>
   readonly invitedById: Prisma.FieldRef<"CompanyInvitation", 'String'>
   readonly expiresAt: Prisma.FieldRef<"CompanyInvitation", 'DateTime'>
   readonly acceptedAt: Prisma.FieldRef<"CompanyInvitation", 'DateTime'>

@@ -251,6 +251,8 @@ model CompanyInvitation {
   positionId   String?
   departmentId String?
   tokenHash    String     @unique
+  /// Raw link token, kept so the owner can copy the invite link again until it is accepted.
+  token        String?
   invitedById  String
   expiresAt    DateTime
   acceptedAt   DateTime?

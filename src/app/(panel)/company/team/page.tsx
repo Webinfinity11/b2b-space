@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/Badge";
 import { Card, CardBody, CardHeader, PageHeader } from "@/components/ui/Card";
 import { ActionForm, CheckboxGroup, Field, Input, Select, SubmitButton } from "@/components/ui/Form";
 import { getPeopleLists, type PeopleLists } from "@/lib/people";
+import { appUrl, emailEnabled } from "@/lib/email";
+import { CopyLink } from "@/components/ui/CopyLink";
 import { RolePicker } from "@/components/panel/RolePicker";
 
 export const metadata: Metadata = { title: ka.team.title };
@@ -20,6 +22,8 @@ export default async function TeamPage() {
   // Everyone in the company sees the team; only owners manage it.
   const { user, membership } = await requireCompany();
   const isOwner = membership.role === "OWNER";
+  const base = appUrl();
+  const emailOn = emailEnabled();
   const lists = await getPeopleLists();
   const members = await db.companyMember.findMany({
     where: { companyId: membership.companyId, status: "ACTIVE" },
@@ -94,7 +98,7 @@ export default async function TeamPage() {
 
           {invitations.length > 0 && (
             <Card>
-              <CardHeader title={`${ka.team.pendingTitle} (${invitations.length})`} text={ka.team.pendingHint} />
+              <CardHeader title={`${ka.team.pendingTitle} (${invitations.length})`} text={emailOn ? ka.team.pendingHintEmail : ka.team.pendingHintNoEmail} />
               <CardBody>
                 <ul className="divide-y divide-line">
                   {invitations.map((inv) => (
@@ -108,6 +112,13 @@ export default async function TeamPage() {
                         <input type="hidden" name="invitationId" value={inv.id} />
                         <Button type="submit" size="sm" variant="ghost" className="text-danger">{ka.team.revoke}</Button>
                       </form>
+                      {inv.token ? (
+                        <div className="w-full">
+                          <CopyLink url={`${base}/invite/${inv.token}`} />
+                        </div>
+                      ) : (
+                        <p className="w-full text-xs text-muted">{ka.team.noLinkReinvite}</p>
+                      )}
                     </li>
                   ))}
                 </ul>

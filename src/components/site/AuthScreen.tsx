@@ -119,7 +119,7 @@ export async function AuthScreen({ tab, next, registered, invited, inviteToken, 
         />
       </ActionForm>
       <p className="mt-5 text-center text-sm text-muted">
-        {c.regInvited} {c.regInvitedLink}
+        {c.regInvited} <Link href="/register?invited=1" className="font-medium text-accent hover:underline">{c.regInvitedLink}</Link>
       </p>
     </>
   );
