@@ -13,9 +13,12 @@ export type PublicSettings = {
   platformIban: string | null;
   /** Days the seller has to pay an SGBA commission invoice. */
   commissionDueDays: number | null;
+  /** Texts of the legal pages (/terms, /privacy). Empty = "being prepared". */
+  termsText: string | null;
+  privacyText: string | null;
 };
 
-const DEFAULTS: PublicSettings = {
+export const SETTINGS_DEFAULTS: PublicSettings = {
   contactEmail: null,
   contactPhone: null,
   contactAddress: null,
@@ -24,9 +27,11 @@ const DEFAULTS: PublicSettings = {
   platformAddress: null,
   platformIban: null,
   commissionDueDays: 10,
+  termsText: null,
+  privacyText: null,
 };
 
 export const getPublicSettings = cache(async (): Promise<PublicSettings> => {
   const row = await db.platformSetting.findUnique({ where: { key: "public" } });
-  return { ...DEFAULTS, ...((row?.value as Partial<PublicSettings> | null) ?? {}) };
+  return { ...SETTINGS_DEFAULTS, ...((row?.value as Partial<PublicSettings> | null) ?? {}) };
 });

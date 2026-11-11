@@ -6,6 +6,7 @@ import { startCompanyChatAction } from "@/actions/chat";
 import { getActiveMembership } from "@/lib/authz";
 import type { ReactNode } from "react";
 import { ka } from "@/i18n/ka";
+import { ReportButton } from "@/components/panel/ReportButton";
 import { formatDate } from "@/lib/format";
 import { companyName, getPublicCompany, searchOffers } from "@/lib/public";
 import { getCurrentUser } from "@/lib/session";
@@ -193,6 +194,7 @@ export default async function CompanyPage({ params }: PageProps<"/companies/[slu
                 )}
               </CardBody>
             </Card>
+            {m && m.companyId !== company.id && <ReportButton targetType="COMPANY" targetId={company.id} />}
           </aside>
         </div>
       </div>

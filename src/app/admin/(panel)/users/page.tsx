@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import type { Prisma } from "@/generated/prisma/client";
 import { ka } from "@/i18n/ka";
-import { setUserRoleAction, setUserStatusAction } from "@/actions/admin";
+import { adminResetLinkAction, adminUpdateUserAction, clearRejectedUserAction, setUserRoleAction, setUserStatusAction } from "@/actions/admin";
+import { ActionForm, Field, Input, SubmitButton } from "@/components/ui/Form";
 import { requireAdmin } from "@/lib/authz";
 import { db } from "@/lib/db";
 import { formatDate, formatDateTime } from "@/lib/format";
@@ -17,7 +18,7 @@ import { controlClass } from "@/components/ui/styles";
 export const metadata: Metadata = { title: ka.admin.users };
 
 const PER_PAGE = 25;
-const ROLES = ["USER", "ADMIN", "FINANCE_MANAGER"] as const;
+const ROLES = ["USER", "ADMIN"] as const;
 
 export default async function AdminUsersPage({ searchParams }: PageProps<"/admin/users">) {
   const admin = await requireAdmin();
@@ -93,6 +94,36 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                   <div className="font-medium">{u.firstName} {u.lastName}</div>
                   <div className="text-xs text-muted">{u.email}{u.phone ? ` · ${u.phone}` : ""}</div>
                   <div className="text-xs text-muted">{ka.admin.registered}: {formatDate(u.createdAt)}</div>
+                  {!self && (
+                    <details className="mt-2">
+                      <summary className="cursor-pointer text-xs font-medium text-accent-strong">{ka.admin.editUser}</summary>
+                      <div className="mt-2 w-72 space-y-3 rounded-lg border border-line p-3">
+                        <ActionForm action={adminUpdateUserAction} toast className="space-y-2">
+                          <input type="hidden" name="userId" value={u.id} />
+                          <div className="grid grid-cols-2 gap-2">
+                            <Field label={ka.auth.firstName} name="firstName"><Input name="firstName" defaultValue={u.firstName} required className="h-9" /></Field>
+                            <Field label={ka.auth.lastName} name="lastName"><Input name="lastName" defaultValue={u.lastName} required className="h-9" /></Field>
+                          </div>
+                          <Field label={ka.auth.email} name="email"><Input name="email" type="email" defaultValue={u.email} required className="h-9" /></Field>
+                          <Field label={ka.auth.phone} name="phone" optional><Input name="phone" defaultValue={u.phone ?? ""} className="h-9" /></Field>
+                          <SubmitButton size="sm">{ka.common.save}</SubmitButton>
+                        </ActionForm>
+                        {u.status === "ACTIVE" && (
+                          <ActionForm action={adminResetLinkAction} className="border-t border-line pt-3">
+                            <input type="hidden" name="userId" value={u.id} />
+                            <SubmitButton size="sm" variant="secondary">{ka.reset.adminButton}</SubmitButton>
+                          </ActionForm>
+                        )}
+                        {u.status === "REJECTED" && !u.email.endsWith("@removed.invalid") && (
+                          <form action={clearRejectedUserAction} className="border-t border-line pt-3">
+                            <input type="hidden" name="userId" value={u.id} />
+                            <p className="mb-2 text-xs text-muted">{ka.admin.clearRejectedHint}</p>
+                            <Button type="submit" size="sm" variant="ghost" className="text-danger">{ka.admin.clearRejected}</Button>
+                          </form>
+                        )}
+                      </div>
+                    </details>
+                  )}
                 </Td>
                 <Td>
                   {u.memberships.length === 0
@@ -126,11 +157,15 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                           <input type="hidden" name="status" value="ACTIVE" />
                           <Button type="submit" size="sm">{ka.approval.approve}</Button>
                         </form>
-                        <form action={setUserStatusAction}>
-                          <input type="hidden" name="userId" value={u.id} />
-                          <input type="hidden" name="status" value="REJECTED" />
-                          <Button type="submit" size="sm" variant="ghost" className="text-danger">{ka.approval.reject}</Button>
-                        </form>
+                        <details>
+                          <summary className="cursor-pointer text-sm text-danger">{ka.approval.reject}</summary>
+                          <form action={setUserStatusAction} className="mt-2 space-y-2">
+                            <input type="hidden" name="userId" value={u.id} />
+                            <input type="hidden" name="status" value="REJECTED" />
+                            <input name="reason" required minLength={3} placeholder={ka.admin.rejectReason} className={`${controlClass} h-9 text-xs`} />
+                            <Button type="submit" size="sm" variant="danger">{ka.approval.reject}</Button>
+                          </form>
+                        </details>
                       </div>
                     ) : !self && (
                       <form action={setUserStatusAction}>

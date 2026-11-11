@@ -187,3 +187,8 @@ export type CampaignRecipient = Prisma.CampaignRecipientModel
  * Admin-managed offer badges (e.g. "მთავარი პარტნიორი"). showBanner = featured on the dashboard banner.
  */
 export type OfferBadge = Prisma.OfferBadgeModel
+/**
+ * Model PasswordReset
+ * One-time password reset link (only the hash of the token is stored).
+ */
+export type PasswordReset = Prisma.PasswordResetModel

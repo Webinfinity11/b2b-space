@@ -99,6 +99,7 @@ export type CampaignRequestCountAggregateOutputType = {
   ctaUrl: number
   fileUrl: number
   fileName: number
+  attachments: number
   startDate: number
   price: number
   paidAt: number
@@ -183,6 +184,7 @@ export type CampaignRequestCountAggregateInputType = {
   ctaUrl?: true
   fileUrl?: true
   fileName?: true
+  attachments?: true
   startDate?: true
   price?: true
   paidAt?: true
@@ -298,6 +300,7 @@ export type CampaignRequestGroupByOutputType = {
   ctaUrl: string | null
   fileUrl: string | null
   fileName: string | null
+  attachments: runtime.JsonValue
   startDate: Date | null
   price: runtime.Decimal | null
   paidAt: Date | null
@@ -349,6 +352,7 @@ export type CampaignRequestWhereInput = {
   ctaUrl?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
   fileUrl?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
   fileName?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
+  attachments?: Prisma.JsonFilter<"CampaignRequest">
   startDate?: Prisma.DateTimeNullableFilter<"CampaignRequest"> | Date | string | null
   price?: Prisma.DecimalNullableFilter<"CampaignRequest"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Prisma.DateTimeNullableFilter<"CampaignRequest"> | Date | string | null
@@ -380,6 +384,7 @@ export type CampaignRequestOrderByWithRelationInput = {
   ctaUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   fileName?: Prisma.SortOrderInput | Prisma.SortOrder
+  attachments?: Prisma.SortOrder
   startDate?: Prisma.SortOrderInput | Prisma.SortOrder
   price?: Prisma.SortOrderInput | Prisma.SortOrder
   paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -414,6 +419,7 @@ export type CampaignRequestWhereUniqueInput = Prisma.AtLeast<{
   ctaUrl?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
   fileUrl?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
   fileName?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
+  attachments?: Prisma.JsonFilter<"CampaignRequest">
   startDate?: Prisma.DateTimeNullableFilter<"CampaignRequest"> | Date | string | null
   price?: Prisma.DecimalNullableFilter<"CampaignRequest"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Prisma.DateTimeNullableFilter<"CampaignRequest"> | Date | string | null
@@ -445,6 +451,7 @@ export type CampaignRequestOrderByWithAggregationInput = {
   ctaUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   fileName?: Prisma.SortOrderInput | Prisma.SortOrder
+  attachments?: Prisma.SortOrder
   startDate?: Prisma.SortOrderInput | Prisma.SortOrder
   price?: Prisma.SortOrderInput | Prisma.SortOrder
   paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -481,6 +488,7 @@ export type CampaignRequestScalarWhereWithAggregatesInput = {
   ctaUrl?: Prisma.StringNullableWithAggregatesFilter<"CampaignRequest"> | string | null
   fileUrl?: Prisma.StringNullableWithAggregatesFilter<"CampaignRequest"> | string | null
   fileName?: Prisma.StringNullableWithAggregatesFilter<"CampaignRequest"> | string | null
+  attachments?: Prisma.JsonWithAggregatesFilter<"CampaignRequest">
   startDate?: Prisma.DateTimeNullableWithAggregatesFilter<"CampaignRequest"> | Date | string | null
   price?: Prisma.DecimalNullableWithAggregatesFilter<"CampaignRequest"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CampaignRequest"> | Date | string | null
@@ -507,6 +515,7 @@ export type CampaignRequestCreateInput = {
   ctaUrl?: string | null
   fileUrl?: string | null
   fileName?: string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Date | string | null
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Date | string | null
@@ -538,6 +547,7 @@ export type CampaignRequestUncheckedCreateInput = {
   ctaUrl?: string | null
   fileUrl?: string | null
   fileName?: string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Date | string | null
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Date | string | null
@@ -565,6 +575,7 @@ export type CampaignRequestUpdateInput = {
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -596,6 +607,7 @@ export type CampaignRequestUncheckedUpdateInput = {
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -625,6 +637,7 @@ export type CampaignRequestCreateManyInput = {
   ctaUrl?: string | null
   fileUrl?: string | null
   fileName?: string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Date | string | null
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Date | string | null
@@ -651,6 +664,7 @@ export type CampaignRequestUpdateManyMutationInput = {
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -679,6 +693,7 @@ export type CampaignRequestUncheckedUpdateManyInput = {
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -717,6 +732,7 @@ export type CampaignRequestCountOrderByAggregateInput = {
   ctaUrl?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
   fileName?: Prisma.SortOrder
+  attachments?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   price?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
@@ -949,6 +965,7 @@ export type CampaignRequestCreateWithoutCompanyInput = {
   ctaUrl?: string | null
   fileUrl?: string | null
   fileName?: string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Date | string | null
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Date | string | null
@@ -978,6 +995,7 @@ export type CampaignRequestUncheckedCreateWithoutCompanyInput = {
   ctaUrl?: string | null
   fileUrl?: string | null
   fileName?: string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Date | string | null
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Date | string | null
@@ -1036,6 +1054,7 @@ export type CampaignRequestScalarWhereInput = {
   ctaUrl?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
   fileUrl?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
   fileName?: Prisma.StringNullableFilter<"CampaignRequest"> | string | null
+  attachments?: Prisma.JsonFilter<"CampaignRequest">
   startDate?: Prisma.DateTimeNullableFilter<"CampaignRequest"> | Date | string | null
   price?: Prisma.DecimalNullableFilter<"CampaignRequest"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Prisma.DateTimeNullableFilter<"CampaignRequest"> | Date | string | null
@@ -1062,6 +1081,7 @@ export type CampaignRequestCreateWithoutPackageInput = {
   ctaUrl?: string | null
   fileUrl?: string | null
   fileName?: string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Date | string | null
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Date | string | null
@@ -1091,6 +1111,7 @@ export type CampaignRequestUncheckedCreateWithoutPackageInput = {
   ctaUrl?: string | null
   fileUrl?: string | null
   fileName?: string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Date | string | null
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Date | string | null
@@ -1144,6 +1165,7 @@ export type CampaignRequestCreateWithoutRecipientsInput = {
   ctaUrl?: string | null
   fileUrl?: string | null
   fileName?: string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Date | string | null
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Date | string | null
@@ -1174,6 +1196,7 @@ export type CampaignRequestUncheckedCreateWithoutRecipientsInput = {
   ctaUrl?: string | null
   fileUrl?: string | null
   fileName?: string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Date | string | null
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Date | string | null
@@ -1216,6 +1239,7 @@ export type CampaignRequestUpdateWithoutRecipientsInput = {
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1246,6 +1270,7 @@ export type CampaignRequestUncheckedUpdateWithoutRecipientsInput = {
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1273,6 +1298,7 @@ export type CampaignRequestCreateManyCompanyInput = {
   ctaUrl?: string | null
   fileUrl?: string | null
   fileName?: string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Date | string | null
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Date | string | null
@@ -1299,6 +1325,7 @@ export type CampaignRequestUpdateWithoutCompanyInput = {
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1328,6 +1355,7 @@ export type CampaignRequestUncheckedUpdateWithoutCompanyInput = {
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1356,6 +1384,7 @@ export type CampaignRequestUncheckedUpdateManyWithoutCompanyInput = {
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1383,6 +1412,7 @@ export type CampaignRequestCreateManyPackageInput = {
   ctaUrl?: string | null
   fileUrl?: string | null
   fileName?: string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Date | string | null
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Date | string | null
@@ -1409,6 +1439,7 @@ export type CampaignRequestUpdateWithoutPackageInput = {
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1438,6 +1469,7 @@ export type CampaignRequestUncheckedUpdateWithoutPackageInput = {
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1466,6 +1498,7 @@ export type CampaignRequestUncheckedUpdateManyWithoutPackageInput = {
   ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachments?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1525,6 +1558,7 @@ export type CampaignRequestSelect<ExtArgs extends runtime.Types.Extensions.Inter
   ctaUrl?: boolean
   fileUrl?: boolean
   fileName?: boolean
+  attachments?: boolean
   startDate?: boolean
   price?: boolean
   paidAt?: boolean
@@ -1557,6 +1591,7 @@ export type CampaignRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   ctaUrl?: boolean
   fileUrl?: boolean
   fileName?: boolean
+  attachments?: boolean
   startDate?: boolean
   price?: boolean
   paidAt?: boolean
@@ -1587,6 +1622,7 @@ export type CampaignRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   ctaUrl?: boolean
   fileUrl?: boolean
   fileName?: boolean
+  attachments?: boolean
   startDate?: boolean
   price?: boolean
   paidAt?: boolean
@@ -1617,6 +1653,7 @@ export type CampaignRequestSelectScalar = {
   ctaUrl?: boolean
   fileUrl?: boolean
   fileName?: boolean
+  attachments?: boolean
   startDate?: boolean
   price?: boolean
   paidAt?: boolean
@@ -1626,7 +1663,7 @@ export type CampaignRequestSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CampaignRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "packageId" | "companyId" | "userId" | "title" | "message" | "status" | "adminNote" | "industryIds" | "cities" | "sizes" | "roles" | "positions" | "positionIds" | "perk" | "ctaUrl" | "fileUrl" | "fileName" | "startDate" | "price" | "paidAt" | "launchedAt" | "finishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["campaignRequest"]>
+export type CampaignRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "packageId" | "companyId" | "userId" | "title" | "message" | "status" | "adminNote" | "industryIds" | "cities" | "sizes" | "roles" | "positions" | "positionIds" | "perk" | "ctaUrl" | "fileUrl" | "fileName" | "attachments" | "startDate" | "price" | "paidAt" | "launchedAt" | "finishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["campaignRequest"]>
 export type CampaignRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   package?: boolean | Prisma.CampaignRequest$packageArgs<ExtArgs>
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
@@ -1674,6 +1711,10 @@ export type $CampaignRequestPayload<ExtArgs extends runtime.Types.Extensions.Int
     ctaUrl: string | null
     fileUrl: string | null
     fileName: string | null
+    /**
+     * More files (visual, PDF): [{ url, name }]. fileUrl/fileName keep the first one.
+     */
+    attachments: runtime.JsonValue
     startDate: Date | null
     /**
      * Final price set by the admin.
@@ -2128,6 +2169,7 @@ export interface CampaignRequestFieldRefs {
   readonly ctaUrl: Prisma.FieldRef<"CampaignRequest", 'String'>
   readonly fileUrl: Prisma.FieldRef<"CampaignRequest", 'String'>
   readonly fileName: Prisma.FieldRef<"CampaignRequest", 'String'>
+  readonly attachments: Prisma.FieldRef<"CampaignRequest", 'Json'>
   readonly startDate: Prisma.FieldRef<"CampaignRequest", 'DateTime'>
   readonly price: Prisma.FieldRef<"CampaignRequest", 'Decimal'>
   readonly paidAt: Prisma.FieldRef<"CampaignRequest", 'DateTime'>

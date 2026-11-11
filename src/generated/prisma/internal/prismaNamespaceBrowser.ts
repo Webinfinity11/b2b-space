@@ -84,7 +84,8 @@ export const ModelName = {
   CampaignPackage: 'CampaignPackage',
   CampaignRequest: 'CampaignRequest',
   CampaignRecipient: 'CampaignRecipient',
-  OfferBadge: 'OfferBadge'
+  OfferBadge: 'OfferBadge',
+  PasswordReset: 'PasswordReset'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -110,6 +111,7 @@ export const UserScalarFieldEnum = {
   email: 'email',
   phone: 'phone',
   passwordHash: 'passwordHash',
+  avatarUrl: 'avatarUrl',
   platformRole: 'platformRole',
   status: 'status',
   emailVerifiedAt: 'emailVerifiedAt',
@@ -301,6 +303,8 @@ export const OfferScalarFieldEnum = {
   commissionText: 'commissionText',
   visibility: 'visibility',
   status: 'status',
+  hiddenAt: 'hiddenAt',
+  hiddenReason: 'hiddenReason',
   publishedAt: 'publishedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -657,6 +661,7 @@ export const CampaignRequestScalarFieldEnum = {
   ctaUrl: 'ctaUrl',
   fileUrl: 'fileUrl',
   fileName: 'fileName',
+  attachments: 'attachments',
   startDate: 'startDate',
   price: 'price',
   paidAt: 'paidAt',
@@ -693,6 +698,18 @@ export const OfferBadgeScalarFieldEnum = {
 } as const
 
 export type OfferBadgeScalarFieldEnum = (typeof OfferBadgeScalarFieldEnum)[keyof typeof OfferBadgeScalarFieldEnum]
+
+
+export const PasswordResetScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type PasswordResetScalarFieldEnum = (typeof PasswordResetScalarFieldEnum)[keyof typeof PasswordResetScalarFieldEnum]
 
 
 export const SortOrder = {

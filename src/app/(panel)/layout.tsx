@@ -68,6 +68,7 @@ export default async function PanelLayout({ children }: LayoutProps<"/">) {
       top={
         <Topbar
           firstName={user.firstName}
+          avatarUrl={user.avatarUrl}
           fullName={`${user.firstName} ${user.lastName}`}
           sub={active ? `${companyName(active.company)} · ${ka.enums.memberRole[active.role]}` : ka.panel.personalMode}
           unread={unread}

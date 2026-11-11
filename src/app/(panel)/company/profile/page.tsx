@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ka } from "@/i18n/ka";
-import { updateCompanyProfileAction } from "@/actions/company";
+import { deleteVerificationDocAction, updateCompanyProfileAction, uploadVerificationDocAction } from "@/actions/company";
+import { Button } from "@/components/ui/Button";
 import { requireCompany } from "@/lib/authz";
 import { db } from "@/lib/db";
 import { companyName, getCategoryTree } from "@/lib/public";
@@ -19,6 +20,8 @@ export default async function CompanyProfilePage() {
     getCategoryTree(),
   ]);
   const legalLocked = company.verificationStatus === "VERIFIED" || company.verificationStatus === "IN_REVIEW";
+  const owner = membership.role === "OWNER";
+  const docs = owner ? await db.verificationDocument.findMany({ where: { companyId: company.id }, orderBy: { createdAt: "desc" } }) : [];
   const name = companyName(company);
 
   return (
@@ -61,6 +64,43 @@ export default async function CompanyProfilePage() {
           <SubmitButton size="lg">{ka.common.save}</SubmitButton>
         </div>
       </ActionForm>
+      <div className="mt-6 grid max-w-3xl gap-6 md:grid-cols-2">
+        <Card>
+          <CardHeader title={ka.media.title} text={ka.media.text} />
+          <CardBody>
+            <Link href="/company/media" className="text-sm font-medium text-accent-strong hover:underline">{ka.media.manage} →</Link>
+          </CardBody>
+        </Card>
+        {owner && (
+          <Card>
+            <CardHeader title={ka.verification.documents} text={ka.verification.profileCardText} />
+            <CardBody className="space-y-3">
+              {docs.length === 0 ? (
+                <p className="text-sm text-muted">{ka.verification.noDocuments}</p>
+              ) : (
+                <ul className="space-y-1.5 text-sm">
+                  {docs.map((d) => (
+                    <li key={d.id} className="flex items-center justify-between gap-2">
+                      <a href={`/api/verification-documents/${d.id}`} target="_blank" className="truncate text-accent-strong hover:underline">📎 {d.fileName}</a>
+                      <form action={deleteVerificationDocAction}>
+                        <input type="hidden" name="documentId" value={d.id} />
+                        <Button type="submit" size="sm" variant="ghost" className="text-danger">{ka.common.delete}</Button>
+                      </form>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <ActionForm action={uploadVerificationDocAction} resetOnSuccess className="space-y-2 border-t border-line pt-3">
+                <input type="hidden" name="companyId" value={company.id} />
+                <Field label={ka.verification.upload} name="documents" hint={ka.verification.documentsHint}>
+                  <Input name="documents" type="file" multiple accept="application/pdf,image/jpeg,image/png,image/webp" className="pt-1.5 text-xs" />
+                </Field>
+                <SubmitButton size="sm" variant="secondary">{ka.common.upload}</SubmitButton>
+              </ActionForm>
+            </CardBody>
+          </Card>
+        )}
+      </div>
     </>
   );
 }

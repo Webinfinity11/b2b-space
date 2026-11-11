@@ -147,3 +147,16 @@ export async function updateDealInfoAction(_: FormState, formData: FormData): Pr
   revalidatePath("/app/conversations");
   return { ok: true, message: ka.sgba.dealSaved };
 }
+
+/** "+ ახალი მოლაპარაკება": opens (or continues) a negotiation with a chosen company, with a first message. */
+export async function startDealAction(_: FormState, formData: FormData): Promise<FormState> {
+  const user = await assertUser();
+  const m = await getActiveMembership(user.id);
+  if (!m || !hasPermission(m, "responses.manage")) return fail(ka.offer.noRespondPermission, formData);
+  const message = String(formData.get("message") ?? "").trim().slice(0, 3000);
+  if (message.length < 5) return fail(ka.validation.formErrors, formData, { message: ka.validation.required });
+  if (!rateLimit(`direct:${user.id}`, 30, 60 * 60_000)) return fail(ka.auth.tooManyAttempts, formData);
+  const id = await openDirectConversation(user.id, m, String(formData.get("companyId") ?? ""), message);
+  if (!id) return fail(ka.validation.formErrors, formData, { companyId: ka.validation.required });
+  redirect(`/app/conversations/${id}`);
+}

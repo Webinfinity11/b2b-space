@@ -14,6 +14,7 @@ import { slugify } from "@/lib/slug";
 import { notify } from "@/lib/notify";
 import { emailEnabled, renderEmail, sendEmail } from "@/lib/email";
 import { rateLimit } from "@/lib/rate-limit";
+import { RESET_HOURS, createResetLink, findReset } from "@/lib/password-reset";
 import { createSession, destroySession } from "@/lib/session";
 
 /** Only same-site relative paths are allowed as post-login targets. */
@@ -204,4 +205,46 @@ export async function loginAction(_: FormState, formData: FormData): Promise<For
 export async function logoutAction() {
   await destroySession();
   redirect("/");
+}
+
+// ─────────────────────────────── Password reset ───────────────────────────────
+
+/** "Forgot password": emails a one-time link. Same answer whether or not the email exists. */
+export async function requestPasswordResetAction(_: FormState, formData: FormData): Promise<FormState> {
+  const ip = (await clientIp()) ?? "unknown";
+  const parsed = z.object({ email: zEmail }).safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return invalid(parsed.error, formData);
+  if (!rateLimit(`reset:ip:${ip}`, 10, 60 * 60_000) || !rateLimit(`reset:email:${parsed.data.email}`, 3, 60 * 60_000)) {
+    return fail(ka.auth.tooManyAttempts, formData);
+  }
+  const user = await db.user.findUnique({ where: { email: parsed.data.email }, select: { id: true, email: true, firstName: true, status: true } });
+  if (user && user.status === "ACTIVE") {
+    const path = await createResetLink(user.id);
+    await audit({ actorId: user.id, action: "auth.password_reset_requested", entityType: "User", entityId: user.id });
+    if (emailEnabled()) {
+      const { html, text } = renderEmail({ title: ka.reset.emailTitle, body: ka.reset.emailBody(user.firstName, RESET_HOURS), link: path, button: ka.reset.emailButton, footer: ka.email.footer });
+      await sendEmail({ to: user.email, subject: ka.reset.emailTitle, html, text });
+    }
+  }
+  return { ok: true, message: ka.reset.sent };
+}
+
+/** Sets a new password from a reset link; signs out every session of that user. */
+export async function resetPasswordAction(_: FormState, formData: FormData): Promise<FormState> {
+  const token = String(formData.get("token") ?? "");
+  const parsed = z
+    .object({ password: zPassword, passwordConfirm: z.string() })
+    .refine((d) => d.password === d.passwordConfirm, { path: ["passwordConfirm"], error: ka.validation.passwordMismatch })
+    .safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const reset = await findReset(token);
+  if (!reset || reset.user.status !== "ACTIVE") return fail(ka.reset.invalid);
+  const done = await db.passwordReset.updateMany({ where: { id: reset.id, usedAt: null }, data: { usedAt: new Date() } });
+  if (!done.count) return fail(ka.reset.invalid);
+  await db.$transaction([
+    db.user.update({ where: { id: reset.user.id }, data: { passwordHash: await bcrypt.hash(parsed.data.password, 12) } }),
+    db.session.deleteMany({ where: { userId: reset.user.id } }),
+  ]);
+  await audit({ actorId: reset.user.id, action: "auth.password_reset", entityType: "User", entityId: reset.user.id });
+  redirect("/login?reset=1");
 }

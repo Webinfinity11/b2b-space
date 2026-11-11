@@ -14,7 +14,8 @@ import { notify } from "@/lib/notify";
 import { readPeopleFields } from "@/lib/people";
 import { appUrl, emailEnabled, renderEmail, sendEmail } from "@/lib/email";
 import { DEFAULT_PERMISSIONS, sanitizePermissions } from "@/lib/permissions";
-import { IMAGE_TYPES, UploadError, deletePublicFile, filesFrom, storeFile } from "@/lib/storage";
+import { DOCUMENT_TYPES, IMAGE_TYPES, UploadError, VIDEO_MAX_MB, VIDEO_TYPES, deletePublicFile, filesFrom, storeFile } from "@/lib/storage";
+import { videoEmbedUrl } from "@/lib/video";
 
 const COUNTRY_CODES = Object.keys(ka.countries) as [string, ...string[]];
 
@@ -81,6 +82,9 @@ export async function updateCompanyProfileAction(_: FormState, formData: FormDat
     return fail(ka.validation.formErrors, formData, errors);
   }
 
+  // Tax ID was never asked at registration — it may be filled in once even while legal data is locked.
+  const taxOnce = legalLocked && !company.taxNumber ? String(raw.taxNumber ?? "").trim().slice(0, 40) || null : null;
+
   const images: { logoUrl?: string } = {};
   try {
     const [logo] = filesFrom(formData, "logo");
@@ -93,7 +97,7 @@ export async function updateCompanyProfileAction(_: FormState, formData: FormDat
     await db.$transaction([
       db.company.update({
         where: { id: companyId },
-        data: { ...(legal?.success ? legal.data : {}), ...profile.data, ...images },
+        data: { ...(legal?.success ? legal.data : {}), ...(taxOnce ? { taxNumber: taxOnce } : {}), ...profile.data, ...images },
       }),
       db.companyCategory.deleteMany({ where: { companyId } }),
       db.companyCategory.createMany({ data: cats.map((categoryId) => ({ companyId, categoryId })) }),
@@ -255,4 +259,95 @@ export async function revokeInvitationAction(formData: FormData) {
   await db.companyInvitation.update({ where: { id: inv.id }, data: { revokedAt: new Date() } });
   await audit({ actorId: user.id, action: "company.invitation_revoked", entityType: "Company", entityId: inv.companyId, metadata: { email: inv.email } });
   revalidatePath("/company/team");
+}
+
+// ─────────────────────────────── Media (photos / videos on the public profile) ───────────────────────────────
+
+const MEDIA_LIMIT = 30;
+
+export async function addCompanyImageAction(_: FormState, formData: FormData): Promise<FormState> {
+  const companyId = String(formData.get("companyId"));
+  await assertCompanyPermission(companyId, "company.edit");
+  const files = filesFrom(formData, "images");
+  if (files.length === 0) return fail(ka.validation.required, formData, { images: ka.validation.required });
+  const count = await db.companyMedia.count({ where: { companyId } });
+  if (count + files.length > MEDIA_LIMIT) return fail(ka.media.limit, formData);
+  const caption = String(formData.get("caption") ?? "").trim().slice(0, 200) || null;
+  try {
+    for (const [i, file] of files.entries()) {
+      const stored = await storeFile(file, { visibility: "public", folder: "media", allowed: IMAGE_TYPES, maxMb: 5 });
+      await db.companyMedia.create({ data: { companyId, type: "IMAGE", url: stored.url!, caption, sortOrder: count + i } });
+    }
+  } catch (e) {
+    return fail(uploadMessage(e, 5), formData);
+  }
+  revalidatePath("/company/media");
+  return { ok: true, message: ka.common.saved };
+}
+
+export async function addCompanyVideoAction(_: FormState, formData: FormData): Promise<FormState> {
+  const companyId = String(formData.get("companyId"));
+  await assertCompanyPermission(companyId, "company.edit");
+  // Either a YouTube/Vimeo link or an uploaded video file (or both — each becomes its own item).
+  const url = String(formData.get("videoUrl") ?? "").trim();
+  const files = filesFrom(formData, "videoFiles");
+  if (!url && files.length === 0) return fail(ka.validation.formErrors, formData, { videoUrl: ka.media.videoRequired });
+  if (url && !videoEmbedUrl(url)) return fail(ka.validation.formErrors, formData, { videoUrl: ka.media.videoInvalid });
+  const count = await db.companyMedia.count({ where: { companyId } });
+  if (count + (url ? 1 : 0) + files.length > MEDIA_LIMIT) return fail(ka.media.limit, formData);
+  const caption = String(formData.get("videoCaption") ?? "").trim().slice(0, 200) || null;
+  let order = count;
+  if (url) await db.companyMedia.create({ data: { companyId, type: "VIDEO", url, caption, sortOrder: order++ } });
+  try {
+    for (const file of files) {
+      const stored = await storeFile(file, { visibility: "public", folder: "videos", allowed: VIDEO_TYPES, maxMb: VIDEO_MAX_MB });
+      await db.companyMedia.create({ data: { companyId, type: "VIDEO", url: stored.url!, caption, sortOrder: order++ } });
+    }
+  } catch (e) {
+    return fail(ka.validation.formErrors, formData, { videoFiles: uploadMessage(e, VIDEO_MAX_MB) });
+  }
+  revalidatePath("/company/media");
+  return { ok: true, message: ka.common.saved };
+}
+
+export async function deleteCompanyMediaAction(formData: FormData) {
+  const id = String(formData.get("mediaId"));
+  const media = await db.companyMedia.findUnique({ where: { id } });
+  if (!media) return;
+  await assertCompanyPermission(media.companyId, "company.edit");
+  await db.companyMedia.delete({ where: { id } });
+  await deletePublicFile(media.url); // no-op for external video links
+  revalidatePath("/company/media");
+}
+
+// ─────────────────────────────── Verification documents (private, for the admin review) ───────────────────────────────
+
+export async function uploadVerificationDocAction(_: FormState, formData: FormData): Promise<FormState> {
+  const companyId = String(formData.get("companyId"));
+  const { user } = await assertCompanyPermission(companyId, "owner");
+  const files = filesFrom(formData, "documents");
+  if (files.length === 0) return fail(ka.validation.required, formData, { documents: ka.validation.required });
+  if ((await db.verificationDocument.count({ where: { companyId } })) + files.length > 20) return fail(ka.verification.limit, formData);
+  try {
+    for (const file of files.slice(0, 10)) {
+      const s = await storeFile(file, { visibility: "private", folder: `verification/${companyId}`, allowed: DOCUMENT_TYPES, maxMb: 10 });
+      const doc = await db.verificationDocument.create({
+        data: { companyId, storageKey: s.key, fileName: s.fileName, mimeType: s.mimeType, sizeBytes: s.sizeBytes, uploadedById: user.id },
+      });
+      await audit({ actorId: user.id, action: "company.document_uploaded", entityType: "Company", entityId: companyId, metadata: { documentId: doc.id } });
+    }
+  } catch (e) {
+    return fail(ka.validation.formErrors, formData, { documents: uploadMessage(e, 10) });
+  }
+  revalidatePath("/company/profile");
+  return { ok: true, message: ka.common.saved };
+}
+
+export async function deleteVerificationDocAction(formData: FormData) {
+  const doc = await db.verificationDocument.findUnique({ where: { id: String(formData.get("documentId")) } });
+  if (!doc) return;
+  const { user } = await assertCompanyPermission(doc.companyId, "owner");
+  await db.verificationDocument.delete({ where: { id: doc.id } });
+  await audit({ actorId: user.id, action: "company.document_deleted", entityType: "Company", entityId: doc.companyId, metadata: { documentId: doc.id, name: doc.fileName } });
+  revalidatePath("/company/profile");
 }

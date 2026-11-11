@@ -49,17 +49,20 @@ export async function requestCampaignAction(_: FormState, formData: FormData): P
   if (positionIds.length && (await db.category.count({ where: { id: { in: positionIds }, kind: "POSITION" } })) !== positionIds.length) return fail(ka.errors.generic);
   if (industryIds.length && (await db.category.count({ where: { id: { in: industryIds }, kind: "INDUSTRY" } })) !== industryIds.length) return fail(ka.errors.generic);
 
-  let file: { url: string; name: string } | null = null;
-  const [upload] = filesFrom(formData, "file");
-  if (upload) {
+  // Visual(s) and PDF: up to 5 files; the first one also fills the legacy single-file fields.
+  const uploads = filesFrom(formData, "file");
+  if (uploads.length > 5) return fail(ka.validation.formErrors, formData, { file: c.campFilesMax });
+  const attachments: { url: string; name: string }[] = [];
+  for (const upload of uploads) {
     try {
       const stored = await storeFile(upload, { visibility: "public", folder: "campaigns", allowed: DOCUMENT_TYPES, maxMb: 10 });
-      file = { url: stored.url!, name: stored.fileName };
+      attachments.push({ url: stored.url!, name: stored.fileName });
     } catch (e) {
       if (e instanceof UploadError) return fail(ka.validation.formErrors, formData, { file: e.code === "size" ? ka.validation.fileSize(10) : ka.validation.fileType });
       throw e;
     }
   }
+  const file = attachments[0] ?? null;
 
   const d = parsed.data;
   const req = await db.campaignRequest.create({
@@ -80,6 +83,7 @@ export async function requestCampaignAction(_: FormState, formData: FormData): P
       roles: list("roles", ["BUYER", "SELLER", "BOTH"]),
       fileUrl: file?.url,
       fileName: file?.name,
+      attachments,
     },
   });
   await audit({ actorId: user.id, action: "campaign.requested", entityType: "CampaignRequest", entityId: req.id, metadata: { packageId, title: d.title } });

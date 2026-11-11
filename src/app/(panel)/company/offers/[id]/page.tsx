@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ka } from "@/i18n/ka";
-import { deleteOfferAttachmentAction } from "@/actions/offers";
+import { deleteOfferAttachmentAction, setResponseStatusAction } from "@/actions/offers";
 import { getActiveMembership, requireUser } from "@/lib/authz";
 import { db } from "@/lib/db";
 import { formatDateTime } from "@/lib/format";
@@ -112,6 +112,20 @@ export default async function EditOfferPage({ params }: PageProps<"/company/offe
                       <span>{formatDateTime(r.createdAt)}</span>
                       {r.conversation && <Link href={`/app/conversations/${r.conversation.id}`} className="text-accent-strong hover:underline">{ka.offer.openConversation}</Link>}
                     </div>
+                    {(r.status === "SENT" || r.status === "VIEWED") && (
+                      <div className="mt-2 flex gap-2">
+                        <form action={setResponseStatusAction}>
+                          <input type="hidden" name="responseId" value={r.id} />
+                          <input type="hidden" name="op" value="accept" />
+                          <Button type="submit" size="sm">{ka.offer.accept}</Button>
+                        </form>
+                        <form action={setResponseStatusAction}>
+                          <input type="hidden" name="responseId" value={r.id} />
+                          <input type="hidden" name="op" value="decline" />
+                          <Button type="submit" size="sm" variant="ghost" className="text-danger">{ka.offer.decline}</Button>
+                        </form>
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>

@@ -10,12 +10,26 @@ import { db } from "@/lib/db";
 import { fail, invalid, zOptionalPhone, zPassword, zText, type FormState } from "@/lib/forms";
 import { rateLimit } from "@/lib/rate-limit";
 import { destroyOtherSessions } from "@/lib/session";
+import { IMAGE_TYPES, UploadError, deletePublicFile, filesFrom, storeFile } from "@/lib/storage";
 
 export async function updateProfileAction(_: FormState, formData: FormData): Promise<FormState> {
   const user = await assertUser();
   const parsed = z.object({ firstName: zText(1, 60), lastName: zText(1, 60), phone: zOptionalPhone }).safeParse(Object.fromEntries(formData));
   if (!parsed.success) return invalid(parsed.error, formData);
-  await db.user.update({ where: { id: user.id }, data: parsed.data });
+  let avatarUrl: string | undefined;
+  const [avatar] = filesFrom(formData, "avatar");
+  if (avatar) {
+    try {
+      avatarUrl = (await storeFile(avatar, { visibility: "public", folder: "avatars", allowed: IMAGE_TYPES, maxMb: 3 })).url!;
+    } catch (e) {
+      if (e instanceof UploadError) return fail(ka.validation.formErrors, formData, { avatar: e.code === "size" ? ka.validation.fileSize(3) : ka.validation.fileType });
+      throw e;
+    }
+  }
+  const removeAvatar = formData.get("removeAvatar") === "on";
+  const before = await db.user.findUnique({ where: { id: user.id }, select: { avatarUrl: true } });
+  await db.user.update({ where: { id: user.id }, data: { ...parsed.data, ...(avatarUrl ? { avatarUrl } : removeAvatar ? { avatarUrl: null } : {}) } });
+  if ((avatarUrl || removeAvatar) && before?.avatarUrl) await deletePublicFile(before.avatarUrl);
   revalidatePath("/app", "layout");
   return { ok: true, message: ka.common.saved };
 }

@@ -29,6 +29,7 @@ model User {
   email              String       @unique
   phone              String?
   passwordHash       String
+  avatarUrl          String?
   platformRole       PlatformRole @default(USER)
   status             UserStatus   @default(ACTIVE)
   emailVerifiedAt    DateTime?
@@ -39,6 +40,7 @@ model User {
   updatedAt          DateTime     @updatedAt
 
   sessions              Session[]
+  passwordResets        PasswordReset[]
   memberships           CompanyMember[]
   createdCompanies      Company[]                 @relation("CompanyCreatedBy")
   offers                Offer[]
@@ -380,6 +382,9 @@ model Offer {
   commissionText String?
   visibility     OfferVisibility @default(PUBLIC)
   status         OfferStatus     @default(DRAFT)
+  /// Hidden by a platform admin (moderation) — invisible everywhere until restored.
+  hiddenAt       DateTime?
+  hiddenReason   String?
   publishedAt    DateTime?
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
@@ -928,6 +933,8 @@ model CampaignRequest {
   ctaUrl      String?
   fileUrl     String?
   fileName    String?
+  /// More files (visual, PDF): [{ url, name }]. fileUrl/fileName keep the first one.
+  attachments Json      @default("[]")
   startDate   DateTime?
   /// Final price set by the admin.
   price       Decimal?              @db.Decimal(18, 2)
@@ -973,4 +980,18 @@ model OfferBadge {
   createdAt   DateTime @default(now())
 
   offers Offer[]
+}
+
+/// One-time password reset link (only the hash of the token is stored).
+model PasswordReset {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

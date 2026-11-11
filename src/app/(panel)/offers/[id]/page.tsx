@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { ka } from "@/i18n/ka";
+import { ReportButton } from "@/components/panel/ReportButton";
 import { respondToOfferAction } from "@/actions/offers";
 import { db } from "@/lib/db";
 import { formatDate } from "@/lib/format";
@@ -206,6 +207,7 @@ export default async function OfferPage({ params }: PageProps<"/offers/[id]">) {
               {offer.publishedAt && <p className="text-xs text-muted">{ka.offer.publishedAt}: {formatDate(offer.publishedAt)}</p>}
             </CardBody>
           </Card>
+          {user && <ReportButton targetType="OFFER" targetId={offer.id} />}
         </aside>
       </div>
 

@@ -3,14 +3,15 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { ka } from "@/i18n/ka";
-import { decideCompanyAction } from "@/actions/admin";
+import { adminUpdateCompanyAction, decideCompanyAction } from "@/actions/admin";
+import { CITIES } from "@/lib/cities";
 import { requireAdmin } from "@/lib/authz";
 import { db } from "@/lib/db";
 import { formatDate, formatDateTime } from "@/lib/format";
 import { companyName } from "@/lib/public";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardBody, CardHeader, PageHeader } from "@/components/ui/Card";
-import { ActionForm, Field, Select, SubmitButton, Textarea } from "@/components/ui/Form";
+import { ActionForm, Field, Input, Select, SubmitButton, Textarea } from "@/components/ui/Form";
 import { VerificationBadge } from "@/components/panel/StatusBadges";
 import { VerificationHistory } from "@/components/panel/VerificationHistory";
 
@@ -74,6 +75,27 @@ export default async function AdminCompanyPage({ params }: PageProps<"/admin/com
                   </div>
                 </Row>
               </dl>
+              <details className="mt-5 rounded-lg border border-line">
+                <summary className="cursor-pointer px-3 py-2 text-sm font-medium text-accent-strong">{ka.admin.editLegal}</summary>
+                <ActionForm action={adminUpdateCompanyAction} toast className="grid gap-3 border-t border-line p-3 sm:grid-cols-2">
+                  <input type="hidden" name="companyId" value={c.id} />
+                  <Field label={f.legalName} name="legalName"><Input name="legalName" defaultValue={c.legalName} required /></Field>
+                  <Field label={f.tradeName} name="tradeName" optional><Input name="tradeName" defaultValue={c.tradeName ?? ""} /></Field>
+                  <Field label={f.registrationNumber} name="registrationNumber"><Input name="registrationNumber" defaultValue={c.registrationNumber} required /></Field>
+                  <Field label={f.taxNumber} name="taxNumber" optional><Input name="taxNumber" defaultValue={c.taxNumber ?? ""} /></Field>
+                  <Field label={f.legalAddress} name="legalAddress" optional><Input name="legalAddress" defaultValue={c.legalAddress} /></Field>
+                  <Field label={f.city} name="city" optional>
+                    <Select name="city" defaultValue={c.city ?? ""} placeholder={ka.sgba.choose} options={[...CITIES, ...(c.city && !CITIES.includes(c.city) ? [c.city] : [])].map((x) => ({ value: x, label: x }))} />
+                  </Field>
+                  <Field label={ka.sgba.role} name="businessRole">
+                    <Select name="businessRole" defaultValue={c.businessRole} options={["BUYER", "SELLER", "BOTH"].map((r) => ({ value: r, label: ka.sgba.roles[r] }))} />
+                  </Field>
+                  <Field label={ka.sgba.size} name="size">
+                    <Select name="size" defaultValue={c.size} options={["SMALL", "MEDIUM", "LARGE"].map((r) => ({ value: r, label: ka.sgba.sizeFull[r] }))} />
+                  </Field>
+                  <div className="sm:col-span-2"><SubmitButton size="sm">{ka.common.save}</SubmitButton></div>
+                </ActionForm>
+              </details>
             </CardBody>
           </Card>
 

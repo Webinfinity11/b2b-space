@@ -10,7 +10,7 @@ import { AuthTabs } from "./AuthTabs";
 import { FormSteps } from "./FormSteps";
 
 /** Sign-in and company registration on one page (tabs). */
-export async function AuthScreen({ tab, next, registered, invited, inviteToken }: { tab: "login" | "register"; next?: string; registered?: boolean; invited?: boolean; inviteToken?: string }) {
+export async function AuthScreen({ tab, next, registered, invited, inviteToken, reset }: { tab: "login" | "register"; next?: string; registered?: boolean; invited?: boolean; inviteToken?: string; reset?: boolean }) {
   const categories = invited ? [] : await getCategoryTree();
   const c = ka.sgba;
 
@@ -41,6 +41,7 @@ export async function AuthScreen({ tab, next, registered, invited, inviteToken }
   const login = (
     <>
       {registered && <p role="status" className="mb-5 rounded-[12px] border border-success/30 bg-success/10 p-3 text-sm text-ink">{ka.auth.registeredPending}</p>}
+      {reset && <p role="status" className="mb-5 rounded-[12px] border border-success/30 bg-success/10 p-3 text-sm text-ink">{ka.reset.done}</p>}
       <ActionForm action={loginAction} className="space-y-4">
         {next && <input type="hidden" name="next" value={next} />}
         <Field label={c.workEmail} name="email">
@@ -49,6 +50,9 @@ export async function AuthScreen({ tab, next, registered, invited, inviteToken }
         <Field label={ka.auth.password} name="password">
           <Input name="password" type="password" autoComplete="current-password" required />
         </Field>
+        <div className="-mt-2 text-right">
+          <Link href="/forgot-password" className="text-xs font-medium text-accent hover:underline">{ka.reset.forgotLink}</Link>
+        </div>
         <SubmitButton className="w-full" size="lg">
           {c.enter} <Icon name="arrow" size={18} />
         </SubmitButton>

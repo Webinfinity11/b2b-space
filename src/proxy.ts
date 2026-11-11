@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 const SESSION_COOKIE = "b2b_session";
 
 /** Pages a guest may open. Everything else on the platform requires an approved account. */
-const PUBLIC = ["/login", "/register", "/invite", "/terms", "/privacy", "/admin/login"];
+const PUBLIC = ["/login", "/register", "/invite", "/forgot-password", "/reset-password", "/terms", "/privacy", "/admin/login"];
 
 /**
  * Optimistic redirect for guests (the platform is closed). This is only a UX shortcut —

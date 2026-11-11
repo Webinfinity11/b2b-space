@@ -6,7 +6,7 @@ import { ka } from "@/i18n/ka";
 import { logoutAction } from "@/actions/auth";
 import { Icon } from "@/components/ui/Icon";
 
-export function ProfileMenu({ initials, fullName, sub, profileHref }: { initials: string; firstName: string; fullName: string; sub: string; profileHref: string }) {
+export function ProfileMenu({ initials, fullName, sub, profileHref, avatarUrl }: { initials: string; firstName: string; fullName: string; sub: string; profileHref: string; avatarUrl?: string | null }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -22,8 +22,9 @@ export function ProfileMenu({ initials, fullName, sub, profileHref }: { initials
   }, []);
   return (
     <div className="relative" ref={ref}>
-      <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label={fullName} title={fullName} className="grid size-10 place-items-center rounded-full bg-blue-soft text-sm font-bold text-ink hover:ring-2 hover:ring-[#c9d5ef]">
-        {initials}
+      <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label={fullName} title={fullName} className="grid size-10 place-items-center rounded-full bg-blue-soft text-sm font-bold text-ink overflow-hidden hover:ring-2 hover:ring-[#c9d5ef]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        {avatarUrl ? <img src={avatarUrl} alt="" className="size-full object-cover" /> : initials}
       </button>
       {open && (
         <div className="absolute right-0 top-12 z-40 w-64 rounded-[14px] border border-line bg-surface p-2 shadow-[0_14px_40px_rgb(33_55_105/0.12)]">

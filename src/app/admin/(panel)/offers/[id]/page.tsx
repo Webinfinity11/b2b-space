@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ka } from "@/i18n/ka";
-import { adminArchiveOfferAction, adminUpdateOfferAction } from "@/actions/admin";
+import { adminArchiveOfferAction, adminRestoreOfferAction, adminUpdateOfferAction } from "@/actions/admin";
+import { controlClass } from "@/components/ui/styles";
 import { requireAdmin } from "@/lib/authz";
 import { db } from "@/lib/db";
 import { formatDate } from "@/lib/format";
@@ -75,9 +76,16 @@ export default async function AdminOfferPage({ params }: PageProps<"/admin/offer
               </ActionForm>
             </CardBody>
           </Card>
-          {o.status !== "ARCHIVED" && (
-            <form action={adminArchiveOfferAction}>
+          {o.hiddenAt ? (
+            <form key="restore" action={adminRestoreOfferAction} className="space-y-2">
+              <p className="text-sm text-danger">{ka.admin.hiddenByAdmin}: {o.hiddenReason}</p>
               <input type="hidden" name="offerId" value={o.id} />
+              <Button type="submit" variant="secondary" className="w-full">{ka.admin.restoreOffer}</Button>
+            </form>
+          ) : (
+            <form key="hide" action={adminArchiveOfferAction} className="space-y-2">
+              <input type="hidden" name="offerId" value={o.id} />
+              <input name="reason" required minLength={3} placeholder={ka.admin.hideReason} className={`${controlClass} h-10`} />
               <Button type="submit" variant="ghost" className="w-full text-danger">{ka.admin.hideOffer}</Button>
             </form>
           )}

@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { formatDateTime } from "@/lib/format";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { controlClass } from "@/components/ui/styles";
 import { Card, EmptyState, PageHeader } from "@/components/ui/Card";
 
 export const metadata: Metadata = { title: ka.sgba.approvalsTitle };
@@ -66,11 +67,15 @@ export default async function RegistrationsPage() {
                     <input type="hidden" name="status" value="ACTIVE" />
                     <Button type="submit">{ka.sgba.approveCompany}</Button>
                   </form>
-                  <form action={setUserStatusAction}>
-                    <input type="hidden" name="userId" value={u.id} />
-                    <input type="hidden" name="status" value="REJECTED" />
-                    <Button type="submit" variant="ghost" className="text-danger">{ka.sgba.rejectCompany}</Button>
-                  </form>
+                  <details className="w-full">
+                    <summary className="cursor-pointer text-sm font-medium text-danger">{ka.sgba.rejectCompany}</summary>
+                    <form action={setUserStatusAction} className="mt-2 flex flex-wrap gap-2">
+                      <input type="hidden" name="userId" value={u.id} />
+                      <input type="hidden" name="status" value="REJECTED" />
+                      <input name="reason" required minLength={3} placeholder={ka.admin.rejectReason} className={`${controlClass} h-10 min-w-64 flex-1`} />
+                      <Button type="submit" variant="danger">{ka.sgba.rejectCompany}</Button>
+                    </form>
+                  </details>
                 </div>
               </Card>
             );

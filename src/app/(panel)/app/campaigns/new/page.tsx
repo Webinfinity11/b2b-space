@@ -78,7 +78,7 @@ export default async function NewCampaignPage({ searchParams }: PageProps<"/app/
               <Input name="ctaUrl" placeholder="https://" />
             </Field>
             <Field label={c.campFile} name="file" optional>
-              <input type="file" name="file" accept=".pdf,image/jpeg,image/png,image/webp" className="block w-full text-sm" />
+              <input type="file" name="file" multiple accept=".pdf,image/jpeg,image/png,image/webp" className="block w-full text-sm" />
             </Field>
             <Field label={c.campStart} name="startDate" optional>
               <Input name="startDate" type="date" />

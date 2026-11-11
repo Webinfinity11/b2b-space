@@ -56,7 +56,7 @@ export function CompanyFields({
             <Input name="registrationNumber" defaultValue={defaults.registrationNumber} disabled={legalLocked} required />
           </Field>
           <Field label={f.taxNumber} name="taxNumber" optional>
-            <Input name="taxNumber" defaultValue={defaults.taxNumber} disabled={legalLocked} />
+            <Input name="taxNumber" defaultValue={defaults.taxNumber} disabled={legalLocked && Boolean(defaults.taxNumber)} />
           </Field>
           <Field label={f.country} name="country">
             <Select name="country" defaultValue={defaults.country ?? "GE"} options={countryOptions} disabled={legalLocked} />

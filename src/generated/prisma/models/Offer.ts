@@ -67,6 +67,8 @@ export type OfferMinAggregateOutputType = {
   commissionText: string | null
   visibility: $Enums.OfferVisibility | null
   status: $Enums.OfferStatus | null
+  hiddenAt: Date | null
+  hiddenReason: string | null
   publishedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -99,6 +101,8 @@ export type OfferMaxAggregateOutputType = {
   commissionText: string | null
   visibility: $Enums.OfferVisibility | null
   status: $Enums.OfferStatus | null
+  hiddenAt: Date | null
+  hiddenReason: string | null
   publishedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -131,6 +135,8 @@ export type OfferCountAggregateOutputType = {
   commissionText: number
   visibility: number
   status: number
+  hiddenAt: number
+  hiddenReason: number
   publishedAt: number
   createdAt: number
   updatedAt: number
@@ -179,6 +185,8 @@ export type OfferMinAggregateInputType = {
   commissionText?: true
   visibility?: true
   status?: true
+  hiddenAt?: true
+  hiddenReason?: true
   publishedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -211,6 +219,8 @@ export type OfferMaxAggregateInputType = {
   commissionText?: true
   visibility?: true
   status?: true
+  hiddenAt?: true
+  hiddenReason?: true
   publishedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -243,6 +253,8 @@ export type OfferCountAggregateInputType = {
   commissionText?: true
   visibility?: true
   status?: true
+  hiddenAt?: true
+  hiddenReason?: true
   publishedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -362,6 +374,8 @@ export type OfferGroupByOutputType = {
   commissionText: string | null
   visibility: $Enums.OfferVisibility
   status: $Enums.OfferStatus
+  hiddenAt: Date | null
+  hiddenReason: string | null
   publishedAt: Date | null
   createdAt: Date
   updatedAt: Date
@@ -417,6 +431,8 @@ export type OfferWhereInput = {
   commissionText?: Prisma.StringNullableFilter<"Offer"> | string | null
   visibility?: Prisma.EnumOfferVisibilityFilter<"Offer"> | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFilter<"Offer"> | $Enums.OfferStatus
+  hiddenAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  hiddenReason?: Prisma.StringNullableFilter<"Offer"> | string | null
   publishedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
@@ -456,6 +472,8 @@ export type OfferOrderByWithRelationInput = {
   commissionText?: Prisma.SortOrderInput | Prisma.SortOrder
   visibility?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  hiddenAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  hiddenReason?: Prisma.SortOrderInput | Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -498,6 +516,8 @@ export type OfferWhereUniqueInput = Prisma.AtLeast<{
   commissionText?: Prisma.StringNullableFilter<"Offer"> | string | null
   visibility?: Prisma.EnumOfferVisibilityFilter<"Offer"> | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFilter<"Offer"> | $Enums.OfferStatus
+  hiddenAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  hiddenReason?: Prisma.StringNullableFilter<"Offer"> | string | null
   publishedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
@@ -537,6 +557,8 @@ export type OfferOrderByWithAggregationInput = {
   commissionText?: Prisma.SortOrderInput | Prisma.SortOrder
   visibility?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  hiddenAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  hiddenReason?: Prisma.SortOrderInput | Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -577,6 +599,8 @@ export type OfferScalarWhereWithAggregatesInput = {
   commissionText?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
   visibility?: Prisma.EnumOfferVisibilityWithAggregatesFilter<"Offer"> | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusWithAggregatesFilter<"Offer"> | $Enums.OfferStatus
+  hiddenAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Offer"> | Date | string | null
+  hiddenReason?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
   publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Offer"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Offer"> | Date | string
@@ -605,6 +629,8 @@ export type OfferCreateInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -644,6 +670,8 @@ export type OfferUncheckedCreateInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -675,6 +703,8 @@ export type OfferUpdateInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -714,6 +744,8 @@ export type OfferUncheckedUpdateInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -749,6 +781,8 @@ export type OfferCreateManyInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -777,6 +811,8 @@ export type OfferUpdateManyMutationInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -809,6 +845,8 @@ export type OfferUncheckedUpdateManyInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -851,6 +889,8 @@ export type OfferCountOrderByAggregateInput = {
   commissionText?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  hiddenAt?: Prisma.SortOrder
+  hiddenReason?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -890,6 +930,8 @@ export type OfferMaxOrderByAggregateInput = {
   commissionText?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  hiddenAt?: Prisma.SortOrder
+  hiddenReason?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -922,6 +964,8 @@ export type OfferMinOrderByAggregateInput = {
   commissionText?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  hiddenAt?: Prisma.SortOrder
+  hiddenReason?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -1207,6 +1251,8 @@ export type OfferCreateWithoutAuthorInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1244,6 +1290,8 @@ export type OfferUncheckedCreateWithoutAuthorInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1308,6 +1356,8 @@ export type OfferScalarWhereInput = {
   commissionText?: Prisma.StringNullableFilter<"Offer"> | string | null
   visibility?: Prisma.EnumOfferVisibilityFilter<"Offer"> | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFilter<"Offer"> | $Enums.OfferStatus
+  hiddenAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  hiddenReason?: Prisma.StringNullableFilter<"Offer"> | string | null
   publishedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
@@ -1336,6 +1386,8 @@ export type OfferCreateWithoutCategoryInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1373,6 +1425,8 @@ export type OfferUncheckedCreateWithoutCategoryInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1430,6 +1484,8 @@ export type OfferCreateWithoutCompanyInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1467,6 +1523,8 @@ export type OfferUncheckedCreateWithoutCompanyInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1524,6 +1582,8 @@ export type OfferCreateWithoutAttachmentsInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1562,6 +1622,8 @@ export type OfferUncheckedCreateWithoutAttachmentsInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1608,6 +1670,8 @@ export type OfferUpdateWithoutAttachmentsInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1646,6 +1710,8 @@ export type OfferUncheckedUpdateWithoutAttachmentsInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1676,6 +1742,8 @@ export type OfferCreateWithoutResponsesInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1714,6 +1782,8 @@ export type OfferUncheckedCreateWithoutResponsesInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1760,6 +1830,8 @@ export type OfferUpdateWithoutResponsesInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1798,6 +1870,8 @@ export type OfferUncheckedUpdateWithoutResponsesInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1828,6 +1902,8 @@ export type OfferCreateWithoutConversationsInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1866,6 +1942,8 @@ export type OfferUncheckedCreateWithoutConversationsInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1912,6 +1990,8 @@ export type OfferUpdateWithoutConversationsInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1950,6 +2030,8 @@ export type OfferUncheckedUpdateWithoutConversationsInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1980,6 +2062,8 @@ export type OfferCreateWithoutBadgeInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2017,6 +2101,8 @@ export type OfferUncheckedCreateWithoutBadgeInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2077,6 +2163,8 @@ export type OfferCreateManyAuthorInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2105,6 +2193,8 @@ export type OfferUpdateWithoutAuthorInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2142,6 +2232,8 @@ export type OfferUncheckedUpdateWithoutAuthorInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2176,6 +2268,8 @@ export type OfferUncheckedUpdateManyWithoutAuthorInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2207,6 +2301,8 @@ export type OfferCreateManyCategoryInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2235,6 +2331,8 @@ export type OfferUpdateWithoutCategoryInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2272,6 +2370,8 @@ export type OfferUncheckedUpdateWithoutCategoryInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2306,6 +2406,8 @@ export type OfferUncheckedUpdateManyWithoutCategoryInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2337,6 +2439,8 @@ export type OfferCreateManyCompanyInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2365,6 +2469,8 @@ export type OfferUpdateWithoutCompanyInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2402,6 +2508,8 @@ export type OfferUncheckedUpdateWithoutCompanyInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2436,6 +2544,8 @@ export type OfferUncheckedUpdateManyWithoutCompanyInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2467,6 +2577,8 @@ export type OfferCreateManyBadgeInput = {
   commissionText?: string | null
   visibility?: $Enums.OfferVisibility
   status?: $Enums.OfferStatus
+  hiddenAt?: Date | string | null
+  hiddenReason?: string | null
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2495,6 +2607,8 @@ export type OfferUpdateWithoutBadgeInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2532,6 +2646,8 @@ export type OfferUncheckedUpdateWithoutBadgeInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2566,6 +2682,8 @@ export type OfferUncheckedUpdateManyWithoutBadgeInput = {
   commissionText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.EnumOfferVisibilityFieldUpdateOperationsInput | $Enums.OfferVisibility
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2647,6 +2765,8 @@ export type OfferSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   commissionText?: boolean
   visibility?: boolean
   status?: boolean
+  hiddenAt?: boolean
+  hiddenReason?: boolean
   publishedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2687,6 +2807,8 @@ export type OfferSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   commissionText?: boolean
   visibility?: boolean
   status?: boolean
+  hiddenAt?: boolean
+  hiddenReason?: boolean
   publishedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2723,6 +2845,8 @@ export type OfferSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   commissionText?: boolean
   visibility?: boolean
   status?: boolean
+  hiddenAt?: boolean
+  hiddenReason?: boolean
   publishedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2759,12 +2883,14 @@ export type OfferSelectScalar = {
   commissionText?: boolean
   visibility?: boolean
   status?: boolean
+  hiddenAt?: boolean
+  hiddenReason?: boolean
   publishedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "title" | "description" | "categoryId" | "itemKind" | "priceType" | "priceMin" | "priceMax" | "currency" | "quantity" | "unit" | "deliveryTerms" | "country" | "city" | "validUntil" | "authorUserId" | "companyId" | "isAnonymous" | "perk" | "audience" | "badgeId" | "commissionPct" | "commissionText" | "visibility" | "status" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
+export type OfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "title" | "description" | "categoryId" | "itemKind" | "priceType" | "priceMin" | "priceMax" | "currency" | "quantity" | "unit" | "deliveryTerms" | "country" | "city" | "validUntil" | "authorUserId" | "companyId" | "isAnonymous" | "perk" | "audience" | "badgeId" | "commissionPct" | "commissionText" | "visibility" | "status" | "hiddenAt" | "hiddenReason" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
 export type OfferInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.Offer$categoryArgs<ExtArgs>
   badge?: boolean | Prisma.Offer$badgeArgs<ExtArgs>
@@ -2841,6 +2967,11 @@ export type $OfferPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     commissionText: string | null
     visibility: $Enums.OfferVisibility
     status: $Enums.OfferStatus
+    /**
+     * Hidden by a platform admin (moderation) — invisible everywhere until restored.
+     */
+    hiddenAt: Date | null
+    hiddenReason: string | null
     publishedAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -3300,6 +3431,8 @@ export interface OfferFieldRefs {
   readonly commissionText: Prisma.FieldRef<"Offer", 'String'>
   readonly visibility: Prisma.FieldRef<"Offer", 'OfferVisibility'>
   readonly status: Prisma.FieldRef<"Offer", 'OfferStatus'>
+  readonly hiddenAt: Prisma.FieldRef<"Offer", 'DateTime'>
+  readonly hiddenReason: Prisma.FieldRef<"Offer", 'String'>
   readonly publishedAt: Prisma.FieldRef<"Offer", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Offer", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Offer", 'DateTime'>

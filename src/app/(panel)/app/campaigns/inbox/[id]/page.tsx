@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ka } from "@/i18n/ka";
+import { campaignFiles } from "@/lib/campaign-files";
 import { replyToCampaignAction } from "@/actions/campaigns";
 import { getActiveMembership, requireUser } from "@/lib/authz";
 import { db } from "@/lib/db";
@@ -48,7 +49,11 @@ export default async function CampaignInboxPage({ params }: PageProps<"/app/camp
           <p className="whitespace-pre-line text-sm leading-relaxed text-secondary">{r.message}</p>
           <div className="mt-4 flex flex-wrap gap-4 text-sm">
             {r.ctaUrl && <a href={r.ctaUrl} target="_blank" rel="noopener noreferrer" className="text-accent-strong hover:underline">{r.ctaUrl}</a>}
-            {r.fileUrl && <a href={r.fileUrl} target="_blank" className="inline-flex items-center gap-1.5 text-accent-strong hover:underline"><Icon name="folder" size={15} /> {r.fileName}</a>}
+            {campaignFiles(r).map((f) => (
+              <a key={f.url} href={f.url} target="_blank" className="inline-flex items-center gap-1.5 text-accent-strong hover:underline">
+                <Icon name="folder" size={15} /> {f.name}
+              </a>
+            ))}
           </div>
         </section>
         <section className="h-fit rounded-[16px] border border-line bg-surface p-6">

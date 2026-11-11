@@ -53,7 +53,7 @@ export default async function DealsPage({ searchParams }: PageProps<"/app/conver
         title={ka.sgba.nav.deals}
         text={ka.sgba.dealsText}
         action={
-          <ButtonLink href="/companies">
+          <ButtonLink href="/app/conversations/new">
             <Icon name="plus" size={16} /> {ka.sgba.newDeal}
           </ButtonLink>
         }
@@ -87,10 +87,16 @@ export default async function DealsPage({ searchParams }: PageProps<"/app/conver
                   const buyer = c.participants.find((p) => p !== seller);
                   const { pct } = resolveCommission(dealCommissionPct(c), rules, c.offer?.categoryId ?? null, c.amount);
                   const amount = c.amount ? Number(c.amount) : null;
+                  // Unread: something was written after I last opened it (and it wasn't only me writing).
+                  const mine = c.participants.find((p) => p.userId === user.id);
+                  const unread = c._count.messages > 0 && (!mine?.lastReadAt || c.lastMessageAt > mine.lastReadAt);
                   return (
                     <tr key={c.id} className="hover:bg-canvas/50">
                       <td className="px-5 py-3.5">
-                        <div className="font-semibold text-ink">{partyName(seller)}</div>
+                        <div className="flex items-center gap-2 font-semibold text-ink">
+                          {unread && <span className="size-2 shrink-0 rounded-full bg-accent" aria-label={ka.chat.unreadDot} />}
+                          {partyName(seller)}
+                        </div>
                         <div className="max-w-[280px] truncate text-xs text-muted">{c.offer?.title ?? c.subject}</div>
                       </td>
                       <td className="px-5 py-3.5">{partyName(buyer)}</td>

@@ -246,6 +246,7 @@ export type OfferFilters = {
 function liveOfferWhere(loggedIn: boolean): Prisma.OfferWhereInput {
   return {
     status: { in: [...PUBLIC_OFFER_STATUSES] },
+    hiddenAt: null,
     OR: [{ validUntil: null }, { validUntil: { gte: new Date() } }],
     ...(loggedIn ? {} : { visibility: "PUBLIC" }),
     // Offers by a company are only public while the company itself is listed.

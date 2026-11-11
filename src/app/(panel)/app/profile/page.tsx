@@ -21,6 +21,18 @@ export default async function ProfilePage() {
           <CardHeader title={ka.profile.personalData} />
           <CardBody>
             <ActionForm action={updateProfileAction} className="space-y-4">
+              <div className="flex items-center gap-4">
+                <span className="grid size-16 shrink-0 place-items-center overflow-hidden rounded-full bg-blue-soft text-lg font-bold text-ink">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  {user.avatarUrl ? <img src={user.avatarUrl} alt="" className="size-full object-cover" /> : `${user.firstName.slice(0, 1)}${user.lastName.slice(0, 1)}`}
+                </span>
+                <div className="flex-1 space-y-1">
+                  <Field label={ka.profile.avatar} name="avatar" optional hint={ka.profile.avatarHint}>
+                    <Input name="avatar" type="file" accept="image/jpeg,image/png,image/webp" className="pt-1.5 text-xs" />
+                  </Field>
+                  {user.avatarUrl && <Checkbox name="removeAvatar" label={ka.profile.avatarRemove} />}
+                </div>
+              </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label={ka.auth.firstName} name="firstName">
                   <Input name="firstName" defaultValue={user.firstName} required />

@@ -1,4 +1,5 @@
 import { ka } from "@/i18n/ka";
+import { campaignFiles } from "@/lib/campaign-files";
 import { CAMPAIGN_STEPS } from "@/lib/campaigns";
 import { formatDate } from "@/lib/format";
 import { formatAmount } from "@/lib/money";
@@ -11,6 +12,7 @@ type Req = {
   perk: string | null;
   ctaUrl: string | null;
   fileUrl: string | null;
+  attachments?: unknown;
   fileName: string | null;
   positions: string | null;
   startDate: Date | null;
@@ -96,11 +98,11 @@ export function CampaignDetail({ r, industries, positions = [], reach, results }
           <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-secondary">{r.message}</p>
           <div className="mt-3 flex flex-wrap gap-3 text-sm">
             {r.ctaUrl && <a href={r.ctaUrl} target="_blank" rel="noopener noreferrer" className="text-accent-strong hover:underline">{r.ctaUrl}</a>}
-            {r.fileUrl && (
-              <a href={r.fileUrl} target="_blank" className="inline-flex items-center gap-1.5 text-accent-strong hover:underline">
-                <Icon name="folder" size={15} /> {r.fileName}
+            {campaignFiles(r).map((f) => (
+              <a key={f.url} href={f.url} target="_blank" className="inline-flex items-center gap-1.5 text-accent-strong hover:underline">
+                <Icon name="folder" size={15} /> {f.name}
               </a>
-            )}
+            ))}
           </div>
           <div className="mt-4 flex items-center justify-between border-t border-line pt-3 text-sm">
             <span className="text-muted">{c.campPrice}</span>

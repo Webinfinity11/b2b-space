@@ -11,5 +11,5 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const sp = await searchParams;
   const user = await getCurrentUser();
   if (user) redirect(user.platformRole === "ADMIN" ? "/admin" : "/app");
-  return <AuthScreen tab="login" next={param(sp.next, 300)} registered={param(sp.registered) === "1"} />;
+  return <AuthScreen tab="login" next={param(sp.next, 300)} registered={param(sp.registered) === "1"} reset={param(sp.reset) === "1"} />;
 }

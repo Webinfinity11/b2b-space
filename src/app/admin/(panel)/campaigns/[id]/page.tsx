@@ -28,6 +28,12 @@ export default async function AdminCampaignPage({ params }: PageProps<"/admin/ca
     db.campaignRecipient.count({ where: { requestId: id, repliedAt: { not: null } } }),
     db.user.findUnique({ where: { id: r.userId }, select: { firstName: true, lastName: true, email: true, phone: true } }),
   ]);
+  const list = await db.campaignRecipient.findMany({
+    where: { requestId: id },
+    orderBy: [{ repliedAt: { sort: "desc", nulls: "last" } }, { viewedAt: { sort: "desc", nulls: "last" } }],
+    take: 500,
+    include: { company: { select: { id: true, legalName: true, tradeName: true } } },
+  });
   const c = ka.sgba;
   const op = (name: string, label: string, variant?: "secondary" | "danger") => (
     <ActionForm action={adminCampaignAction} className="space-y-3" toast>
@@ -81,6 +87,23 @@ export default async function AdminCampaignPage({ params }: PageProps<"/admin/ca
           </Card>
         </aside>
       </div>
+      {list.length > 0 && (
+        <Card className="mt-6">
+          <CardHeader title={c.campRecipientList(list.length)} />
+          <CardBody>
+            <ul className="divide-y divide-line text-sm">
+              {list.map((x) => (
+                <li key={x.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
+                  <Link href={`/admin/companies/${x.company.id}`} className="text-accent-strong hover:underline">{companyName(x.company)}</Link>
+                  <span className="text-xs text-muted">
+                    {x.repliedAt ? `✓ ${c.campRepliedAt(formatDateTime(x.repliedAt))}` : x.viewedAt ? c.campViewedAt(formatDateTime(x.viewedAt)) : c.campNotOpened}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </CardBody>
+        </Card>
+      )}
     </>
   );
 }

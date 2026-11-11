@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ka } from "@/i18n/ka";
+import { controlClass } from "@/components/ui/styles";
 import { deleteCategoryAction, reorderCategoriesAction, saveCategoryAction, toggleCategoryAction } from "@/actions/admin";
 import { requireAdmin } from "@/lib/authz";
 import { db } from "@/lib/db";
@@ -25,11 +26,12 @@ export default async function AdminCategoriesPage({ searchParams }: PageProps<"/
     db.category.findMany({
       where: { kind },
       orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
-      include: { _count: { select: { companies: true, offers: true, positionMembers: true, departmentMembers: true } } },
+      include: { _count: { select: { companies: true, offers: true, positionMembers: true, departmentMembers: true, children: true } }, parent: { select: { name: true } } },
     }),
     db.category.groupBy({ by: ["kind"], _count: true }),
   ]);
   const s = ka.sgba;
+  const roots = all.filter((c) => !c.parentId);
   const tabs = [
     { value: "OFFER", label: s.kindOffer },
     { value: "INDUSTRY", label: s.kindIndustry },
@@ -64,6 +66,12 @@ export default async function AdminCategoriesPage({ searchParams }: PageProps<"/
           <div className="min-w-0 flex-1">
             <Input name="name" placeholder={s.catAddPlaceholder} required maxLength={80} />
           </div>
+          {kind === "OFFER" && (
+            <select name="parentId" defaultValue="" aria-label={s.catParent} className={`${controlClass} h-10 w-auto`}>
+              <option value="">{s.catTopLevel}</option>
+              {roots.map((r) => <option key={r.id} value={r.id}>{s.catUnder(r.name)}</option>)}
+            </select>
+          )}
           <SubmitButton>+ {s.catAdd}</SubmitButton>
         </ActionForm>
 
@@ -79,7 +87,7 @@ export default async function AdminCategoriesPage({ searchParams }: PageProps<"/
                 content: (
                   <details className="group" data-search={c.name}>
                     <summary className="flex cursor-pointer list-none flex-wrap items-center gap-3 py-3 pr-2">
-                      <span className={`font-medium ${c.isActive ? "text-ink" : "text-muted line-through"}`}>{c.name}</span>
+                      <span className={`font-medium ${c.isActive ? "text-ink" : "text-muted line-through"}`}>{c.parent ? <span className="text-muted">{c.parent.name} · </span> : null}{c.name}</span>
                       <span className="rounded-full bg-chip px-2 py-0.5 text-[11px] text-secondary">
                         {c.kind === "OFFER" ? s.catUsedOffers(c._count.offers) : c.kind === "INDUSTRY" ? s.catUsedCompanies(c._count.companies) : s.catUsedMembers(members)}
                       </span>
@@ -91,6 +99,15 @@ export default async function AdminCategoriesPage({ searchParams }: PageProps<"/
                         <input type="hidden" name="kind" value={c.kind} />
                         <input type="hidden" name="sortOrder" value={String(c.sortOrder)} />
                         {c.isActive && <input type="hidden" name="isActive" value="on" />}
+                        {c.kind === "OFFER" && c._count.children === 0 && (
+                          <>
+                            <label className="block text-xs text-muted" htmlFor={`p-${c.id}`}>{s.catParent}</label>
+                            <select id={`p-${c.id}`} name="parentId" defaultValue={c.parentId ?? ""} className={`${controlClass} h-9`}>
+                              <option value="">{s.catTopLevel}</option>
+                              {roots.filter((r) => r.id !== c.id).map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+                            </select>
+                          </>
+                        )}
                         <label className="block text-xs text-muted" htmlFor={`n-${c.id}`}>{s.catRename}</label>
                         <div className="flex gap-2">
                           <Input id={`n-${c.id}`} name="name" defaultValue={c.name} required maxLength={80} />

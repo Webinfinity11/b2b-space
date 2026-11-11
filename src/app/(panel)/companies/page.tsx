@@ -29,10 +29,12 @@ export default async function BusinessesPage({ searchParams }: PageProps<"/compa
   const city = param(sp.city);
   const r = param(sp.role);
   const role = r === "BUYER" || r === "SELLER" || r === "BOTH" ? r : undefined;
+  const sz = param(sp.size);
+  const size = sz === "SMALL" || sz === "MEDIUM" || sz === "LARGE" ? sz : undefined;
   const page = pageParam(sp.page);
 
   const [result, categories, counts] = await Promise.all([
-    searchCompanies({ q, category, city, role, page, pageSize: 30 }),
+    searchCompanies({ q, category, city, role, size, page, pageSize: 30 }),
     getCategoryTree(),
     db.company.groupBy({ by: ["businessRole"], where: { verificationStatus: "VERIFIED" }, _count: true }),
   ]);
@@ -59,7 +61,7 @@ export default async function BusinessesPage({ searchParams }: PageProps<"/compa
         </div>
       </div>
 
-      <form action="/companies" className="mb-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.6fr)_repeat(3,minmax(0,1fr))_auto]">
+      <form action="/companies" className="mb-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.6fr)_repeat(4,minmax(0,1fr))_auto]">
         <label className="flex h-10 items-center gap-2 rounded-[10px] border border-line bg-surface px-3 text-muted sm:col-span-2 lg:col-span-1">
           <Icon name="search" size={16} />
           <input name="q" type="search" defaultValue={q} placeholder={ka.sgba.bizSearch} className="w-full bg-transparent text-sm text-ink placeholder:text-muted focus:outline-none" />
@@ -75,6 +77,10 @@ export default async function BusinessesPage({ searchParams }: PageProps<"/compa
         <select name="city" defaultValue={city ?? ""} aria-label={ka.sgba.city} className={`${controlClass} h-10`}>
           <option value="">{ka.sgba.city}: {ka.sgba.all}</option>
           {CITIES.filter((c) => c !== "სხვა").map((c) => <option key={c} value={c}>{c}</option>)}
+        </select>
+        <select name="size" defaultValue={size ?? ""} aria-label={ka.sgba.size} className={`${controlClass} h-10`}>
+          <option value="">{ka.sgba.size}: {ka.sgba.all}</option>
+          {(["SMALL", "MEDIUM", "LARGE"] as const).map((k) => <option key={k} value={k}>{ka.sgba.sizeFull[k]}</option>)}
         </select>
         <div className="flex gap-2">
           <button type="submit" className="h-10 flex-1 rounded-[10px] bg-accent px-4 text-sm font-semibold text-white hover:bg-accent-hover">{ka.catalog.search}</button>
@@ -135,7 +141,7 @@ export default async function BusinessesPage({ searchParams }: PageProps<"/compa
           })}
         </div>
       )}
-      <Pagination page={result.page} pages={result.pages} basePath="/companies" params={{ q, category, city, role }} />
+      <Pagination page={result.page} pages={result.pages} basePath="/companies" params={{ q, category, city, role, size }} />
     </>
   );
 }

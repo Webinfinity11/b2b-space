@@ -12,7 +12,7 @@ import { fail, zCheckbox, zOptionalText, zText, type FormState } from "@/lib/for
 import { notify } from "@/lib/notify";
 import { hasPermission } from "@/lib/permissions";
 import { rateLimit } from "@/lib/rate-limit";
-import { DOCUMENT_TYPES, UploadError, filesFrom, storeFile } from "@/lib/storage";
+import { DOCUMENT_TYPES, UploadError, deletePublicFile, filesFrom, storeFile } from "@/lib/storage";
 import { CURRENCIES } from "@/lib/currencies";
 import { companyCanAct } from "@/lib/company-policy";
 
@@ -182,6 +182,7 @@ const STATUS_TRANSITIONS: Record<string, OfferStatus[]> = {
   publish: ["DRAFT", "CLOSED"],
   close: ["PUBLISHED", "ACCEPTING_RESPONSES", "NEGOTIATING"],
   archive: ["DRAFT", "PUBLISHED", "ACCEPTING_RESPONSES", "NEGOTIATING", "CLOSED", "EXPIRED"],
+  restore: ["ARCHIVED"],
 };
 
 export async function changeOfferStatusAction(formData: FormData) {
@@ -191,7 +192,9 @@ export async function changeOfferStatusAction(formData: FormData) {
   if (!allowedFrom || !allowedFrom.includes(offer.status)) throw new ForbiddenError();
   // An offer past its date would be "published" yet invisible — the owner must extend the date first.
   if (op === "publish" && offer.validUntil && offer.validUntil < new Date()) redirect(`/company/offers/${offer.id}`);
-  const status: OfferStatus = op === "publish" ? "PUBLISHED" : op === "close" ? "CLOSED" : "ARCHIVED";
+  // An offer hidden by moderation stays hidden until an admin restores it.
+  if (op === "publish" && offer.hiddenAt) throw new ForbiddenError();
+  const status: OfferStatus = op === "publish" ? "PUBLISHED" : op === "close" ? "CLOSED" : op === "restore" ? "DRAFT" : "ARCHIVED";
   await db.offer.update({ where: { id: offer.id }, data: { status, publishedAt: status === "PUBLISHED" ? (offer.publishedAt ?? new Date()) : offer.publishedAt } });
   await audit({ actorId: user.id, action: "offer.status_changed", entityType: "Offer", entityId: offer.id, metadata: { from: offer.status, to: status } });
   revalidatePath("/company", "layout");
@@ -203,6 +206,7 @@ export async function deleteOfferAttachmentAction(formData: FormData) {
   if (!att) return;
   await assertCanManageOffer(att.offerId);
   await db.offerAttachment.delete({ where: { id: att.id } });
+  await deletePublicFile(att.url);
   revalidatePath(`/company/offers/${att.offerId}`);
 }
 
@@ -278,4 +282,55 @@ export async function respondToOfferAction(_: FormState, formData: FormData): Pr
   await notify(recipients, { type: "NEW_RESPONSE", title: ka.notifications.newResponse(offer.title), link: `/app/conversations/${conversationId}` });
   await audit({ actorId: user.id, action: "offer.response_sent", entityType: "Offer", entityId: offerId, metadata: { conversationId } });
   redirect(`/app/conversations/${conversationId}`);
+}
+
+/** Owner deletes an offer that nobody has answered yet (otherwise: archive). Files are removed too. */
+export async function deleteOfferAction(formData: FormData) {
+  const { user, offer } = await assertCanManageOffer(String(formData.get("offerId")));
+  const responses = await db.offerResponse.count({ where: { offerId: offer.id } });
+  if (responses > 0) throw new ForbiddenError();
+  const files = await db.offerAttachment.findMany({ where: { offerId: offer.id }, select: { url: true } });
+  await db.offer.delete({ where: { id: offer.id } });
+  for (const f of files) await deletePublicFile(f.url);
+  await audit({ actorId: user.id, action: "offer.deleted", entityType: "Offer", entityId: offer.id, metadata: { title: offer.title } });
+  revalidatePath("/company", "layout");
+  revalidatePath("/offers");
+  redirect(offer.type === "REQUEST" ? "/company/requests?archived=1" : "/company/offers?archived=1");
+}
+
+/**
+ * Response lifecycle: the offer's side accepts or declines; the responder withdraws.
+ * The other side is notified; the conversation stays for history.
+ */
+export async function setResponseStatusAction(formData: FormData) {
+  const user = await assertUser();
+  const op = z.enum(["accept", "decline", "withdraw"]).parse(formData.get("op"));
+  const r = await db.offerResponse.findUnique({
+    where: { id: String(formData.get("responseId")) },
+    include: { offer: { select: { id: true, title: true, authorUserId: true, companyId: true } }, conversation: { select: { id: true } } },
+  });
+  if (!r) throw new ForbiddenError();
+  const memberOf = async (companyId: string | null) => {
+    if (!companyId) return false;
+    const m = await db.companyMember.findUnique({ where: { companyId_userId: { companyId, userId: user.id } } });
+    return Boolean(m && m.status === "ACTIVE" && hasPermission(m, "responses.manage"));
+  };
+  const isAuthorSide = r.offer.authorUserId === user.id || (await memberOf(r.offer.companyId));
+  const isResponderSide = r.responderUserId === user.id || (await memberOf(r.responderCompanyId));
+  if (op === "withdraw" ? !isResponderSide : !isAuthorSide) throw new ForbiddenError();
+  if (r.status === "WITHDRAWN" || (op !== "withdraw" && ["ACCEPTED", "DECLINED"].includes(r.status) && r.status === (op === "accept" ? "ACCEPTED" : "DECLINED"))) return;
+  const status = op === "accept" ? "ACCEPTED" : op === "decline" ? "DECLINED" : "WITHDRAWN";
+  await db.offerResponse.update({ where: { id: r.id }, data: { status } });
+  if (r.conversation) {
+    await db.message.create({ data: { conversationId: r.conversation.id, kind: "SYSTEM", body: `response.${status}` } });
+  }
+  const notifyIds = op === "withdraw" ? [r.offer.authorUserId] : [r.responderUserId];
+  await notify(notifyIds.filter((id) => id !== user.id), {
+    type: "NEW_RESPONSE",
+    title: ka.offer.responseStatusNotify(r.offer.title, ka.enums.responseStatus[status]),
+    link: r.conversation ? `/app/conversations/${r.conversation.id}` : `/offers/${r.offer.id}`,
+  });
+  await audit({ actorId: user.id, action: `response.${op}`, entityType: "OfferResponse", entityId: r.id });
+  revalidatePath(`/company/offers/${r.offer.id}`);
+  if (r.conversation) revalidatePath(`/app/conversations/${r.conversation.id}`);
 }

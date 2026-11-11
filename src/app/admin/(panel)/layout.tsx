@@ -16,10 +16,11 @@ export const metadata: Metadata = {
  */
 export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   const admin = await requireAdmin();
-  const [pending, pendingUsers, newCampaigns] = await Promise.all([
+  const [pending, pendingUsers, newCampaigns, openReports] = await Promise.all([
     db.company.count({ where: { verificationStatus: "IN_REVIEW", createdBy: { status: { not: "PENDING" } } } }),
     db.user.count({ where: { status: "PENDING" } }),
     db.campaignRequest.count({ where: { status: "NEW" } }),
+    db.report.count({ where: { status: "OPEN" } }),
   ]);
   const groups: NavGroup[] = [
     {
@@ -43,6 +44,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
         { href: "/admin/offers", label: ka.admin.offers, icon: "tag" },
         { href: "/admin/conversations", label: ka.admin.conversations, icon: "chat" },
         { href: "/admin/campaigns", label: ka.sgba.campAdminTitle, badge: newCampaigns, icon: "trend" },
+        { href: "/admin/reports", label: ka.reports.adminTitle, badge: openReports, icon: "shield" },
       ],
     },
     {
@@ -55,7 +57,10 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
     },
     {
       title: ka.admin.auditLog,
-      items: [{ href: "/admin/audit-log", label: ka.admin.auditLog, icon: "list" }],
+      items: [
+        { href: "/admin/settings", label: ka.settings.title, icon: "settings" },
+        { href: "/admin/audit-log", label: ka.admin.auditLog, icon: "list" },
+      ],
     },
   ];
   return (

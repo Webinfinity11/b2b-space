@@ -3,6 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ka } from "@/i18n/ka";
 import { sendMessageAction, updateDealInfoAction } from "@/actions/chat";
+import { setResponseStatusAction } from "@/actions/offers";
+import { Button } from "@/components/ui/Button";
+import { ResponseStatusBadge } from "@/components/panel/StatusBadges";
 import { activeRules, dealCommissionPct, resolveCommission } from "@/lib/commission";
 import { getActiveMembership, requireUser } from "@/lib/authz";
 import { partyLabel, partySelect } from "@/lib/chat";
@@ -31,6 +34,7 @@ export default async function ConversationPage({ params }: PageProps<"/app/conve
       participants: { select: partySelect, orderBy: { createdAt: "asc" } },
       messages: { orderBy: { createdAt: "asc" }, take: 500 },
       offer: { select: { id: true, title: true, type: true, commissionPct: true, categoryId: true } },
+      response: { select: { id: true, status: true } },
     },
   });
   if (!c) notFound();
@@ -42,6 +46,10 @@ export default async function ConversationPage({ params }: PageProps<"/app/conve
   const me = c.participants.find((p) => p.userId === user.id);
   const mySide = me?.side ?? c.participants.find((p) => p.companyId && p.companyId === m?.companyId)?.side ?? null;
   const byUser = new Map(c.participants.map((p) => [p.userId, p]));
+  // The offer's side opening the chat marks the response as seen.
+  if (c.response?.status === "SENT" && mySide === "AUTHOR") {
+    await db.offerResponse.updateMany({ where: { id: c.response.id, status: "SENT" }, data: { status: "VIEWED" } });
+  }
   const others = c.participants.filter((p) => p.userId !== user.id);
   // "Read" means the other party read it — colleagues on our side don't count.
   const otherSide = others.filter((p) => !mySide || p.side !== mySide);
@@ -183,6 +191,37 @@ export default async function ConversationPage({ params }: PageProps<"/app/conve
             <CardBody>
               <Badge tone={c.offer.type === "REQUEST" ? "warning" : "info"}>{ka.enums.offerType[c.offer.type]}</Badge>
               <Link href={`/offers/${c.offer.id}`} className="mt-2 block text-sm font-medium text-accent-strong hover:underline">{c.offer.title}</Link>
+              {c.response && (
+                <div className="mt-3 space-y-2 border-t border-line pt-3 text-sm">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-muted">{ka.offer.responseLabel}</span>
+                    <ResponseStatusBadge status={c.response.status === "SENT" && mySide === "AUTHOR" ? "VIEWED" : c.response.status} />
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {mySide === "AUTHOR" && ["SENT", "VIEWED"].includes(c.response.status) && (
+                      <>
+                        <form action={setResponseStatusAction}>
+                          <input type="hidden" name="responseId" value={c.response.id} />
+                          <input type="hidden" name="op" value="accept" />
+                          <Button type="submit" size="sm">{ka.offer.accept}</Button>
+                        </form>
+                        <form action={setResponseStatusAction}>
+                          <input type="hidden" name="responseId" value={c.response.id} />
+                          <input type="hidden" name="op" value="decline" />
+                          <Button type="submit" size="sm" variant="ghost" className="text-danger">{ka.offer.decline}</Button>
+                        </form>
+                      </>
+                    )}
+                    {mySide === "RESPONDER" && c.response.status !== "WITHDRAWN" && (
+                      <form action={setResponseStatusAction}>
+                        <input type="hidden" name="responseId" value={c.response.id} />
+                        <input type="hidden" name="op" value="withdraw" />
+                        <Button type="submit" size="sm" variant="ghost" className="text-danger">{ka.offer.withdraw}</Button>
+                      </form>
+                    )}
+                  </div>
+                </div>
+              )}
             </CardBody>
           </Card>
         )}

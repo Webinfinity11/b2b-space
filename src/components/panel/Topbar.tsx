@@ -20,6 +20,7 @@ export async function Topbar({
   activeCompanyId = null,
   companyLinks = [],
   label,
+  avatarUrl = null,
 }: {
   subtitle?: string;
   searchPlaceholder?: string;
@@ -35,6 +36,7 @@ export async function Topbar({
   companyLinks?: { href: string; label: string }[];
   /** Shown instead of the company menu (e.g. "ადმინისტრირება"). */
   label?: string;
+  avatarUrl?: string | null;
 }) {
   const initials = fullName
     .split(" ")
@@ -74,7 +76,7 @@ export async function Topbar({
             {unread > 0 && <span className="absolute right-0.5 top-0 size-2 rounded-full bg-accent ring-[3px] ring-surface" />}
           </Link>
         )}
-        <ProfileMenu initials={initials} firstName="" fullName={fullName} sub={sub} profileHref={profileHref} />
+        <ProfileMenu initials={initials} firstName="" fullName={fullName} sub={sub} profileHref={profileHref} avatarUrl={avatarUrl} />
       </div>
     </>
   );

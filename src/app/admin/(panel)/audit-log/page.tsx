@@ -3,7 +3,9 @@ import { ka } from "@/i18n/ka";
 import { requireAdmin } from "@/lib/authz";
 import { db } from "@/lib/db";
 import { formatDateTime } from "@/lib/format";
-import { pageParam } from "@/lib/params";
+import { pageParam, param } from "@/lib/params";
+import type { Prisma } from "@/generated/prisma/client";
+import { controlClass } from "@/components/ui/styles";
 import { EmptyState, PageHeader } from "@/components/ui/Card";
 import { Pagination } from "@/components/ui/Pagination";
 import { Table, Td } from "@/components/ui/Table";
@@ -14,10 +16,24 @@ const PER_PAGE = 50;
 
 export default async function AuditLogPage({ searchParams }: PageProps<"/admin/audit-log">) {
   await requireAdmin();
-  const page = pageParam((await searchParams).page);
+  const sp = await searchParams;
+  const page = pageParam(sp.page);
+  // Filters: area (action prefix), who did it (email), and from which date.
+  const area = param(sp.area);
+  const who = param(sp.who);
+  const from = param(sp.from);
+  const where: Prisma.AuditLogWhereInput = {
+    AND: [
+      area ? { action: { startsWith: `${area}.` } } : {},
+      who ? { actor: { email: { contains: who, mode: "insensitive" } } } : {},
+      from && !Number.isNaN(new Date(from).getTime()) ? { createdAt: { gte: new Date(`${from}T00:00:00+04:00`) } } : {},
+    ],
+  };
+  const areas = ["auth", "user", "company", "offer", "response", "conversation", "invoice", "commission", "commission_rule", "campaign", "category", "badge", "report", "settings", "demo"];
   const [total, rows] = await Promise.all([
-    db.auditLog.count(),
+    db.auditLog.count({ where }),
     db.auditLog.findMany({
+      where,
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * PER_PAGE,
       take: PER_PAGE,
@@ -27,6 +43,15 @@ export default async function AuditLogPage({ searchParams }: PageProps<"/admin/a
   return (
     <>
       <PageHeader title={ka.admin.auditLog} text={ka.catalog.results(total)} />
+      <form className="mb-4 flex flex-wrap gap-2">
+        <select name="area" defaultValue={area ?? ""} className={`${controlClass} h-10 w-auto`} aria-label={ka.admin.auditArea}>
+          <option value="">{ka.admin.auditArea}: {ka.common.all}</option>
+          {areas.map((a) => <option key={a} value={a}>{a}</option>)}
+        </select>
+        <input name="who" type="search" defaultValue={who} placeholder={ka.admin.auditWho} className={`${controlClass} h-10 w-64`} />
+        <input name="from" type="date" defaultValue={from} className={`${controlClass} h-10 w-auto`} aria-label={ka.admin.auditFrom} />
+        <button type="submit" className="h-10 rounded-[10px] border border-line px-4 text-sm">{ka.catalog.search}</button>
+      </form>
       {rows.length === 0 ? (
         <EmptyState text={ka.common.noData} />
       ) : (
@@ -57,7 +82,7 @@ export default async function AuditLogPage({ searchParams }: PageProps<"/admin/a
           ))}
         </Table>
       )}
-      <Pagination page={page} pages={Math.max(1, Math.ceil(total / PER_PAGE))} basePath="/admin/audit-log" params={{}} />
+      <Pagination page={page} pages={Math.max(1, Math.ceil(total / PER_PAGE))} basePath="/admin/audit-log" params={{ area, who, from }} />
     </>
   );
 }

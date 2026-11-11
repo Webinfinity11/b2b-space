@@ -5,12 +5,13 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { ka } from "@/i18n/ka";
 import { Prisma } from "@/generated/prisma/client";
-import { emailEnabled, renderEmail, sendEmail } from "@/lib/email";
+import { appUrl, emailEnabled, renderEmail, sendEmail } from "@/lib/email";
 import { audit } from "@/lib/audit";
 import { assertAdmin } from "@/lib/authz";
 import { db } from "@/lib/db";
 import { backfillDealCommissions } from "@/lib/commission";
-import { fail, invalid, zCheckbox, zText, type FormState } from "@/lib/forms";
+import { fail, invalid, zCheckbox, zEmail, zOptionalPhone, zText, type FormState } from "@/lib/forms";
+import { createResetLink } from "@/lib/password-reset";
 import { notify } from "@/lib/notify";
 import { slugify } from "@/lib/slug";
 import { loadDemoData, removeDemoData } from "@/lib/demo-data";
@@ -52,6 +53,10 @@ export async function decideCompanyAction(_: FormState, formData: FormData): Pro
   ]);
 
   const owners = await db.companyMember.findMany({ where: { companyId, role: "OWNER", status: "ACTIVE" }, select: { userId: true } });
+  // Verifying a company also lets its still-pending owner in; rejecting rejects a pending owner.
+  if (status === "VERIFIED" || status === "REJECTED") {
+    await db.user.updateMany({ where: { id: { in: owners.map((o) => o.userId) }, status: "PENDING" }, data: { status: status === "VERIFIED" ? "ACTIVE" : "REJECTED" } });
+  }
   await notify(
     owners.map((o) => o.userId),
     {
@@ -78,30 +83,33 @@ export async function setUserStatusAction(formData: FormData) {
   const admin = await assertAdmin();
   const userId = String(formData.get("userId"));
   const status = z.enum(["ACTIVE", "SUSPENDED", "REJECTED"]).parse(formData.get("status"));
+  const reason = String(formData.get("reason") ?? "").trim().slice(0, 1000) || null;
   if (userId === admin.id) return;
   const before = await db.user.findUnique({ where: { id: userId }, select: { status: true, email: true, firstName: true } });
   if (!before) return;
   await db.user.update({ where: { id: userId }, data: { status } });
   if (status !== "ACTIVE") await db.session.deleteMany({ where: { userId } });
   // Approving / declining a registration decides the company registered with it as well.
-  if (before.status === "PENDING") {
-    const companies = await db.company.findMany({ where: { createdById: userId, verificationStatus: { in: ["PENDING", "IN_REVIEW"] } }, select: { id: true, verificationStatus: true } });
+  if (before.status === "PENDING" && status === "REJECTED" && !reason) return;
+  if (before.status === "PENDING" || (before.status === "REJECTED" && status === "ACTIVE")) {
+    const from = before.status === "PENDING" ? (["PENDING", "IN_REVIEW"] as const) : (["REJECTED"] as const);
+    const companies = await db.company.findMany({ where: { createdById: userId, verificationStatus: { in: [...from] } }, select: { id: true, verificationStatus: true } });
     const to = status === "ACTIVE" ? "VERIFIED" : "REJECTED";
     for (const c of companies) {
       await db.$transaction([
         db.company.update({ where: { id: c.id }, data: { verificationStatus: to, verifiedAt: to === "VERIFIED" ? new Date() : null } }),
-        db.verificationDecision.create({ data: { companyId: c.id, reviewerId: admin.id, fromStatus: c.verificationStatus, toStatus: to } }),
+        db.verificationDecision.create({ data: { companyId: c.id, reviewerId: admin.id, fromStatus: c.verificationStatus, toStatus: to, comment: to === "REJECTED" ? reason : null } }),
       ]);
     }
   }
   const action = before.status === "PENDING" ? (status === "ACTIVE" ? "user.approved" : "user.rejected") : "user.status_changed";
-  await audit({ actorId: admin.id, action, entityType: "User", entityId: userId, metadata: { from: before.status, status } });
+  await audit({ actorId: admin.id, action, entityType: "User", entityId: userId, metadata: { from: before.status, status, reason } });
   // Let the person know their account was approved / declined.
   if (before.status === "PENDING" && emailEnabled()) {
     const approved = status === "ACTIVE";
     const { html, text } = renderEmail({
       title: approved ? ka.approval.approvedTitle : ka.approval.rejectedTitle,
-      body: approved ? ka.approval.approvedText(before.firstName) : ka.approval.rejectedText(before.firstName),
+      body: approved ? ka.approval.approvedText(before.firstName) : `${ka.approval.rejectedText(before.firstName)}${reason ? `\n\n${ka.approval.reasonLabel}: ${reason}` : ""}`,
       link: approved ? "/login" : null,
       button: ka.nav.login,
       footer: ka.email.footer,
@@ -114,7 +122,7 @@ export async function setUserStatusAction(formData: FormData) {
 export async function setUserRoleAction(formData: FormData) {
   const admin = await assertAdmin();
   const userId = String(formData.get("userId"));
-  const role = z.enum(["USER", "ADMIN", "FINANCE_MANAGER"]).parse(formData.get("role"));
+  const role = z.enum(["USER", "ADMIN"]).parse(formData.get("role"));
   if (userId === admin.id) return;
   await db.user.update({ where: { id: userId }, data: { platformRole: role } });
   await audit({ actorId: admin.id, action: "user.role_changed", entityType: "User", entityId: userId, metadata: { role } });
@@ -222,22 +230,39 @@ export async function reorderCategoriesAction(ids: string[]) {
 
 /** Quick on/off without opening the form. */
 export async function toggleCategoryAction(id: string) {
-  await assertAdmin();
+  const admin = await assertAdmin();
   const cat = await db.category.findUnique({ where: { id }, select: { isActive: true } });
   if (!cat) return;
   await db.category.update({ where: { id }, data: { isActive: !cat.isActive } });
+  await audit({ actorId: admin.id, action: "category.toggled", entityType: "Category", entityId: id, metadata: { isActive: !cat.isActive } });
   revalidatePath("/admin/categories");
 }
 
 // ─────────────────────────────── Offers ───────────────────────────────
 
 
+/** Moderation: hides an offer everywhere (not the same as the owner archiving it) and tells the owner why. */
 export async function adminArchiveOfferAction(formData: FormData) {
   const admin = await assertAdmin();
   const id = String(formData.get("offerId"));
-  const offer = await db.offer.update({ where: { id }, data: { status: "ARCHIVED" } });
-  await audit({ actorId: admin.id, action: "offer.admin_archived", entityType: "Offer", entityId: offer.id });
+  const reason = String(formData.get("reason") ?? "").trim().slice(0, 500);
+  if (reason.length < 3) return;
+  const offer = await db.offer.update({ where: { id }, data: { hiddenAt: new Date(), hiddenReason: reason } });
+  await notify([offer.authorUserId], { type: "COMPANY_STATUS_CHANGED", title: ka.admin.offerHiddenNotify(offer.title), body: reason, link: offer.type === "REQUEST" ? "/company/requests" : "/company/offers" });
+  await audit({ actorId: admin.id, action: "offer.admin_hidden", entityType: "Offer", entityId: offer.id, metadata: { reason } });
   revalidatePath("/admin/offers");
+  revalidatePath(`/admin/offers/${id}`);
+  revalidatePath("/offers");
+}
+
+export async function adminRestoreOfferAction(formData: FormData) {
+  const admin = await assertAdmin();
+  const id = String(formData.get("offerId"));
+  const offer = await db.offer.update({ where: { id }, data: { hiddenAt: null, hiddenReason: null } });
+  await notify([offer.authorUserId], { type: "COMPANY_STATUS_CHANGED", title: ka.admin.offerRestoredNotify(offer.title), link: offer.type === "REQUEST" ? "/company/requests" : "/company/offers" });
+  await audit({ actorId: admin.id, action: "offer.admin_restored", entityType: "Offer", entityId: offer.id });
+  revalidatePath("/admin/offers");
+  revalidatePath(`/admin/offers/${id}`);
   revalidatePath("/offers");
 }
 
@@ -642,5 +667,144 @@ export async function voidPaymentAction(_: FormState, formData: FormData): Promi
   await audit({ actorId: admin.id, action: "invoice.payment_voided", entityType: "Invoice", entityId: inv.id, metadata: { paymentId, amount: p.amount.toString(), reason } });
   revalidatePath(`/admin/invoices/${inv.id}`);
   revalidatePath(`/app/invoices/${inv.id}`);
+  return { ok: true, message: ka.common.saved };
+}
+
+
+// ─────────────────────────────── Users: edit / reset link / clear rejected ───────────────────────────────
+
+export async function adminUpdateUserAction(_: FormState, formData: FormData): Promise<FormState> {
+  const admin = await assertAdmin();
+  const userId = String(formData.get("userId"));
+  const parsed = z
+    .object({ firstName: zText(1, 60), lastName: zText(1, 60), email: zEmail, phone: zOptionalPhone })
+    .safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const taken = await db.user.findFirst({ where: { email: parsed.data.email, NOT: { id: userId } }, select: { id: true } });
+  if (taken) return fail(ka.validation.formErrors, formData, { email: ka.auth.emailTaken });
+  const before = await db.user.findUnique({ where: { id: userId }, select: { email: true } });
+  if (!before) return fail(ka.errors.generic);
+  await db.user.update({ where: { id: userId }, data: parsed.data });
+  // A changed email signs the person out everywhere.
+  if (before.email !== parsed.data.email) await db.session.deleteMany({ where: { userId } });
+  await audit({ actorId: admin.id, action: "user.admin_updated", entityType: "User", entityId: userId, metadata: { from: before.email, ...parsed.data } });
+  revalidatePath("/admin/users");
+  return { ok: true, message: ka.common.saved };
+}
+
+/** Admin creates a one-time password reset link to hand over (works without email delivery). */
+export async function adminResetLinkAction(_: FormState, formData: FormData): Promise<FormState> {
+  const admin = await assertAdmin();
+  const userId = String(formData.get("userId"));
+  const user = await db.user.findUnique({ where: { id: userId }, select: { id: true, status: true } });
+  if (!user || user.status !== "ACTIVE") return fail(ka.admin.resetOnlyActive);
+  const link = `${appUrl()}${await createResetLink(user.id)}`;
+  await audit({ actorId: admin.id, action: "user.reset_link_created", entityType: "User", entityId: userId });
+  return { ok: true, message: ka.reset.adminLink(link) };
+}
+
+/**
+ * A rejected applicant could never apply again (email and company ID stay taken). This frees them:
+ * the account is anonymised and the rejected company's registration number released. History stays.
+ */
+export async function clearRejectedUserAction(formData: FormData) {
+  const admin = await assertAdmin();
+  const userId = String(formData.get("userId"));
+  const user = await db.user.findUnique({ where: { id: userId }, select: { status: true, email: true } });
+  if (!user || user.status !== "REJECTED") return;
+  const tag = `removed-${userId.slice(-8)}`;
+  await db.$transaction(async (tx) => {
+    const companies = await tx.company.findMany({ where: { createdById: userId, verificationStatus: "REJECTED" }, select: { id: true, registrationNumber: true } });
+    for (const c of companies) await tx.company.update({ where: { id: c.id }, data: { registrationNumber: `${c.registrationNumber}-${tag}` } });
+    await tx.user.update({ where: { id: userId }, data: { email: `${tag}@removed.invalid`, phone: null } });
+    await tx.session.deleteMany({ where: { userId } });
+  });
+  await audit({ actorId: admin.id, action: "user.rejected_cleared", entityType: "User", entityId: userId, metadata: { email: user.email } });
+  revalidatePath("/admin/users");
+}
+
+
+// ─────────────────────────────── Companies: admin edits legal data ───────────────────────────────
+
+const adminCompanySchema = z.object({
+  legalName: zText(2, 200),
+  tradeName: z.string().trim().max(200).optional().transform((v) => v || null),
+  registrationNumber: zText(3, 40),
+  taxNumber: z.string().trim().max(40).optional().transform((v) => v || null),
+  legalAddress: z.string().trim().max(300).optional().transform((v) => v ?? ""),
+  city: z.string().trim().max(80).optional().transform((v) => v || null),
+  businessRole: z.enum(["BUYER", "SELLER", "BOTH"]),
+  size: z.enum(["SMALL", "MEDIUM", "LARGE"]),
+});
+
+/** Legal data is locked for companies; changes go through the platform admin (audited, owners notified). */
+export async function adminUpdateCompanyAction(_: FormState, formData: FormData): Promise<FormState> {
+  const admin = await assertAdmin();
+  const companyId = String(formData.get("companyId"));
+  const parsed = adminCompanySchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const before = await db.company.findUnique({ where: { id: companyId } });
+  if (!before) return fail(ka.errors.generic);
+  try {
+    await db.company.update({ where: { id: companyId }, data: parsed.data });
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002") return fail(ka.validation.formErrors, formData, { registrationNumber: ka.companyForm.duplicate });
+    throw e;
+  }
+  const changed = Object.fromEntries(Object.entries(parsed.data).filter(([k, v]) => (before as Record<string, unknown>)[k] !== v));
+  await audit({ actorId: admin.id, action: "company.admin_updated", entityType: "Company", entityId: companyId, metadata: changed });
+  const owners = await db.companyMember.findMany({ where: { companyId, role: "OWNER", status: "ACTIVE" }, select: { userId: true } });
+  if (Object.keys(changed).length) {
+    await notify(owners.map((o) => o.userId), { type: "COMPANY_STATUS_CHANGED", title: ka.admin.companyEditedNotify(parsed.data.tradeName || parsed.data.legalName), link: "/company/profile" });
+  }
+  revalidatePath(`/admin/companies/${companyId}`);
+  revalidatePath(`/companies/${before.slug}`);
+  return { ok: true, message: ka.common.saved };
+}
+
+
+// ─────────────────────────────── Platform settings ───────────────────────────────
+
+const opt = (max: number) => z.string().trim().max(max).optional().transform((v) => v || null);
+
+const settingsSchema = z.object({
+  contactEmail: z.string().trim().max(200).optional().transform((v) => v || null).refine((v) => !v || /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v), { error: ka.validation.email }),
+  contactPhone: opt(60),
+  contactAddress: opt(300),
+  platformLegalName: opt(200),
+  platformRegNumber: opt(40),
+  platformAddress: opt(300),
+  platformIban: opt(60),
+  commissionDueDays: z.coerce.number({ error: ka.validation.number }).int().min(1).max(120),
+  termsText: opt(50000),
+  privacyText: opt(50000),
+});
+
+export async function saveSettingsAction(_: FormState, formData: FormData): Promise<FormState> {
+  const admin = await assertAdmin();
+  const parsed = settingsSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return invalid(parsed.error, formData);
+  await db.platformSetting.upsert({ where: { key: "public" }, create: { key: "public", value: parsed.data }, update: { value: parsed.data } });
+  await audit({ actorId: admin.id, action: "settings.updated", entityType: "Platform" });
+  revalidatePath("/", "layout");
+  return { ok: true, message: ka.common.saved };
+}
+
+// ─────────────────────────────── Reports (complaints) ───────────────────────────────
+
+export async function handleReportAction(_: FormState, formData: FormData): Promise<FormState> {
+  const admin = await assertAdmin();
+  const id = String(formData.get("reportId"));
+  const status = z.enum(["IN_REVIEW", "RESOLVED", "DISMISSED"]).safeParse(formData.get("status"));
+  const resolution = String(formData.get("resolution") ?? "").trim().slice(0, 1000) || null;
+  if (!status.success) return fail(ka.errors.generic);
+  if (status.data !== "IN_REVIEW" && !resolution) return fail(ka.validation.formErrors, formData, { resolution: ka.validation.required });
+  const r = await db.report.update({ where: { id }, data: { status: status.data, resolution, handledById: admin.id } });
+  if (status.data !== "IN_REVIEW") {
+    await notify([r.reporterId], { type: "COMPANY_STATUS_CHANGED", title: ka.reports.handledNotify(ka.reports.status[status.data]), body: resolution ?? undefined, link: "/app/notifications" });
+  }
+  await audit({ actorId: admin.id, action: `report.${status.data.toLowerCase()}`, entityType: "Report", entityId: id, metadata: { resolution } });
+  revalidatePath("/admin/reports");
+  revalidatePath("/admin", "layout");
   return { ok: true, message: ka.common.saved };
 }
