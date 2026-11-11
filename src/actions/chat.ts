@@ -126,8 +126,23 @@ export async function updateDealInfoAction(_: FormState, formData: FormData): Pr
   if (!stage || (amount !== null && (!Number.isFinite(amount) || amount < 0 || amount > 1e12))) {
     return fail(ka.validation.formErrors, formData, amount !== null && !Number.isFinite(amount) ? { amount: ka.validation.number } : {});
   }
-  await db.conversation.update({ where: { id: conversation.id }, data: { stage, amount } });
-  await audit({ actorId: user.id, action: "conversation.deal_updated", entityType: "Conversation", entityId: conversation.id, metadata: { stage, amount } });
+  // Direct chats (no offer): either side says who sells — locked once an invoice exists.
+  let sellerSide = conversation.sellerSide;
+  const who = formData.get("seller");
+  if (!conversation.offerId && (who === "us" || who === "them")) {
+    const m = await getActiveMembership(user.id);
+    const mine = conversation.participants.find((p) => p.userId === user.id) ?? conversation.participants.find((p) => p.companyId && p.companyId === m?.companyId);
+    if (mine) {
+      const wanted = who === "us" ? mine.side : mine.side === "AUTHOR" ? "RESPONDER" : "AUTHOR";
+      if (wanted !== (sellerSide ?? "AUTHOR")) {
+        const invoiced = await db.invoice.count({ where: { dealTermsVersion: { dealTerms: { conversationId: conversation.id } } } });
+        if (invoiced) return fail(ka.sgba.sellerLocked, formData);
+        sellerSide = wanted;
+      }
+    }
+  }
+  await db.conversation.update({ where: { id: conversation.id }, data: { stage, amount, sellerSide } });
+  await audit({ actorId: user.id, action: "conversation.deal_updated", entityType: "Conversation", entityId: conversation.id, metadata: { stage, amount, sellerSide } });
   revalidatePath(`/app/conversations/${conversation.id}`);
   revalidatePath("/app/conversations");
   return { ok: true, message: ka.sgba.dealSaved };

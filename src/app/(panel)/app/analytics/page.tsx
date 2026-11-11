@@ -3,7 +3,7 @@ import { ka } from "@/i18n/ka";
 import { getActiveMembership, requireUser } from "@/lib/authz";
 import { db } from "@/lib/db";
 import { formatAmount } from "@/lib/money";
-import { manageableOffers, visibleConversations, visibleInvoices } from "@/lib/scope";
+import { activeContextConversations, manageableOffers, visibleInvoices } from "@/lib/scope";
 import { Icon } from "@/components/ui/Icon";
 import { KpiCard, PageHeader, SectionTitle } from "@/components/ui/Card";
 
@@ -16,12 +16,14 @@ const MONTHS = ["იან", "თებ", "მარ", "აპრ", "მაი",
 export default async function AnalyticsPage() {
   const user = await requireUser("/app/analytics");
   const m = await getActiveMembership(user.id);
-  const sixAgo = new Date();
-  sixAgo.setMonth(sixAgo.getMonth() - 5, 1);
-  sixAgo.setHours(0, 0, 0, 0);
+  // Months are counted in Georgian time (UTC+4, no DST) — the server runs in UTC.
+  const geo = (d: Date) => new Date(d.getTime() + 4 * 3600_000);
+  const nowG = geo(new Date());
+  const firstMonth = new Date(Date.UTC(nowG.getUTCFullYear(), nowG.getUTCMonth() - 5, 1));
+  const sixAgo = new Date(firstMonth.getTime() - 4 * 3600_000);
 
   const [deals, invoices, offers, campaigns] = await Promise.all([
-    db.conversation.findMany({ where: visibleConversations(user.id, m), select: { stage: true, amount: true } }),
+    db.conversation.findMany({ where: activeContextConversations(user.id, m), select: { stage: true, amount: true } }),
     db.invoice.findMany({
       where: { AND: [visibleInvoices(user.id, m), { issuedAt: { gte: sixAgo } }, { status: { notIn: ["DRAFT", "CANCELLED"] } }] },
       select: { issuedAt: true, total: true, paidAmount: true, currency: true, sellerCompanyId: true, sellerUserId: true },
@@ -46,14 +48,14 @@ export default async function AnalyticsPage() {
 
   // Sales invoices per month (GEL), issued vs paid.
   const months = Array.from({ length: 6 }, (_, i) => {
-    const d = new Date(sixAgo);
-    d.setMonth(sixAgo.getMonth() + i);
-    return { key: `${d.getFullYear()}-${d.getMonth()}`, label: MONTHS[d.getMonth()], issued: 0, paid: 0 };
+    const d = new Date(Date.UTC(firstMonth.getUTCFullYear(), firstMonth.getUTCMonth() + i, 1));
+    return { key: `${d.getUTCFullYear()}-${d.getUTCMonth()}`, label: MONTHS[d.getUTCMonth()], issued: 0, paid: 0 };
   });
   for (const inv of invoices) {
     const seller = inv.sellerCompanyId ? inv.sellerCompanyId === m?.companyId : inv.sellerUserId === user.id;
     if (!seller || inv.currency !== "GEL") continue;
-    const row = months.find((x) => x.key === `${inv.issuedAt.getFullYear()}-${inv.issuedAt.getMonth()}`);
+    const g = geo(inv.issuedAt);
+    const row = months.find((x) => x.key === `${g.getUTCFullYear()}-${g.getUTCMonth()}`);
     if (row) {
       row.issued += Number(inv.total);
       row.paid += Number(inv.paidAmount);

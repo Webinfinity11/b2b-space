@@ -4,20 +4,30 @@ import { audit } from "./audit";
 import type { Membership } from "./authz";
 import { db } from "./db";
 import { notify } from "./notify";
+import { hasPermission } from "./permissions";
 
 /**
- * Opens (or reuses) a direct negotiation between the user's active company and another approved
- * company. Returns the conversation id, or null when the target cannot be contacted.
+ * Opens (or reuses) a direct negotiation between the user's active company and another verified
+ * company. Every active owner of the target joins the conversation; owners and members who handle
+ * responses are notified. Returns the conversation id, or null when the target cannot be contacted.
  * `firstMessage` is posted by the initiator (e.g. a reply to a campaign).
  */
-export async function openDirectConversation(userId: string, m: Membership, targetCompanyId: string, firstMessage?: string) {
+export async function openDirectConversation(
+  userId: string,
+  m: Membership,
+  targetCompanyId: string,
+  firstMessage?: string,
+  origin: "direct" | "campaign" = "direct",
+) {
   if (targetCompanyId === m.companyId) return null;
   const target = await db.company.findFirst({
     where: { id: targetCompanyId, verificationStatus: "VERIFIED" },
-    select: { id: true, legalName: true, tradeName: true, members: { where: { status: "ACTIVE", role: "OWNER" }, select: { userId: true }, take: 1 } },
+    select: { id: true, legalName: true, tradeName: true, members: { where: { status: "ACTIVE" }, select: { userId: true, role: true, permissions: true } } },
   });
-  const ownerId = target?.members[0]?.userId;
-  if (!target || !ownerId) return null;
+  const owners = target?.members.filter((x) => x.role === "OWNER").map((x) => x.userId) ?? [];
+  if (!target || owners.length === 0) return null;
+  const handlers = target.members.filter((x) => hasPermission(x, "responses.manage")).map((x) => x.userId);
+  const recipients = [...new Set([...owners, ...handlers])].filter((id) => id !== userId);
   const mine = m.company.tradeName || m.company.legalName;
 
   const existing = await db.conversation.findFirst({
@@ -28,7 +38,7 @@ export async function openDirectConversation(userId: string, m: Membership, targ
     if (firstMessage) {
       await db.message.create({ data: { conversationId: existing.id, senderId: userId, kind: "TEXT", body: firstMessage } });
       await db.conversation.update({ where: { id: existing.id }, data: { lastMessageAt: new Date() } });
-      await notify([ownerId], { type: "NEW_MESSAGE", title: ka.chat.newMessageNotification(mine), link: `/app/conversations/${existing.id}` });
+      await notify(recipients, { type: "NEW_MESSAGE", title: ka.chat.newMessageNotification(mine), link: `/app/conversations/${existing.id}` });
     }
     return existing.id;
   }
@@ -39,16 +49,19 @@ export async function openDirectConversation(userId: string, m: Membership, targ
       subject: `${mine} ↔ ${theirs}`,
       participants: {
         create: [
-          { userId: ownerId, companyId: target.id, side: "AUTHOR" },
+          ...owners.filter((id) => id !== userId).map((id) => ({ userId: id, companyId: target.id, side: "AUTHOR" as const })),
           { userId, companyId: m.companyId, side: "RESPONDER", lastReadAt: new Date() },
         ],
       },
       messages: {
-        create: [{ kind: "SYSTEM", body: "conversation.opened" }, ...(firstMessage ? [{ kind: "TEXT" as const, senderId: userId, body: firstMessage }] : [])],
+        create: [
+          { kind: "SYSTEM", body: origin === "campaign" ? "conversation.campaign" : "conversation.direct" },
+          ...(firstMessage ? [{ kind: "TEXT" as const, senderId: userId, body: firstMessage }] : []),
+        ],
       },
     },
   });
-  await notify([ownerId], { type: "NEW_MESSAGE", title: ka.chat.newMessageNotification(mine), link: `/app/conversations/${conversation.id}` });
-  await audit({ actorId: userId, action: "conversation.direct_opened", entityType: "Conversation", entityId: conversation.id, metadata: { from: m.companyId, to: target.id } });
+  await notify(recipients, { type: "NEW_MESSAGE", title: ka.chat.newMessageNotification(mine), link: `/app/conversations/${conversation.id}` });
+  await audit({ actorId: userId, action: "conversation.direct_opened", entityType: "Conversation", entityId: conversation.id, metadata: { from: m.companyId, to: target.id, origin } });
   return conversation.id;
 }

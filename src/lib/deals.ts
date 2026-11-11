@@ -9,9 +9,12 @@ import { getCurrentUser } from "./session";
 
 const D = Prisma.Decimal;
 
-/** The author of an OFFER sells; the author of a REQUEST buys. */
-export function dealSideFor(partySide: ParticipantSide, offerType: OfferType | null): DealSide {
-  const authorSells = offerType !== "REQUEST";
+/**
+ * The author of an OFFER sells; the author of a REQUEST buys. Direct chats (no offer) use the
+ * conversation's chosen seller side, defaulting to the contacted company (AUTHOR).
+ */
+export function dealSideFor(partySide: ParticipantSide, offerType: OfferType | null, sellerSide?: ParticipantSide | null): DealSide {
+  const authorSells = offerType ? offerType !== "REQUEST" : (sellerSide ?? "AUTHOR") === "AUTHOR";
   return (partySide === "AUTHOR") === authorSells ? "SELLER" : "BUYER";
 }
 
@@ -65,7 +68,7 @@ export async function loadDealContext(conversationId: string): Promise<DealConte
   const party = own ?? viaCompany ?? null;
   const actingCompanyId = party?.companyId ?? null;
   const partySide = party?.side ?? null;
-  const dealSide = partySide ? dealSideFor(partySide, conversation.offer?.type ?? null) : null;
+  const dealSide = partySide ? dealSideFor(partySide, conversation.offer?.type ?? null, conversation.sellerSide) : null;
 
   // Acting for a company needs that company's permission; acting personally needs nothing extra.
   const can = (permission: Permission) => {
@@ -99,5 +102,5 @@ export function computeTotals(items: ItemInput[], discount: string, taxRatePerce
 
 /** Users to notify on the other side of a deal. */
 export function otherSideUserIds(c: DealConversation, mySide: DealSide, userId: string) {
-  return c.participants.filter((p) => dealSideFor(p.side, c.offer?.type ?? null) !== mySide && p.userId !== userId).map((p) => p.userId);
+  return c.participants.filter((p) => dealSideFor(p.side, c.offer?.type ?? null, c.sellerSide) !== mySide && p.userId !== userId).map((p) => p.userId);
 }

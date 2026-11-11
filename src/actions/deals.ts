@@ -9,6 +9,8 @@ import { audit } from "@/lib/audit";
 import { CURRENCIES } from "@/lib/currencies";
 import { db } from "@/lib/db";
 import { computeTotals, dealSideFor, otherSideUserIds, requireDealContext, type ItemInput } from "@/lib/deals";
+import { dealCommissionPct } from "@/lib/commission";
+import { yearInGeorgia } from "@/lib/money";
 import { fail, type FormState } from "@/lib/forms";
 import { notify } from "@/lib/notify";
 import { formatMoney } from "@/lib/format";
@@ -96,7 +98,7 @@ export async function sendTermsAction(_: FormState, formData: FormData): Promise
 
   // Parties are fixed by the first participant of each side (the original author and responder).
   const firstOf = (side: "SELLER" | "BUYER") =>
-    [...c.participants].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()).find((p) => dealSideFor(p.side, c.offer?.type ?? null) === side)!;
+    [...c.participants].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()).find((p) => dealSideFor(p.side, c.offer?.type ?? null, c.sellerSide) === side)!;
   const seller = firstOf("SELLER");
   const buyer = firstOf("BUYER");
 
@@ -261,7 +263,7 @@ export async function sendInvoiceAction(_: FormState, formData: FormData): Promi
   }
 
   const firstOf = (side: "SELLER" | "BUYER") =>
-    [...c.participants].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()).find((p) => dealSideFor(p.side, c.offer?.type ?? null) === side)!;
+    [...c.participants].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()).find((p) => dealSideFor(p.side, c.offer?.type ?? null, c.sellerSide) === side)!;
   const seller = firstOf("SELLER");
   const buyer = firstOf("BUYER");
   const versionNumber = (c.dealTerms?.versions[0]?.versionNumber ?? 0) + 1;
@@ -307,10 +309,13 @@ export async function sendInvoiceAction(_: FormState, formData: FormData): Promi
     await tx.dealTerms.update({ where: { id: deal.id }, data: { currentVersionId: version.id } });
     const snapshot = await buildInvoiceSnapshot(deal, version, tx);
     const [{ nextval }] = await tx.$queryRaw<{ nextval: bigint }[]>`SELECT nextval('invoice_number_seq')`;
-    const num = `B2B-${new Date().getFullYear()}-${String(nextval).padStart(6, "0")}`;
+    const num = `B2B-${yearInGeorgia()}-${String(nextval).padStart(6, "0")}`;
+    // The commission rate is fixed at issue time; later admin changes don't rewrite history.
+    const conv = await tx.conversation.findUniqueOrThrow({ where: { id: ctx.conversation.id }, select: { commissionPct: true, offer: { select: { commissionPct: true } } } });
     const inv = await tx.invoice.create({
       data: {
         number: num,
+        commissionPct: dealCommissionPct(conv),
         dealTermsVersionId: version.id,
         sellerCompanyId: deal.sellerCompanyId,
         buyerCompanyId: deal.buyerCompanyId,

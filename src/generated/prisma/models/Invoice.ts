@@ -33,6 +33,7 @@ export type InvoiceAvgAggregateOutputType = {
   deliveryCost: runtime.Decimal | null
   total: runtime.Decimal | null
   paidAmount: runtime.Decimal | null
+  commissionPct: runtime.Decimal | null
 }
 
 export type InvoiceSumAggregateOutputType = {
@@ -42,6 +43,7 @@ export type InvoiceSumAggregateOutputType = {
   deliveryCost: runtime.Decimal | null
   total: runtime.Decimal | null
   paidAmount: runtime.Decimal | null
+  commissionPct: runtime.Decimal | null
 }
 
 export type InvoiceMinAggregateOutputType = {
@@ -62,6 +64,7 @@ export type InvoiceMinAggregateOutputType = {
   deliveryCost: runtime.Decimal | null
   total: runtime.Decimal | null
   paidAmount: runtime.Decimal | null
+  commissionPct: runtime.Decimal | null
   paymentTerms: string | null
   notes: string | null
   correctsInvoiceId: string | null
@@ -87,6 +90,7 @@ export type InvoiceMaxAggregateOutputType = {
   deliveryCost: runtime.Decimal | null
   total: runtime.Decimal | null
   paidAmount: runtime.Decimal | null
+  commissionPct: runtime.Decimal | null
   paymentTerms: string | null
   notes: string | null
   correctsInvoiceId: string | null
@@ -112,6 +116,7 @@ export type InvoiceCountAggregateOutputType = {
   deliveryCost: number
   total: number
   paidAmount: number
+  commissionPct: number
   paymentTerms: number
   notes: number
   snapshot: number
@@ -129,6 +134,7 @@ export type InvoiceAvgAggregateInputType = {
   deliveryCost?: true
   total?: true
   paidAmount?: true
+  commissionPct?: true
 }
 
 export type InvoiceSumAggregateInputType = {
@@ -138,6 +144,7 @@ export type InvoiceSumAggregateInputType = {
   deliveryCost?: true
   total?: true
   paidAmount?: true
+  commissionPct?: true
 }
 
 export type InvoiceMinAggregateInputType = {
@@ -158,6 +165,7 @@ export type InvoiceMinAggregateInputType = {
   deliveryCost?: true
   total?: true
   paidAmount?: true
+  commissionPct?: true
   paymentTerms?: true
   notes?: true
   correctsInvoiceId?: true
@@ -183,6 +191,7 @@ export type InvoiceMaxAggregateInputType = {
   deliveryCost?: true
   total?: true
   paidAmount?: true
+  commissionPct?: true
   paymentTerms?: true
   notes?: true
   correctsInvoiceId?: true
@@ -208,6 +217,7 @@ export type InvoiceCountAggregateInputType = {
   deliveryCost?: true
   total?: true
   paidAmount?: true
+  commissionPct?: true
   paymentTerms?: true
   notes?: true
   snapshot?: true
@@ -321,6 +331,7 @@ export type InvoiceGroupByOutputType = {
   deliveryCost: runtime.Decimal
   total: runtime.Decimal
   paidAmount: runtime.Decimal
+  commissionPct: runtime.Decimal | null
   paymentTerms: string | null
   notes: string | null
   snapshot: runtime.JsonValue
@@ -370,6 +381,7 @@ export type InvoiceWhereInput = {
   deliveryCost?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.DecimalNullableFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.StringNullableFilter<"Invoice"> | string | null
   notes?: Prisma.StringNullableFilter<"Invoice"> | string | null
   snapshot?: Prisma.JsonFilter<"Invoice">
@@ -405,6 +417,7 @@ export type InvoiceOrderByWithRelationInput = {
   deliveryCost?: Prisma.SortOrder
   total?: Prisma.SortOrder
   paidAmount?: Prisma.SortOrder
+  commissionPct?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentTerms?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   snapshot?: Prisma.SortOrder
@@ -443,6 +456,7 @@ export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
   deliveryCost?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.DecimalNullableFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.StringNullableFilter<"Invoice"> | string | null
   notes?: Prisma.StringNullableFilter<"Invoice"> | string | null
   snapshot?: Prisma.JsonFilter<"Invoice">
@@ -478,6 +492,7 @@ export type InvoiceOrderByWithAggregationInput = {
   deliveryCost?: Prisma.SortOrder
   total?: Prisma.SortOrder
   paidAmount?: Prisma.SortOrder
+  commissionPct?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentTerms?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   snapshot?: Prisma.SortOrder
@@ -512,6 +527,7 @@ export type InvoiceScalarWhereWithAggregatesInput = {
   deliveryCost?: Prisma.DecimalWithAggregatesFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalWithAggregatesFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalWithAggregatesFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.DecimalNullableWithAggregatesFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.StringNullableWithAggregatesFilter<"Invoice"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"Invoice"> | string | null
   snapshot?: Prisma.JsonWithAggregatesFilter<"Invoice">
@@ -535,6 +551,7 @@ export type InvoiceCreateInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -569,6 +586,7 @@ export type InvoiceUncheckedCreateInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -597,6 +615,7 @@ export type InvoiceUpdateInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -631,6 +650,7 @@ export type InvoiceUncheckedUpdateInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -662,6 +682,7 @@ export type InvoiceCreateManyInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -685,6 +706,7 @@ export type InvoiceUpdateManyMutationInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -710,6 +732,7 @@ export type InvoiceUncheckedUpdateManyInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -751,6 +774,7 @@ export type InvoiceCountOrderByAggregateInput = {
   deliveryCost?: Prisma.SortOrder
   total?: Prisma.SortOrder
   paidAmount?: Prisma.SortOrder
+  commissionPct?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   snapshot?: Prisma.SortOrder
@@ -766,6 +790,7 @@ export type InvoiceAvgOrderByAggregateInput = {
   deliveryCost?: Prisma.SortOrder
   total?: Prisma.SortOrder
   paidAmount?: Prisma.SortOrder
+  commissionPct?: Prisma.SortOrder
 }
 
 export type InvoiceMaxOrderByAggregateInput = {
@@ -786,6 +811,7 @@ export type InvoiceMaxOrderByAggregateInput = {
   deliveryCost?: Prisma.SortOrder
   total?: Prisma.SortOrder
   paidAmount?: Prisma.SortOrder
+  commissionPct?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   correctsInvoiceId?: Prisma.SortOrder
@@ -811,6 +837,7 @@ export type InvoiceMinOrderByAggregateInput = {
   deliveryCost?: Prisma.SortOrder
   total?: Prisma.SortOrder
   paidAmount?: Prisma.SortOrder
+  commissionPct?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   correctsInvoiceId?: Prisma.SortOrder
@@ -825,6 +852,7 @@ export type InvoiceSumOrderByAggregateInput = {
   deliveryCost?: Prisma.SortOrder
   total?: Prisma.SortOrder
   paidAmount?: Prisma.SortOrder
+  commissionPct?: Prisma.SortOrder
 }
 
 export type InvoiceScalarRelationFilter = {
@@ -1081,6 +1109,7 @@ export type InvoiceCreateWithoutSellerCompanyInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1113,6 +1142,7 @@ export type InvoiceUncheckedCreateWithoutSellerCompanyInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1151,6 +1181,7 @@ export type InvoiceCreateWithoutBuyerCompanyInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1183,6 +1214,7 @@ export type InvoiceUncheckedCreateWithoutBuyerCompanyInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1243,6 +1275,7 @@ export type InvoiceScalarWhereInput = {
   deliveryCost?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.DecimalNullableFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.StringNullableFilter<"Invoice"> | string | null
   notes?: Prisma.StringNullableFilter<"Invoice"> | string | null
   snapshot?: Prisma.JsonFilter<"Invoice">
@@ -1282,6 +1315,7 @@ export type InvoiceCreateWithoutDealTermsVersionInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1314,6 +1348,7 @@ export type InvoiceUncheckedCreateWithoutDealTermsVersionInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1358,6 +1393,7 @@ export type InvoiceUpdateWithoutDealTermsVersionInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1390,6 +1426,7 @@ export type InvoiceUncheckedUpdateWithoutDealTermsVersionInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1418,6 +1455,7 @@ export type InvoiceCreateWithoutCorrectionsInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1451,6 +1489,7 @@ export type InvoiceUncheckedCreateWithoutCorrectionsInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1483,6 +1522,7 @@ export type InvoiceCreateWithoutCorrectsInvoiceInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1516,6 +1556,7 @@ export type InvoiceUncheckedCreateWithoutCorrectsInvoiceInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1564,6 +1605,7 @@ export type InvoiceUpdateWithoutCorrectionsInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1597,6 +1639,7 @@ export type InvoiceUncheckedUpdateWithoutCorrectionsInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1640,6 +1683,7 @@ export type InvoiceCreateWithoutItemsInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1673,6 +1717,7 @@ export type InvoiceUncheckedCreateWithoutItemsInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1716,6 +1761,7 @@ export type InvoiceUpdateWithoutItemsInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1749,6 +1795,7 @@ export type InvoiceUncheckedUpdateWithoutItemsInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1776,6 +1823,7 @@ export type InvoiceCreateWithoutStatusHistoryInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1809,6 +1857,7 @@ export type InvoiceUncheckedCreateWithoutStatusHistoryInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1852,6 +1901,7 @@ export type InvoiceUpdateWithoutStatusHistoryInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1885,6 +1935,7 @@ export type InvoiceUncheckedUpdateWithoutStatusHistoryInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1912,6 +1963,7 @@ export type InvoiceCreateWithoutPaymentsInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1945,6 +1997,7 @@ export type InvoiceUncheckedCreateWithoutPaymentsInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1988,6 +2041,7 @@ export type InvoiceUpdateWithoutPaymentsInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -2021,6 +2075,7 @@ export type InvoiceUncheckedUpdateWithoutPaymentsInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -2048,6 +2103,7 @@ export type InvoiceCreateWithoutCommissionInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -2081,6 +2137,7 @@ export type InvoiceUncheckedCreateWithoutCommissionInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -2124,6 +2181,7 @@ export type InvoiceUpdateWithoutCommissionInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -2157,6 +2215,7 @@ export type InvoiceUncheckedUpdateWithoutCommissionInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -2186,6 +2245,7 @@ export type InvoiceCreateManySellerCompanyInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -2211,6 +2271,7 @@ export type InvoiceCreateManyBuyerCompanyInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -2234,6 +2295,7 @@ export type InvoiceUpdateWithoutSellerCompanyInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -2266,6 +2328,7 @@ export type InvoiceUncheckedUpdateWithoutSellerCompanyInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -2296,6 +2359,7 @@ export type InvoiceUncheckedUpdateManyWithoutSellerCompanyInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -2319,6 +2383,7 @@ export type InvoiceUpdateWithoutBuyerCompanyInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -2351,6 +2416,7 @@ export type InvoiceUncheckedUpdateWithoutBuyerCompanyInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -2381,6 +2447,7 @@ export type InvoiceUncheckedUpdateManyWithoutBuyerCompanyInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -2407,6 +2474,7 @@ export type InvoiceCreateManyCorrectsInvoiceInput = {
   deliveryCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: string | null
   notes?: string | null
   snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -2429,6 +2497,7 @@ export type InvoiceUpdateWithoutCorrectsInvoiceInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -2462,6 +2531,7 @@ export type InvoiceUncheckedUpdateWithoutCorrectsInvoiceInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -2492,6 +2562,7 @@ export type InvoiceUncheckedUpdateManyWithoutCorrectsInvoiceInput = {
   deliveryCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   paidAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -2575,6 +2646,7 @@ export type InvoiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   deliveryCost?: boolean
   total?: boolean
   paidAmount?: boolean
+  commissionPct?: boolean
   paymentTerms?: boolean
   notes?: boolean
   snapshot?: boolean
@@ -2611,6 +2683,7 @@ export type InvoiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   deliveryCost?: boolean
   total?: boolean
   paidAmount?: boolean
+  commissionPct?: boolean
   paymentTerms?: boolean
   notes?: boolean
   snapshot?: boolean
@@ -2641,6 +2714,7 @@ export type InvoiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   deliveryCost?: boolean
   total?: boolean
   paidAmount?: boolean
+  commissionPct?: boolean
   paymentTerms?: boolean
   notes?: boolean
   snapshot?: boolean
@@ -2671,6 +2745,7 @@ export type InvoiceSelectScalar = {
   deliveryCost?: boolean
   total?: boolean
   paidAmount?: boolean
+  commissionPct?: boolean
   paymentTerms?: boolean
   notes?: boolean
   snapshot?: boolean
@@ -2679,7 +2754,7 @@ export type InvoiceSelectScalar = {
   updatedAt?: boolean
 }
 
-export type InvoiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "number" | "dealTermsVersionId" | "sellerCompanyId" | "buyerCompanyId" | "sellerUserId" | "buyerUserId" | "status" | "issuedAt" | "dueDate" | "currency" | "subtotal" | "discountAmount" | "taxAmount" | "deliveryCost" | "total" | "paidAmount" | "paymentTerms" | "notes" | "snapshot" | "correctsInvoiceId" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
+export type InvoiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "number" | "dealTermsVersionId" | "sellerCompanyId" | "buyerCompanyId" | "sellerUserId" | "buyerUserId" | "status" | "issuedAt" | "dueDate" | "currency" | "subtotal" | "discountAmount" | "taxAmount" | "deliveryCost" | "total" | "paidAmount" | "commissionPct" | "paymentTerms" | "notes" | "snapshot" | "correctsInvoiceId" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
 export type InvoiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   dealTermsVersion?: boolean | Prisma.DealTermsVersionDefaultArgs<ExtArgs>
   sellerCompany?: boolean | Prisma.Invoice$sellerCompanyArgs<ExtArgs>
@@ -2736,6 +2811,10 @@ export type $InvoicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     deliveryCost: runtime.Decimal
     total: runtime.Decimal
     paidAmount: runtime.Decimal
+    /**
+     * Commission percent frozen when the invoice was issued (null = use the deal's current one).
+     */
+    commissionPct: runtime.Decimal | null
     paymentTerms: string | null
     notes: string | null
     /**
@@ -3194,6 +3273,7 @@ export interface InvoiceFieldRefs {
   readonly deliveryCost: Prisma.FieldRef<"Invoice", 'Decimal'>
   readonly total: Prisma.FieldRef<"Invoice", 'Decimal'>
   readonly paidAmount: Prisma.FieldRef<"Invoice", 'Decimal'>
+  readonly commissionPct: Prisma.FieldRef<"Invoice", 'Decimal'>
   readonly paymentTerms: Prisma.FieldRef<"Invoice", 'String'>
   readonly notes: Prisma.FieldRef<"Invoice", 'String'>
   readonly snapshot: Prisma.FieldRef<"Invoice", 'Json'>

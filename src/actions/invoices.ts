@@ -148,8 +148,11 @@ export async function recordPaymentAction(_: FormState, formData: FormData): Pro
 
   const paid = inv.paidAmount.add(amount);
   const status: InvoiceStatus = paid.gte(inv.total) ? "PAID" : "PARTIALLY_PAID";
-  await db.$transaction([
-    db.paymentRecord.create({
+  // Optimistic lock: the update only applies if nobody recorded a payment in between (double click).
+  const applied = await db.$transaction(async (tx) => {
+    const r = await tx.invoice.updateMany({ where: { id: inv.id, paidAmount: inv.paidAmount, status: inv.status }, data: { paidAmount: paid, status } });
+    if (r.count !== 1) return false;
+    await tx.paymentRecord.create({
       data: {
         invoiceId: inv.id,
         amount,
@@ -159,12 +162,13 @@ export async function recordPaymentAction(_: FormState, formData: FormData): Pro
         reference: parsed.data.reference || null,
         recordedById: user.id,
       },
-    }),
-    db.invoice.update({ where: { id: inv.id }, data: { paidAmount: paid, status } }),
-    ...(status !== inv.status
-      ? [db.invoiceStatusChange.create({ data: { invoiceId: inv.id, fromStatus: inv.status, toStatus: status, changedById: user.id, comment: `${amount.toFixed(2)} ${inv.currency}` } })]
-      : []),
-  ]);
+    });
+    if (status !== inv.status) {
+      await tx.invoiceStatusChange.create({ data: { invoiceId: inv.id, fromStatus: inv.status, toStatus: status, changedById: user.id, comment: `${amount.toFixed(2)} ${inv.currency}` } });
+    }
+    return true;
+  });
+  if (!applied) return fail(i18n.paymentConflict);
   if (status === "PAID") await createCommissionForPaidInvoice(inv.id);
   await audit({ actorId: user.id, action: "invoice.payment_recorded", entityType: "Invoice", entityId: inv.id, metadata: { amount: amount.toFixed(2), currency: inv.currency, status } });
   revalidatePath(`/app/invoices/${inv.id}`);

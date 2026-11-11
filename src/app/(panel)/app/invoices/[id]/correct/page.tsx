@@ -44,6 +44,7 @@ export default async function CorrectInvoicePage({ params }: PageProps<"/app/inv
               taxRatePercent: snap.taxRatePercent ?? "",
               deliveryCost: plain(inv.deliveryCost),
               discountAmount: plain(inv.discountAmount),
+              deliveryTerms: snap.deliveryTerms ?? "",
               dueDate: inv.dueDate ? inv.dueDate.toISOString().slice(0, 10) : "",
               paymentTerms: inv.paymentTerms ?? "",
               notes: inv.notes ?? "",

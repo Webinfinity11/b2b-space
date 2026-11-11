@@ -6,7 +6,7 @@ import { db } from "@/lib/db";
 import { formatAmount } from "@/lib/money";
 import { OPEN_STATUSES } from "@/lib/invoices";
 import { searchOffers } from "@/lib/public";
-import { visibleConversations, visibleInvoices } from "@/lib/scope";
+import { activeContextConversations, visibleInvoices } from "@/lib/scope";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { KpiCard, PageHeader, SectionTitle } from "@/components/ui/Card";
@@ -17,7 +17,7 @@ import { RelativeTime } from "@/components/panel/RelativeTime";
 export default async function DashboardPage() {
   const user = await requireUser("/app");
   const m = await getActiveMembership(user.id);
-  const convScope = visibleConversations(user.id, m);
+  const convScope = activeContextConversations(user.id, m);
   const invScope = visibleInvoices(user.id, m);
 
   const [deals, dealCount, notifications, unreadMsgLinks, invoices, perks] = await Promise.all([
@@ -39,7 +39,7 @@ export default async function DashboardPage() {
   const banner = await db.offerBadge.findFirst({ where: { showBanner: true, isActive: true }, orderBy: { sortOrder: "asc" } });
   const activeDeals = await db.conversation.count({ where: { AND: [convScope, { stage: { not: "CONTRACT" } }] } });
   const forecast = await db.conversation.aggregate({ where: { AND: [convScope, { stage: { not: "CONTRACT" } }] }, _sum: { amount: true } });
-  const unread = notifications.filter((n) => !n.readAt).length;
+  const unread = await db.notification.count({ where: { userId: user.id, readAt: null } });
 
   // Receivables: open invoices where we are the seller (GEL shown; other currencies are listed in Finance).
   const receivable = invoices
@@ -153,7 +153,7 @@ export default async function DashboardPage() {
             <ul className="space-y-1">
               {notifications.map((n) => (
                 <li key={n.id}>
-                  <Link href={n.link ?? "/app/notifications"} className="flex items-start gap-3 rounded-[10px] px-2 py-2.5 hover:bg-canvas">
+                  <Link href={`/app/notifications/${n.id}`} className="flex items-start gap-3 rounded-[10px] px-2 py-2.5 hover:bg-canvas">
                     <span className={`grid size-9 shrink-0 place-items-center rounded-lg ${n.readAt ? "bg-chip text-muted" : "bg-blue-soft text-accent"}`}>
                       <Icon name={n.type.startsWith("INVOICE") || n.type.startsWith("PAYMENT") ? "invoice" : n.type === "NEW_MESSAGE" ? "chat" : "bell"} size={16} />
                     </span>

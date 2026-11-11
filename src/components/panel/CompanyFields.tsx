@@ -1,5 +1,6 @@
 import { ka } from "@/i18n/ka";
 import type { CategoryNode } from "@/lib/public";
+import { CITIES } from "@/lib/cities";
 import { CheckboxGroup, Field, Input, Select, Textarea } from "@/components/ui/Form";
 import { Card, CardBody, CardHeader } from "@/components/ui/Card";
 
@@ -61,7 +62,13 @@ export function CompanyFields({
             <Select name="country" defaultValue={defaults.country ?? "GE"} options={countryOptions} disabled={legalLocked} />
           </Field>
           <Field label={f.city} name="city" optional>
-            <Input name="city" defaultValue={defaults.city} />
+            {/* A fixed list keeps cities identical everywhere (filters, campaign targeting). */}
+            <Select
+              name="city"
+              defaultValue={defaults.city ?? ""}
+              placeholder={ka.sgba.choose}
+              options={[...CITIES, ...(defaults.city && !CITIES.includes(defaults.city) ? [defaults.city] : [])].map((x) => ({ value: x, label: x }))}
+            />
           </Field>
           <Field label={f.legalAddress} name="legalAddress" className="md:col-span-2">
             <Input name="legalAddress" defaultValue={defaults.legalAddress} required />

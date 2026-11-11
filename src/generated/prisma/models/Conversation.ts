@@ -44,6 +44,7 @@ export type ConversationMinAggregateOutputType = {
   stage: $Enums.DealStage | null
   amount: runtime.Decimal | null
   commissionPct: runtime.Decimal | null
+  sellerSide: $Enums.ParticipantSide | null
   lastMessageAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -57,6 +58,7 @@ export type ConversationMaxAggregateOutputType = {
   stage: $Enums.DealStage | null
   amount: runtime.Decimal | null
   commissionPct: runtime.Decimal | null
+  sellerSide: $Enums.ParticipantSide | null
   lastMessageAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -70,6 +72,7 @@ export type ConversationCountAggregateOutputType = {
   stage: number
   amount: number
   commissionPct: number
+  sellerSide: number
   lastMessageAt: number
   createdAt: number
   updatedAt: number
@@ -95,6 +98,7 @@ export type ConversationMinAggregateInputType = {
   stage?: true
   amount?: true
   commissionPct?: true
+  sellerSide?: true
   lastMessageAt?: true
   createdAt?: true
   updatedAt?: true
@@ -108,6 +112,7 @@ export type ConversationMaxAggregateInputType = {
   stage?: true
   amount?: true
   commissionPct?: true
+  sellerSide?: true
   lastMessageAt?: true
   createdAt?: true
   updatedAt?: true
@@ -121,6 +126,7 @@ export type ConversationCountAggregateInputType = {
   stage?: true
   amount?: true
   commissionPct?: true
+  sellerSide?: true
   lastMessageAt?: true
   createdAt?: true
   updatedAt?: true
@@ -221,6 +227,7 @@ export type ConversationGroupByOutputType = {
   stage: $Enums.DealStage
   amount: runtime.Decimal | null
   commissionPct: runtime.Decimal | null
+  sellerSide: $Enums.ParticipantSide | null
   lastMessageAt: Date
   createdAt: Date
   updatedAt: Date
@@ -257,6 +264,7 @@ export type ConversationWhereInput = {
   stage?: Prisma.EnumDealStageFilter<"Conversation"> | $Enums.DealStage
   amount?: Prisma.DecimalNullableFilter<"Conversation"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.DecimalNullableFilter<"Conversation"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.EnumParticipantSideNullableFilter<"Conversation"> | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFilter<"Conversation"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Conversation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Conversation"> | Date | string
@@ -276,6 +284,7 @@ export type ConversationOrderByWithRelationInput = {
   stage?: Prisma.SortOrder
   amount?: Prisma.SortOrderInput | Prisma.SortOrder
   commissionPct?: Prisma.SortOrderInput | Prisma.SortOrder
+  sellerSide?: Prisma.SortOrderInput | Prisma.SortOrder
   lastMessageAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -298,6 +307,7 @@ export type ConversationWhereUniqueInput = Prisma.AtLeast<{
   stage?: Prisma.EnumDealStageFilter<"Conversation"> | $Enums.DealStage
   amount?: Prisma.DecimalNullableFilter<"Conversation"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.DecimalNullableFilter<"Conversation"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.EnumParticipantSideNullableFilter<"Conversation"> | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFilter<"Conversation"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Conversation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Conversation"> | Date | string
@@ -317,6 +327,7 @@ export type ConversationOrderByWithAggregationInput = {
   stage?: Prisma.SortOrder
   amount?: Prisma.SortOrderInput | Prisma.SortOrder
   commissionPct?: Prisma.SortOrderInput | Prisma.SortOrder
+  sellerSide?: Prisma.SortOrderInput | Prisma.SortOrder
   lastMessageAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -338,6 +349,7 @@ export type ConversationScalarWhereWithAggregatesInput = {
   stage?: Prisma.EnumDealStageWithAggregatesFilter<"Conversation"> | $Enums.DealStage
   amount?: Prisma.DecimalNullableWithAggregatesFilter<"Conversation"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.DecimalNullableWithAggregatesFilter<"Conversation"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.EnumParticipantSideNullableWithAggregatesFilter<"Conversation"> | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeWithAggregatesFilter<"Conversation"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Conversation"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Conversation"> | Date | string
@@ -349,6 +361,7 @@ export type ConversationCreateInput = {
   stage?: $Enums.DealStage
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: $Enums.ParticipantSide | null
   lastMessageAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -368,6 +381,7 @@ export type ConversationUncheckedCreateInput = {
   stage?: $Enums.DealStage
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: $Enums.ParticipantSide | null
   lastMessageAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -383,6 +397,7 @@ export type ConversationUpdateInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.NullableEnumParticipantSideFieldUpdateOperationsInput | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -402,6 +417,7 @@ export type ConversationUncheckedUpdateInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.NullableEnumParticipantSideFieldUpdateOperationsInput | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -419,6 +435,7 @@ export type ConversationCreateManyInput = {
   stage?: $Enums.DealStage
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: $Enums.ParticipantSide | null
   lastMessageAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -430,6 +447,7 @@ export type ConversationUpdateManyMutationInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.NullableEnumParticipantSideFieldUpdateOperationsInput | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -443,6 +461,7 @@ export type ConversationUncheckedUpdateManyInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.NullableEnumParticipantSideFieldUpdateOperationsInput | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -471,6 +490,7 @@ export type ConversationCountOrderByAggregateInput = {
   stage?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   commissionPct?: Prisma.SortOrder
+  sellerSide?: Prisma.SortOrder
   lastMessageAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -489,6 +509,7 @@ export type ConversationMaxOrderByAggregateInput = {
   stage?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   commissionPct?: Prisma.SortOrder
+  sellerSide?: Prisma.SortOrder
   lastMessageAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -502,6 +523,7 @@ export type ConversationMinOrderByAggregateInput = {
   stage?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   commissionPct?: Prisma.SortOrder
+  sellerSide?: Prisma.SortOrder
   lastMessageAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -595,6 +617,10 @@ export type EnumDealStageFieldUpdateOperationsInput = {
   set?: $Enums.DealStage
 }
 
+export type NullableEnumParticipantSideFieldUpdateOperationsInput = {
+  set?: $Enums.ParticipantSide | null
+}
+
 export type ConversationCreateNestedOneWithoutParticipantsInput = {
   create?: Prisma.XOR<Prisma.ConversationCreateWithoutParticipantsInput, Prisma.ConversationUncheckedCreateWithoutParticipantsInput>
   connectOrCreate?: Prisma.ConversationCreateOrConnectWithoutParticipantsInput
@@ -659,6 +685,7 @@ export type ConversationCreateWithoutOfferInput = {
   stage?: $Enums.DealStage
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: $Enums.ParticipantSide | null
   lastMessageAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -676,6 +703,7 @@ export type ConversationUncheckedCreateWithoutOfferInput = {
   stage?: $Enums.DealStage
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: $Enums.ParticipantSide | null
   lastMessageAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -722,6 +750,7 @@ export type ConversationScalarWhereInput = {
   stage?: Prisma.EnumDealStageFilter<"Conversation"> | $Enums.DealStage
   amount?: Prisma.DecimalNullableFilter<"Conversation"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.DecimalNullableFilter<"Conversation"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.EnumParticipantSideNullableFilter<"Conversation"> | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFilter<"Conversation"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Conversation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Conversation"> | Date | string
@@ -733,6 +762,7 @@ export type ConversationCreateWithoutResponseInput = {
   stage?: $Enums.DealStage
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: $Enums.ParticipantSide | null
   lastMessageAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -750,6 +780,7 @@ export type ConversationUncheckedCreateWithoutResponseInput = {
   stage?: $Enums.DealStage
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: $Enums.ParticipantSide | null
   lastMessageAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -781,6 +812,7 @@ export type ConversationUpdateWithoutResponseInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.NullableEnumParticipantSideFieldUpdateOperationsInput | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -798,6 +830,7 @@ export type ConversationUncheckedUpdateWithoutResponseInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.NullableEnumParticipantSideFieldUpdateOperationsInput | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -813,6 +846,7 @@ export type ConversationCreateWithoutParticipantsInput = {
   stage?: $Enums.DealStage
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: $Enums.ParticipantSide | null
   lastMessageAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -831,6 +865,7 @@ export type ConversationUncheckedCreateWithoutParticipantsInput = {
   stage?: $Enums.DealStage
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: $Enums.ParticipantSide | null
   lastMessageAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -861,6 +896,7 @@ export type ConversationUpdateWithoutParticipantsInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.NullableEnumParticipantSideFieldUpdateOperationsInput | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -879,6 +915,7 @@ export type ConversationUncheckedUpdateWithoutParticipantsInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.NullableEnumParticipantSideFieldUpdateOperationsInput | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -893,6 +930,7 @@ export type ConversationCreateWithoutMessagesInput = {
   stage?: $Enums.DealStage
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: $Enums.ParticipantSide | null
   lastMessageAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -911,6 +949,7 @@ export type ConversationUncheckedCreateWithoutMessagesInput = {
   stage?: $Enums.DealStage
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: $Enums.ParticipantSide | null
   lastMessageAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -941,6 +980,7 @@ export type ConversationUpdateWithoutMessagesInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.NullableEnumParticipantSideFieldUpdateOperationsInput | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -959,6 +999,7 @@ export type ConversationUncheckedUpdateWithoutMessagesInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.NullableEnumParticipantSideFieldUpdateOperationsInput | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -973,6 +1014,7 @@ export type ConversationCreateWithoutDealTermsInput = {
   stage?: $Enums.DealStage
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: $Enums.ParticipantSide | null
   lastMessageAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -991,6 +1033,7 @@ export type ConversationUncheckedCreateWithoutDealTermsInput = {
   stage?: $Enums.DealStage
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: $Enums.ParticipantSide | null
   lastMessageAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1021,6 +1064,7 @@ export type ConversationUpdateWithoutDealTermsInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.NullableEnumParticipantSideFieldUpdateOperationsInput | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1039,6 +1083,7 @@ export type ConversationUncheckedUpdateWithoutDealTermsInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.NullableEnumParticipantSideFieldUpdateOperationsInput | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1053,6 +1098,7 @@ export type ConversationCreateWithoutCommissionsInput = {
   stage?: $Enums.DealStage
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: $Enums.ParticipantSide | null
   lastMessageAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1071,6 +1117,7 @@ export type ConversationUncheckedCreateWithoutCommissionsInput = {
   stage?: $Enums.DealStage
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: $Enums.ParticipantSide | null
   lastMessageAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1101,6 +1148,7 @@ export type ConversationUpdateWithoutCommissionsInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.NullableEnumParticipantSideFieldUpdateOperationsInput | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1119,6 +1167,7 @@ export type ConversationUncheckedUpdateWithoutCommissionsInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.NullableEnumParticipantSideFieldUpdateOperationsInput | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1134,6 +1183,7 @@ export type ConversationCreateManyOfferInput = {
   stage?: $Enums.DealStage
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: $Enums.ParticipantSide | null
   lastMessageAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1145,6 +1195,7 @@ export type ConversationUpdateWithoutOfferInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.NullableEnumParticipantSideFieldUpdateOperationsInput | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1162,6 +1213,7 @@ export type ConversationUncheckedUpdateWithoutOfferInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.NullableEnumParticipantSideFieldUpdateOperationsInput | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1178,6 +1230,7 @@ export type ConversationUncheckedUpdateManyWithoutOfferInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  sellerSide?: Prisma.NullableEnumParticipantSideFieldUpdateOperationsInput | $Enums.ParticipantSide | null
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1240,6 +1293,7 @@ export type ConversationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   stage?: boolean
   amount?: boolean
   commissionPct?: boolean
+  sellerSide?: boolean
   lastMessageAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1260,6 +1314,7 @@ export type ConversationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   stage?: boolean
   amount?: boolean
   commissionPct?: boolean
+  sellerSide?: boolean
   lastMessageAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1275,6 +1330,7 @@ export type ConversationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   stage?: boolean
   amount?: boolean
   commissionPct?: boolean
+  sellerSide?: boolean
   lastMessageAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1290,12 +1346,13 @@ export type ConversationSelectScalar = {
   stage?: boolean
   amount?: boolean
   commissionPct?: boolean
+  sellerSide?: boolean
   lastMessageAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ConversationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "offerId" | "responseId" | "subject" | "stage" | "amount" | "commissionPct" | "lastMessageAt" | "createdAt" | "updatedAt", ExtArgs["result"]["conversation"]>
+export type ConversationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "offerId" | "responseId" | "subject" | "stage" | "amount" | "commissionPct" | "sellerSide" | "lastMessageAt" | "createdAt" | "updatedAt", ExtArgs["result"]["conversation"]>
 export type ConversationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   offer?: boolean | Prisma.Conversation$offerArgs<ExtArgs>
   response?: boolean | Prisma.Conversation$responseArgs<ExtArgs>
@@ -1335,6 +1392,10 @@ export type $ConversationPayload<ExtArgs extends runtime.Types.Extensions.Intern
      * Commission percent for this deal (falls back to the offer's).
      */
     commissionPct: runtime.Decimal | null
+    /**
+     * Direct chats (no offer): which side sells. null = the contacted company (AUTHOR) sells.
+     */
+    sellerSide: $Enums.ParticipantSide | null
     lastMessageAt: Date
     createdAt: Date
     updatedAt: Date
@@ -1774,6 +1835,7 @@ export interface ConversationFieldRefs {
   readonly stage: Prisma.FieldRef<"Conversation", 'DealStage'>
   readonly amount: Prisma.FieldRef<"Conversation", 'Decimal'>
   readonly commissionPct: Prisma.FieldRef<"Conversation", 'Decimal'>
+  readonly sellerSide: Prisma.FieldRef<"Conversation", 'ParticipantSide'>
   readonly lastMessageAt: Prisma.FieldRef<"Conversation", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Conversation", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Conversation", 'DateTime'>

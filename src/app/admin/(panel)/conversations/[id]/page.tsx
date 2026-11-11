@@ -3,8 +3,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ka } from "@/i18n/ka";
 import { grantConversationAccessAction, setDealCommissionAction } from "@/actions/admin";
-import { controlClass } from "@/components/ui/styles";
-import { Button } from "@/components/ui/Button";
 import { CHAT_ACCESS_ACTION, CHAT_ACCESS_MINUTES, activeChatGrant } from "@/lib/admin-access";
 import { requireAdmin } from "@/lib/authz";
 import { db } from "@/lib/db";
@@ -13,7 +11,7 @@ import { companyName } from "@/lib/public";
 import { Badge } from "@/components/ui/Badge";
 import { ButtonLink } from "@/components/ui/Button";
 import { Card, CardBody, CardHeader, PageHeader } from "@/components/ui/Card";
-import { ActionForm, Field, SubmitButton, Textarea } from "@/components/ui/Form";
+import { ActionForm, Field, Input, SubmitButton, Textarea } from "@/components/ui/Form";
 
 export const metadata: Metadata = { title: ka.admin.conversations };
 
@@ -119,12 +117,13 @@ export default async function AdminConversationPage({ params }: PageProps<"/admi
                   <span className="text-xs text-muted"> · {ka.enums.offerType[c.offer.type]}</span>
                 </p>
               )}
-              <form action={setDealCommissionAction} className="mt-3 flex items-center gap-2 border-t border-line pt-3 text-sm">
+              <ActionForm action={setDealCommissionAction} toast className="mt-3 space-y-2 border-t border-line pt-3 text-sm">
                 <input type="hidden" name="conversationId" value={c.id} />
-                <span className="text-muted">{ka.sgba.dealCommission} %</span>
-                <input name="commissionPct" defaultValue={c.commissionPct?.toString() ?? ""} placeholder={c.offer?.commissionPct?.toString() ?? "—"} className={`${controlClass} h-8 w-20 text-xs`} />
-                <Button type="submit" size="sm" variant="secondary">{ka.common.save}</Button>
-              </form>
+                <Field label={`${ka.sgba.dealCommission} %`} name="commissionPct">
+                  <Input name="commissionPct" inputMode="decimal" defaultValue={c.commissionPct?.toString() ?? ""} placeholder={c.offer?.commissionPct?.toString() ?? "—"} className="h-9 w-28 text-sm" />
+                </Field>
+                <SubmitButton size="sm" variant="secondary">{ka.common.save}</SubmitButton>
+              </ActionForm>
               {invoices.length > 0 && (
                 <ul className="mt-3 space-y-1 border-t border-line pt-3 text-sm">
                   {invoices.map((inv) => (

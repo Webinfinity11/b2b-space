@@ -1,9 +1,10 @@
 import type { VerificationStatus } from "@/generated/prisma/enums";
 
 /**
- * Companies work immediately after registration — admin verification is optional and only
- * adds the "verified" badge. Only rejected or suspended companies are blocked.
+ * Admin approval of a registration verifies the company, so "approved" and "verified" are the
+ * same thing. One rule everywhere: only a VERIFIED company is listed, can be contacted and can act.
+ * (Pending / in-review / rejected / suspended companies are hidden and read-only.)
  */
 export function companyCanAct(status: VerificationStatus) {
-  return status !== "REJECTED" && status !== "SUSPENDED";
+  return status === "VERIFIED";
 }

@@ -17,9 +17,23 @@ export function manageableOffers(userId: string, m: Membership | null): Prisma.O
 
 /** Conversations the user may read: where they participate, or the company's (with responses.manage). */
 export function visibleConversations(userId: string, m: Membership | null): Prisma.ConversationWhereInput {
-  const or: Prisma.ConversationWhereInput[] = [{ participants: { some: { userId } } }];
+  // A participant who joined for a company keeps access only while still an active member of it.
+  const or: Prisma.ConversationWhereInput[] = [
+    { participants: { some: { userId, OR: [{ companyId: null }, { company: { members: { some: { userId, status: "ACTIVE" } } } }] } } },
+  ];
   if (m && hasPermission(m, "responses.manage")) or.push({ participants: { some: { companyId: m.companyId } } });
   return { OR: or };
+}
+
+/**
+ * For numbers (dashboard, analytics): only the deals of the active company — or the user's
+ * personal ones when no company is active — so several memberships never mix.
+ */
+export function activeContextConversations(userId: string, m: Membership | null): Prisma.ConversationWhereInput {
+  const mine: Prisma.ConversationWhereInput = m
+    ? { participants: { some: { companyId: m.companyId } } }
+    : { participants: { some: { userId, companyId: null } } };
+  return { AND: [visibleConversations(userId, m), mine] };
 }
 
 /** Invoices where the user or the active company (with invoices.view) is a party. */

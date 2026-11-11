@@ -9,6 +9,7 @@ import { emailEnabled, renderEmail, sendEmail } from "@/lib/email";
 import { audit } from "@/lib/audit";
 import { assertAdmin } from "@/lib/authz";
 import { db } from "@/lib/db";
+import { backfillDealCommissions } from "@/lib/commission";
 import { fail, invalid, zCheckbox, zText, type FormState } from "@/lib/forms";
 import { notify } from "@/lib/notify";
 import { slugify } from "@/lib/slug";
@@ -144,7 +145,19 @@ export async function saveCategoryAction(_: FormState, formData: FormData): Prom
   const id = String(formData.get("id") ?? "") || null;
   const parsed = categorySchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return invalid(parsed.error, formData);
-  const data = { ...parsed.data, slug: parsed.data.slug || slugify(parsed.data.name) };
+  // Editing (e.g. the inline rename) keeps whatever the form did not send: slug (links), parent,
+  // order and active flag must not silently reset.
+  const before = id ? await db.category.findUnique({ where: { id }, select: { slug: true, parentId: true, sortOrder: true, isActive: true, kind: true } }) : null;
+  if (id && !before) return fail(ka.errors.generic);
+  const sent = (k: string) => formData.has(k);
+  const data = {
+    ...parsed.data,
+    slug: parsed.data.slug || before?.slug || slugify(parsed.data.name),
+    parentId: before && !sent("parentId") ? before.parentId : parsed.data.parentId,
+    sortOrder: before && !sent("sortOrder") ? before.sortOrder : parsed.data.sortOrder,
+    isActive: before && !sent("isActive") ? before.isActive : parsed.data.isActive,
+    kind: before && !sent("kind") ? before.kind : parsed.data.kind,
+  };
   if (!data.slug) return fail(ka.validation.formErrors, formData, { slug: ka.validation.required });
   if (data.parentId) {
     const parent = await db.category.findUnique({ where: { id: data.parentId }, select: { parentId: true } });
@@ -314,14 +327,19 @@ const zPct = z
 
 
 /** Overrides the commission % of one deal. */
-export async function setDealCommissionAction(formData: FormData) {
+export async function setDealCommissionAction(_: FormState, formData: FormData): Promise<FormState> {
   const admin = await assertAdmin();
   const conversationId = String(formData.get("conversationId"));
   const pct = zPct.safeParse(formData.get("commissionPct") ?? "");
-  if (!pct.success) return;
+  if (!pct.success) return fail(ka.validation.formErrors, formData, { commissionPct: ka.admin.pctRange });
   await db.conversation.update({ where: { id: conversationId }, data: { commissionPct: pct.data } });
   await audit({ actorId: admin.id, action: "conversation.commission_changed", entityType: "Conversation", entityId: conversationId, metadata: { pct: pct.data?.toString() ?? null } });
+  // Deals already paid without a rate now earn their commission.
+  const added = pct.data ? await backfillDealCommissions(conversationId) : 0;
   revalidatePath(`/admin/conversations/${conversationId}`);
+  revalidatePath("/admin/commissions");
+  revalidatePath("/app/conversations");
+  return { ok: true, message: added ? ka.admin.commissionBackfilled(added) : ka.common.saved };
 }
 
 /** Marks a confirmed commission as received. */
@@ -357,14 +375,15 @@ export async function adminCampaignAction(_: FormState, formData: FormData): Pro
 
   let price: Prisma.Decimal | null = req.price;
   if (op === "approve") {
-    const raw = String(formData.get("price") ?? "").replace(/s/g, "").replace(",", ".");
+    const raw = String(formData.get("price") ?? "").replace(/\s/g, "").replace(",", ".");
     if (!raw || !Number.isFinite(Number(raw)) || Number(raw) < 0) return fail(ka.validation.formErrors, formData, { price: ka.validation.number });
     price = new Prisma.Decimal(raw);
   }
   const status = ({ review: "IN_PROGRESS", approve: "APPROVED", launch: "RUNNING", finish: "DONE", reject: "REJECTED" } as const)[op];
   const now = new Date();
-  await db.campaignRequest.update({
-    where: { id },
+  // Status guard: a double submit must not launch (and notify the audience) twice.
+  const moved = await db.campaignRequest.updateMany({
+    where: { id, status: req.status },
     data: {
       status,
       price,
@@ -373,6 +392,7 @@ export async function adminCampaignAction(_: FormState, formData: FormData): Pro
       ...(op === "finish" ? { finishedAt: now } : {}),
     },
   });
+  if (moved.count !== 1) return fail(ka.admin.transitionNotAllowed, formData);
 
   // Launch: deliver the offer to every company in the audience.
   let delivered = 0;

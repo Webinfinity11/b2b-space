@@ -9,6 +9,8 @@ import { ForbiddenError, assertUser, getActiveMembership } from "@/lib/authz";
 import { db } from "@/lib/db";
 import { openDirectConversation } from "@/lib/direct-chat";
 import { fail, invalid, zOptionalText, zOptionalUrl, zText, type FormState } from "@/lib/forms";
+import { companyCanAct } from "@/lib/company-policy";
+import { notify } from "@/lib/notify";
 import { hasPermission } from "@/lib/permissions";
 import { rateLimit } from "@/lib/rate-limit";
 import { DOCUMENT_TYPES, UploadError, filesFrom, storeFile } from "@/lib/storage";
@@ -32,7 +34,8 @@ const schema = z.object({
 export async function requestCampaignAction(_: FormState, formData: FormData): Promise<FormState> {
   const user = await assertUser();
   const m = await getActiveMembership(user.id);
-  if (!m) throw new ForbiddenError();
+  // Running a paid campaign is a company decision: owners and members who manage offers.
+  if (!m || !hasPermission(m, "offers.manage") || !companyCanAct(m.company.verificationStatus)) throw new ForbiddenError();
   if (!rateLimit(`campaign:${user.id}`, 20, 60 * 60_000)) return fail(ka.auth.tooManyAttempts, formData);
 
   const parsed = schema.safeParse(Object.fromEntries(formData));
@@ -84,6 +87,7 @@ export async function requestCampaignAction(_: FormState, formData: FormData): P
 export async function cancelCampaignAction(formData: FormData) {
   const user = await assertUser();
   const m = await getActiveMembership(user.id);
+  if (!m || !hasPermission(m, "offers.manage")) throw new ForbiddenError();
   const id = String(formData.get("requestId"));
   const r = await db.campaignRequest.updateMany({
     where: { id, companyId: m?.companyId ?? "__none__", status: { in: ["NEW", "IN_PROGRESS"] } },
@@ -92,6 +96,8 @@ export async function cancelCampaignAction(formData: FormData) {
   if (!r.count) throw new ForbiddenError();
   await audit({ actorId: user.id, action: "campaign.cancelled", entityType: "CampaignRequest", entityId: id });
   revalidatePath(`/app/campaigns/${id}`);
+  revalidatePath("/app/campaigns");
+  revalidatePath("/admin/campaigns");
 }
 
 /** A recipient answers a campaign: opens a negotiation with the campaign's company. */
@@ -104,11 +110,15 @@ export async function replyToCampaignAction(_: FormState, formData: FormData): P
   if (message.length < 5) return fail(ka.validation.formErrors, formData, { message: ka.validation.required });
   const recipient = await db.campaignRecipient.findUnique({
     where: { requestId_companyId: { requestId, companyId: m.companyId } },
-    include: { request: { select: { companyId: true, title: true, status: true } } },
+    include: { request: { select: { companyId: true, title: true, status: true, userId: true } } },
   });
   if (!recipient || recipient.request.status !== "RUNNING") throw new ForbiddenError();
-  const conversationId = await openDirectConversation(user.id, m, recipient.request.companyId, `${c.campReplyPrefix(recipient.request.title)}\n\n${message}`);
+  const conversationId = await openDirectConversation(user.id, m, recipient.request.companyId, `${c.campReplyPrefix(recipient.request.title)}\n\n${message}`, "campaign");
   if (!conversationId) return fail(ka.errors.generic);
+  // The person who ordered the campaign hears about every reply.
+  if (recipient.request.userId !== user.id) {
+    await notify([recipient.request.userId], { type: "CAMPAIGN", title: c.campNewReply(recipient.request.title, m.company.tradeName || m.company.legalName), link: `/app/conversations/${conversationId}` });
+  }
   await db.campaignRecipient.update({ where: { id: recipient.id }, data: { repliedAt: recipient.repliedAt ?? new Date(), viewedAt: recipient.viewedAt ?? new Date() } });
   await audit({ actorId: user.id, action: "campaign.replied", entityType: "CampaignRequest", entityId: requestId, metadata: { conversationId } });
   redirect(`/app/conversations/${conversationId}`);

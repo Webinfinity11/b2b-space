@@ -12,6 +12,11 @@ export function formatAmount(n: number, currency?: string | null): string {
   return `${sign}${grouped},${frac}${sym ? `\u00a0${sym}` : ""}`;
 }
 
+/** Current year in Georgia (invoice numbers must not slip to the previous year after local midnight). */
+export function yearInGeorgia(): number {
+  return Number(todayInGeorgia().slice(0, 4));
+}
+
 /** YYYY-MM-DD for "today" in Georgia (server runs in UTC). */
 export function todayInGeorgia(): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Tbilisi" }).format(new Date());

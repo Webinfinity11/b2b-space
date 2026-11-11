@@ -31,7 +31,7 @@ export default async function NewInvoicePage() {
 
   const sellable = rows.flatMap((c) => {
     const me = c.participants.find((p) => p.userId === user.id) ?? c.participants.find((p) => p.companyId && p.companyId === m?.companyId);
-    if (!me || dealSideFor(me.side, c.offer?.type ?? null) !== "SELLER") return [];
+    if (!me || dealSideFor(me.side, c.offer?.type ?? null, c.sellerSide) !== "SELLER") return [];
     if (me.companyId && !(m && m.companyId === me.companyId && hasPermission(m, "invoices.manage"))) return [];
     const invoices = c.dealTerms?.versions.filter((v) => v.invoice).length ?? 0;
     return [{ c, side: me.side, invoices }];

@@ -5,6 +5,7 @@ import { ka } from "@/i18n/ka";
 import { replyToCampaignAction } from "@/actions/campaigns";
 import { getActiveMembership, requireUser } from "@/lib/authz";
 import { db } from "@/lib/db";
+import { hasPermission } from "@/lib/permissions";
 import { companyName } from "@/lib/public";
 import { Icon } from "@/components/ui/Icon";
 import { PageHeader } from "@/components/ui/Card";
@@ -25,6 +26,14 @@ export default async function CampaignInboxPage({ params }: PageProps<"/app/camp
   if (!rec) notFound();
   if (!rec.viewedAt) await db.campaignRecipient.update({ where: { id: rec.id }, data: { viewedAt: new Date() } });
   const r = rec.request;
+  const canReply = hasPermission(m, "responses.manage");
+  // After replying, the negotiation with the campaign's company is one click away.
+  const chat = rec.repliedAt
+    ? await db.conversation.findFirst({
+        where: { offerId: null, AND: [{ participants: { some: { companyId: m.companyId } } }, { participants: { some: { companyId: r.companyId } } }] },
+        select: { id: true },
+      })
+    : null;
 
   return (
     <>
@@ -44,7 +53,12 @@ export default async function CampaignInboxPage({ params }: PageProps<"/app/camp
         </section>
         <section className="h-fit rounded-[16px] border border-line bg-surface p-6">
           {rec.repliedAt ? (
-            <p className="text-sm text-success">{ka.sgba.campReplied}</p>
+            <div className="space-y-3">
+              <p className="text-sm text-success">{ka.sgba.campReplied}</p>
+              {chat && <Link href={`/app/conversations/${chat.id}`} className="inline-flex items-center gap-1.5 text-sm font-medium text-accent-strong hover:underline">{ka.sgba.campOpenChat} <Icon name="arrow" size={15} /></Link>}
+            </div>
+          ) : r.status === "RUNNING" && !canReply ? (
+            <p className="text-sm text-muted">{ka.offer.noRespondPermission}</p>
           ) : r.status === "RUNNING" ? (
             <ActionForm action={replyToCampaignAction} className="space-y-3">
               <input type="hidden" name="requestId" value={r.id} />

@@ -1,5 +1,6 @@
 "use server";
 
+import { createHash } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -69,8 +70,10 @@ export async function registerAction(_: FormState, formData: FormData): Promise<
   const exists = await db.user.findUnique({ where: { email: d.email }, select: { id: true } });
   if (exists) return fail(ka.validation.formErrors, formData, { email: ka.auth.emailTaken });
 
-  const invitations = await db.companyInvitation.findMany({
-    where: { email: d.email, acceptedAt: null, revokedAt: null, expiresAt: { gt: new Date() } },
+  // An employee joins only through the secret link from their invitation, for the invited email.
+  const inviteToken = String(formData.get("invite") ?? "");
+  const invitations = !invitedMode || !inviteToken ? [] : await db.companyInvitation.findMany({
+    where: { email: d.email, tokenHash: createHash("sha256").update(inviteToken).digest("hex"), acceptedAt: null, revokedAt: null, expiresAt: { gt: new Date() } },
     include: { company: { select: { legalName: true, tradeName: true } } },
   });
   if (invitedMode && invitations.length === 0) return fail(ka.sgba.noInvitation, formData);

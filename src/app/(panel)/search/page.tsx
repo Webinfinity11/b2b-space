@@ -37,7 +37,7 @@ export default async function SearchPage({ searchParams }: PageProps<"/search">)
               <div className="flex flex-wrap gap-2">
                 {r.categories.map((c) => (
                   <Link key={c.slug} href={`/offers?category=${c.slug}`}>
-                    <Badge tone="info">{c.parent ? `${c.parent} · ${c.name}` : c.name}</Badge>
+                    <Badge tone="info">{c.parent ? `${c.parent.name} · ${c.name}` : c.name}</Badge>
                   </Link>
                 ))}
               </div>

@@ -7,9 +7,10 @@ import { AuthScreen } from "@/components/site/AuthScreen";
 
 export const metadata: Metadata = { title: ka.sgba.regTitle };
 
-/** Only companies register. Invited employees use the short form (?invited=1). */
+/** Only companies register. Invited employees arrive with the secret link from their invitation (?invite=…). */
 export default async function RegisterPage({ searchParams }: PageProps<"/register">) {
   const sp = await searchParams;
   if (await getCurrentUser()) redirect("/app");
-  return <AuthScreen tab="register" invited={param(sp.invited) === "1"} />;
+  const invite = param(sp.invite) ?? "";
+  return <AuthScreen tab="register" invited={Boolean(invite) || param(sp.invited) === "1"} inviteToken={invite} />;
 }

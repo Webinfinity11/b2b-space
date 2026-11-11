@@ -10,7 +10,7 @@ import { AuthTabs } from "./AuthTabs";
 import { FormSteps } from "./FormSteps";
 
 /** Sign-in and company registration on one page (tabs). */
-export async function AuthScreen({ tab, next, registered, invited }: { tab: "login" | "register"; next?: string; registered?: boolean; invited?: boolean }) {
+export async function AuthScreen({ tab, next, registered, invited, inviteToken }: { tab: "login" | "register"; next?: string; registered?: boolean; invited?: boolean; inviteToken?: string }) {
   const categories = invited ? [] : await getCategoryTree();
   const c = ka.sgba;
 
@@ -65,6 +65,7 @@ export async function AuthScreen({ tab, next, registered, invited }: { tab: "log
       </div>
       <ActionForm action={registerAction} className="space-y-4">
         <input type="hidden" name="mode" value="invited" />
+        <input type="hidden" name="invite" value={inviteToken ?? ""} />
         {person}
         <SubmitButton className="w-full" size="lg">{ka.auth.submitRegister}</SubmitButton>
       </ActionForm>
@@ -117,7 +118,7 @@ export async function AuthScreen({ tab, next, registered, invited }: { tab: "log
         />
       </ActionForm>
       <p className="mt-5 text-center text-sm text-muted">
-        {c.regInvited} <Link href="/register?invited=1" className="font-medium text-accent hover:underline">{c.regInvitedLink}</Link>
+        {c.regInvited} {c.regInvitedLink}
       </p>
     </>
   );

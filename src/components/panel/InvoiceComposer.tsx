@@ -57,6 +57,7 @@ export type InvoiceInitial = {
   taxRatePercent: string;
   deliveryCost: string;
   discountAmount: string;
+  deliveryTerms?: string;
   dueDate: string;
   paymentTerms: string;
   notes: string;
@@ -80,13 +81,25 @@ function Body({ currencies, defaults, onClose, initial, submitLabel }: { currenc
   const state = useFormState();
   const [rows, setRows] = useState<Row[]>(initial?.rows ?? [{ name: defaults.name, quantity: "1", unitPrice: defaults.price }]);
   const [currency, setCurrency] = useState(initial?.currency ?? defaults.currency);
+  const [tax, setTax] = useState(initial?.taxRatePercent ?? "");
+  const [delivery, setDelivery] = useState(initial?.deliveryCost ?? "");
+  const [discount, setDiscount] = useState(initial?.discountAmount ?? "");
   // After a successful send, start from a clean row for the next invoice.
   const [lastOk, setLastOk] = useState(state);
   if (state !== lastOk) {
     setLastOk(state);
-    if (state.ok) setRows([{ name: "", quantity: "1", unitPrice: "" }]);
+    if (state.ok) {
+      setRows([{ name: "", quantity: "1", unitPrice: "" }]);
+      setTax("");
+      setDelivery("");
+      setDiscount("");
+    }
   }
-  const total = rows.reduce((s, r) => s + num(r.quantity) * num(r.unitPrice), 0);
+  // Same math as the server (computeTotals): tax applies after discount, delivery is added on top.
+  const round = (n: number) => Math.round(n * 100) / 100;
+  const subtotal = rows.reduce((s, r) => s + round(num(r.quantity) * num(r.unitPrice)), 0);
+  const taxBase = subtotal - num(discount);
+  const total = round(taxBase + (tax ? round((taxBase * num(tax)) / 100) : 0) + num(delivery));
   const set = (i: number, k: keyof Row, v: string) => setRows((rs) => rs.map((r, j) => (j === i ? { ...r, [k]: v } : r)));
   const cell = `${controlClass} h-9`;
   const err = Object.entries(state.errors ?? {}).filter(([k]) => k.startsWith("items"));
@@ -118,11 +131,13 @@ function Body({ currencies, defaults, onClose, initial, submitLabel }: { currenc
         {i18n.composerAddLine}
       </button>
 
-      <details className="rounded-lg bg-surface p-2 text-sm" open={Boolean(initial)}>
+      <details className="rounded-lg bg-surface p-2 text-sm" open={Boolean(initial) || Boolean(tax || delivery || discount)}>
         <summary className="cursor-pointer text-xs text-muted">{i18n.composerMore}</summary>
         <div className="mt-2 grid gap-2 sm:grid-cols-2">
-          <input name="taxRatePercent" inputMode="decimal" defaultValue={initial?.taxRatePercent} placeholder={ka.terms.taxRate} aria-label={ka.terms.taxRate} className={cell} />
-          <input name="deliveryCost" inputMode="decimal" defaultValue={initial?.deliveryCost} placeholder={ka.terms.deliveryCost} aria-label={ka.terms.deliveryCost} className={cell} />
+          <input name="taxRatePercent" inputMode="decimal" value={tax} onChange={(e) => setTax(e.target.value)} placeholder={ka.terms.taxRate} aria-label={ka.terms.taxRate} className={cell} />
+          <input name="deliveryCost" inputMode="decimal" value={delivery} onChange={(e) => setDelivery(e.target.value)} placeholder={ka.terms.deliveryCost} aria-label={ka.terms.deliveryCost} className={cell} />
+          <input name="discountAmount" inputMode="decimal" value={discount} onChange={(e) => setDiscount(e.target.value)} placeholder={ka.terms.discount} aria-label={ka.terms.discount} className={cell} />
+          <input name="deliveryTerms" defaultValue={initial?.deliveryTerms} placeholder={ka.terms.deliveryTerms} aria-label={ka.terms.deliveryTerms} className={cell} />
           <label className="text-xs text-muted sm:col-span-1">
             {i18n.dueDate}
             <input name="dueDate" type="date" defaultValue={initial?.dueDate} className={`${cell} mt-1`} />
@@ -131,9 +146,6 @@ function Body({ currencies, defaults, onClose, initial, submitLabel }: { currenc
           <input name="notes" defaultValue={initial?.notes} placeholder={ka.terms.notes} aria-label={ka.terms.notes} className={`${cell} sm:col-span-2`} />
         </div>
       </details>
-      {/* Fields the server expects but the quick form leaves empty */}
-      <input type="hidden" name="discountAmount" value={initial?.discountAmount ?? ""} />
-      <input type="hidden" name="deliveryTerms" value="" />
 
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">

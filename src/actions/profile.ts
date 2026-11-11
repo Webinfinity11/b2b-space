@@ -7,13 +7,13 @@ import { ka } from "@/i18n/ka";
 import { audit } from "@/lib/audit";
 import { assertUser } from "@/lib/authz";
 import { db } from "@/lib/db";
-import { fail, invalid, zPassword, zPhone, zText, type FormState } from "@/lib/forms";
+import { fail, invalid, zOptionalPhone, zPassword, zText, type FormState } from "@/lib/forms";
 import { rateLimit } from "@/lib/rate-limit";
 import { destroyOtherSessions } from "@/lib/session";
 
 export async function updateProfileAction(_: FormState, formData: FormData): Promise<FormState> {
   const user = await assertUser();
-  const parsed = z.object({ firstName: zText(1, 60), lastName: zText(1, 60), phone: zPhone }).safeParse(Object.fromEntries(formData));
+  const parsed = z.object({ firstName: zText(1, 60), lastName: zText(1, 60), phone: zOptionalPhone }).safeParse(Object.fromEntries(formData));
   if (!parsed.success) return invalid(parsed.error, formData);
   await db.user.update({ where: { id: user.id }, data: parsed.data });
   revalidatePath("/app", "layout");

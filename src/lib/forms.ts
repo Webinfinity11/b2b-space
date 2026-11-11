@@ -52,7 +52,7 @@ export const zOptionalUrl = z
   .trim()
   .optional()
   .transform((s) => (s ? (/^https?:\/\//i.test(s) ? s : `https://${s}`) : null))
-  .refine((s) => s === null || (URL.canParse(s) && /^https?:$/.test(new URL(s).protocol)), { error: v.url });
+  .refine((s) => s === null || (URL.canParse(s) && /^https?:$/.test(new URL(s).protocol) && new URL(s).hostname.includes(".")), { error: v.url });
 
 export const zPassword = z
   .string({ error: v.required })

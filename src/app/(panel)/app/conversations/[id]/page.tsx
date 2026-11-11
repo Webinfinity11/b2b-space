@@ -43,7 +43,9 @@ export default async function ConversationPage({ params }: PageProps<"/app/conve
   const mySide = me?.side ?? c.participants.find((p) => p.companyId && p.companyId === m?.companyId)?.side ?? null;
   const byUser = new Map(c.participants.map((p) => [p.userId, p]));
   const others = c.participants.filter((p) => p.userId !== user.id);
-  const othersLastRead = others.reduce<Date | null>((acc, p) => (p.lastReadAt && (!acc || p.lastReadAt > acc) ? p.lastReadAt : acc), null);
+  // "Read" means the other party read it — colleagues on our side don't count.
+  const otherSide = others.filter((p) => !mySide || p.side !== mySide);
+  const othersLastRead = otherSide.reduce<Date | null>((acc, p) => (p.lastReadAt && (!acc || p.lastReadAt > acc) ? p.lastReadAt : acc), null);
   const lastMine = [...c.messages].reverse().find((msg) => msg.senderId === user.id);
 
   return (
@@ -135,7 +137,7 @@ export default async function ConversationPage({ params }: PageProps<"/app/conve
                 conversationId={c.id}
                 currencies={CURRENCIES}
                 defaults={{
-                  name: offerFull?.title.replace(/s*(დემო)$/, "") ?? "",
+                  name: offerFull?.title.replace(/\s*\(დემო\)$/, "") ?? "",
                   currency: offerFull?.currency ?? "GEL",
                   price: offerFull && (offerFull.priceType === "FIXED" || offerFull.priceType === "FROM") ? (offerFull.priceMin?.toString() ?? "") : "",
                 }}
@@ -154,6 +156,15 @@ export default async function ConversationPage({ params }: PageProps<"/app/conve
               <Field label={ka.sgba.colStage} name="stage">
                 <Select name="stage" defaultValue={c.stage} options={Object.entries(ka.sgba.stages).map(([value, label]) => ({ value, label }))} />
               </Field>
+              {!c.offer && mySide && (
+                <Field label={ka.sgba.sellerLabel} name="seller">
+                  <Select
+                    name="seller"
+                    defaultValue={deal?.dealSide === "SELLER" ? "us" : "them"}
+                    options={[{ value: "us", label: ka.sgba.sellerUs }, { value: "them", label: ka.sgba.sellerThem }]}
+                  />
+                </Field>
+              )}
               <Field label={ka.sgba.dealAmount} name="amount" optional>
                 <Input name="amount" inputMode="decimal" defaultValue={c.amount?.toString() ?? ""} />
               </Field>

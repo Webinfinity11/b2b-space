@@ -340,6 +340,7 @@ export const ConversationScalarFieldEnum = {
   stage: 'stage',
   amount: 'amount',
   commissionPct: 'commissionPct',
+  sellerSide: 'sellerSide',
   lastMessageAt: 'lastMessageAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -463,6 +464,7 @@ export const InvoiceScalarFieldEnum = {
   deliveryCost: 'deliveryCost',
   total: 'total',
   paidAmount: 'paidAmount',
+  commissionPct: 'commissionPct',
   paymentTerms: 'paymentTerms',
   notes: 'notes',
   snapshot: 'snapshot',

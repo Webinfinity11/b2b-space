@@ -82,7 +82,7 @@ export default async function DealsPage({ searchParams }: PageProps<"/app/conver
               </thead>
               <tbody className="divide-y divide-line">
                 {rows.map((c) => {
-                  const seller = c.participants.find((p) => dealSideFor(p.side, c.offer?.type ?? null) === "SELLER");
+                  const seller = c.participants.find((p) => dealSideFor(p.side, c.offer?.type ?? null, c.sellerSide) === "SELLER");
                   const buyer = c.participants.find((p) => p !== seller);
                   const pct = dealCommissionPct(c);
                   const amount = c.amount ? Number(c.amount) : null;

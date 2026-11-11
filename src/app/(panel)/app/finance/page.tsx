@@ -29,7 +29,7 @@ export default async function FinancePage() {
   const [deals, commissions, rules] = await Promise.all([
     db.conversation.findMany({
       where: { AND: [visibleConversations(user.id, m), { stage: { not: "CONTRACT" } }, { amount: { not: null } }] },
-      select: { amount: true, commissionPct: true, offer: { select: { type: true, commissionPct: true } }, participants: { select: { side: true, userId: true, companyId: true } } },
+      select: { amount: true, commissionPct: true, sellerSide: true, offer: { select: { type: true, commissionPct: true } }, participants: { select: { side: true, userId: true, companyId: true } } },
     }),
     m
       ? db.commission.findMany({
@@ -45,7 +45,7 @@ export default async function FinancePage() {
   // Generated: expected commission from open deals where we are the seller.
   const generated = deals.reduce((sum, d) => {
     const mine = d.participants.find((p) => (m ? p.companyId === m.companyId : p.userId === user.id));
-    if (!mine || dealSideFor(mine.side, d.offer?.type ?? null) !== "SELLER") return sum;
+    if (!mine || dealSideFor(mine.side, d.offer?.type ?? null, d.sellerSide) !== "SELLER") return sum;
     return sum + (Number(d.amount) * Number(dealCommissionPct(d) ?? 0)) / 100;
   }, 0);
   const gel = commissions.filter((c) => c.currency === "GEL");
@@ -72,13 +72,15 @@ export default async function FinancePage() {
   for (const inv of invoices) {
     const row = money.get(inv.currency) ?? { received: 0, receivable: 0, overdue: 0, paid: 0, toPay: 0 };
     const open = Number(inv.total) - Number(inv.paidAmount);
+    // Refunded money went back — it is neither received nor paid.
+    const kept = inv.status === "REFUNDED" ? 0 : Number(inv.paidAmount);
     const isOpen = !["PAID", "REFUNDED"].includes(inv.status) && open > 0;
     if (invoiceSide(inv, user.id, m) === "seller") {
-      row.received += Number(inv.paidAmount);
+      row.received += kept;
       if (isOpen) row.receivable += open;
       if (isOpen && inv.dueDate && inv.dueDate < now) row.overdue += open;
     } else {
-      row.paid += Number(inv.paidAmount);
+      row.paid += kept;
       if (isOpen) row.toPay += open;
     }
     money.set(inv.currency, row);

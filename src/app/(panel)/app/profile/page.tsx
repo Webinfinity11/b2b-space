@@ -32,8 +32,8 @@ export default async function ProfilePage() {
               <Field label={ka.auth.email} name="email" hint={user.emailVerifiedAt ? ka.profile.emailVerified : ka.profile.emailNotVerified}>
                 <Input name="email" defaultValue={user.email} disabled />
               </Field>
-              <Field label={ka.auth.phone} name="phone">
-                <Input name="phone" type="tel" defaultValue={user.phone} required />
+              <Field label={ka.auth.phone} name="phone" optional>
+                <Input name="phone" type="tel" defaultValue={user.phone ?? ""} />
               </Field>
               <SubmitButton>{ka.common.save}</SubmitButton>
             </ActionForm>

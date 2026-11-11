@@ -108,7 +108,7 @@ export async function saveOfferAction(_: FormState, formData: FormData): Promise
     return fail(v.formErrors, formData, Object.fromEntries(parsed.error.issues.map((i) => [String(i.path[0]), i.message])));
   }
   const d = parsed.data;
-  const category = await db.category.findFirst({ where: { id: d.categoryId, isActive: true }, select: { id: true } });
+  const category = await db.category.findFirst({ where: { id: d.categoryId, kind: "OFFER", OR: [{ isActive: true }, ...(existing ? [{ id: existing.categoryId ?? "" }] : [])] }, select: { id: true } });
   if (!category) return fail(v.formErrors, formData, { categoryId: v.chooseCategory });
   const companyId = existing ? existing.companyId : await resolvePublisher(user.id, d.publishAs);
 
@@ -189,6 +189,8 @@ export async function changeOfferStatusAction(formData: FormData) {
   const op = String(formData.get("op"));
   const allowedFrom = STATUS_TRANSITIONS[op];
   if (!allowedFrom || !allowedFrom.includes(offer.status)) throw new ForbiddenError();
+  // An offer past its date would be "published" yet invisible — the owner must extend the date first.
+  if (op === "publish" && offer.validUntil && offer.validUntil < new Date()) redirect(`/company/offers/${offer.id}`);
   const status: OfferStatus = op === "publish" ? "PUBLISHED" : op === "close" ? "CLOSED" : "ARCHIVED";
   await db.offer.update({ where: { id: offer.id }, data: { status, publishedAt: status === "PUBLISHED" ? (offer.publishedAt ?? new Date()) : offer.publishedAt } });
   await audit({ actorId: user.id, action: "offer.status_changed", entityType: "Offer", entityId: offer.id, metadata: { from: offer.status, to: status } });
@@ -229,14 +231,17 @@ export async function respondToOfferAction(_: FormState, formData: FormData): Pr
       include: { company: { select: { verificationStatus: true } } },
     });
     if (!member || member.status !== "ACTIVE" || !hasPermission(member, "responses.manage") || !companyCanAct(member.company.verificationStatus)) {
-      throw new ForbiddenError();
+      return fail(ka.offer.noRespondPermission, formData);
     }
     responderCompanyId = respondAs;
   }
 
   // Cannot respond to your own (or your company's) offer.
   if (offer.authorUserId === user.id || (offer.companyId && offer.companyId === responderCompanyId)) return fail(ka.offer.ownOffer, formData);
-  const duplicate = await db.offerResponse.findFirst({ where: { offerId, responderUserId: user.id, status: { not: "WITHDRAWN" } } });
+  // One open response per person — and per company, so colleagues don't open parallel chats.
+  const duplicate = await db.offerResponse.findFirst({
+    where: { offerId, status: { not: "WITHDRAWN" }, OR: [{ responderUserId: user.id }, ...(responderCompanyId ? [{ responderCompanyId }] : [])] },
+  });
   if (duplicate) return fail(ka.offer.alreadyResponded, formData);
 
   const conversationId = await db.$transaction(async (tx) => {

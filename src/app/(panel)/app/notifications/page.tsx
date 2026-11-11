@@ -36,7 +36,7 @@ export default async function NotificationsPage() {
                 <span aria-hidden="true" className={`mt-1.5 size-2 shrink-0 rounded-full ${n.readAt ? "bg-line" : "bg-accent-strong"}`} />
                 <div className="min-w-0">
                   {n.link ? (
-                    <Link href={n.link} className="text-sm font-medium hover:underline">{n.title}</Link>
+                    <Link href={`/app/notifications/${n.id}`} className="text-sm font-medium hover:underline">{n.title}</Link>
                   ) : (
                     <p className="text-sm font-medium">{n.title}</p>
                   )}

@@ -55,10 +55,11 @@ export async function OfferList({ type }: { type: "OFFER" | "REQUEST" }) {
                 <Td className="tabular-nums">{o._count.responses}</Td>
                 <Td>
                   <div className="flex flex-wrap gap-1.5">
-                    {o.status !== "DRAFT" && (
+                    {["PUBLISHED", "ACCEPTING_RESPONSES", "NEGOTIATING"].includes(o.status) && !expired && (
                       <ButtonLink href={`/offers/${o.id}`} size="sm" variant="ghost" target="_blank">{ka.common.view}</ButtonLink>
                     )}
-                    {(o.status === "DRAFT" || o.status === "CLOSED") && <StatusButton id={o.id} op="publish" label={ka.offerForm.publish} />}
+                    {(o.status === "DRAFT" || o.status === "CLOSED") && !expired && <StatusButton id={o.id} op="publish" label={ka.offerForm.publish} />}
+                    {expired && <ButtonLink href={`/company/offers/${o.id}`} size="sm" variant="secondary">{ka.offerForm.extendValidity}</ButtonLink>}
                     {["PUBLISHED", "ACCEPTING_RESPONSES", "NEGOTIATING"].includes(o.status) && <StatusButton id={o.id} op="close" label={ka.offerForm.unpublish} />}
                     <StatusButton id={o.id} op="archive" label={ka.offerForm.archive} />
                   </div>

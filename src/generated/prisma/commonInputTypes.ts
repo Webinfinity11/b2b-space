@@ -447,6 +447,13 @@ export type EnumDealStageFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumDealStageFilter<$PrismaModel> | $Enums.DealStage
 }
 
+export type EnumParticipantSideNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.ParticipantSide | Prisma.EnumParticipantSideFieldRefInput<$PrismaModel> | null
+  in?: $Enums.ParticipantSide[] | Prisma.ListEnumParticipantSideFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.ParticipantSide[] | Prisma.ListEnumParticipantSideFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumParticipantSideNullableFilter<$PrismaModel> | $Enums.ParticipantSide | null
+}
+
 export type EnumDealStageWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.DealStage | Prisma.EnumDealStageFieldRefInput<$PrismaModel>
   in?: $Enums.DealStage[] | Prisma.ListEnumDealStageFieldRefInput<$PrismaModel>
@@ -455,6 +462,16 @@ export type EnumDealStageWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumDealStageFilter<$PrismaModel>
   _max?: Prisma.NestedEnumDealStageFilter<$PrismaModel>
+}
+
+export type EnumParticipantSideNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ParticipantSide | Prisma.EnumParticipantSideFieldRefInput<$PrismaModel> | null
+  in?: $Enums.ParticipantSide[] | Prisma.ListEnumParticipantSideFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.ParticipantSide[] | Prisma.ListEnumParticipantSideFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumParticipantSideNullableWithAggregatesFilter<$PrismaModel> | $Enums.ParticipantSide | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumParticipantSideNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumParticipantSideNullableFilter<$PrismaModel>
 }
 
 export type EnumParticipantSideFilter<$PrismaModel = never> = {
@@ -1246,6 +1263,13 @@ export type NestedEnumDealStageFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumDealStageFilter<$PrismaModel> | $Enums.DealStage
 }
 
+export type NestedEnumParticipantSideNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.ParticipantSide | Prisma.EnumParticipantSideFieldRefInput<$PrismaModel> | null
+  in?: $Enums.ParticipantSide[] | Prisma.ListEnumParticipantSideFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.ParticipantSide[] | Prisma.ListEnumParticipantSideFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumParticipantSideNullableFilter<$PrismaModel> | $Enums.ParticipantSide | null
+}
+
 export type NestedEnumDealStageWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.DealStage | Prisma.EnumDealStageFieldRefInput<$PrismaModel>
   in?: $Enums.DealStage[] | Prisma.ListEnumDealStageFieldRefInput<$PrismaModel>
@@ -1254,6 +1278,16 @@ export type NestedEnumDealStageWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumDealStageFilter<$PrismaModel>
   _max?: Prisma.NestedEnumDealStageFilter<$PrismaModel>
+}
+
+export type NestedEnumParticipantSideNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ParticipantSide | Prisma.EnumParticipantSideFieldRefInput<$PrismaModel> | null
+  in?: $Enums.ParticipantSide[] | Prisma.ListEnumParticipantSideFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.ParticipantSide[] | Prisma.ListEnumParticipantSideFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumParticipantSideNullableWithAggregatesFilter<$PrismaModel> | $Enums.ParticipantSide | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumParticipantSideNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumParticipantSideNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumParticipantSideFilter<$PrismaModel = never> = {

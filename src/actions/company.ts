@@ -1,6 +1,6 @@
 "use server";
 
-import { randomBytes } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { ka } from "@/i18n/ka";
@@ -139,8 +139,11 @@ export async function addMemberAction(_: FormState, formData: FormData): Promise
       where: { companyId, email: parsed.data.email, acceptedAt: null, revokedAt: null },
     });
     const expiresAt = new Date(Date.now() + 30 * 864e5);
+    // The link carries a one-time secret; only its hash is stored. Re-inviting issues a fresh link.
+    const token = randomBytes(24).toString("base64url");
+    const tokenHash = createHash("sha256").update(token).digest("hex");
     if (pending) {
-      await db.companyInvitation.update({ where: { id: pending.id }, data: { role: parsed.data.role, permissions, expiresAt } });
+      await db.companyInvitation.update({ where: { id: pending.id }, data: { role: parsed.data.role, permissions, expiresAt, tokenHash } });
     } else {
       await db.companyInvitation.create({
         data: {
@@ -150,16 +153,17 @@ export async function addMemberAction(_: FormState, formData: FormData): Promise
           permissions,
           invitedById: user.id,
           expiresAt,
-          tokenHash: randomBytes(32).toString("hex"),
+          tokenHash,
         },
       });
     }
     // Email the invitation with the employee registration link.
-    const link = `${appUrl()}/register?invited=1`;
+    const path = `/register?invite=${token}`;
+    const link = `${appUrl()}${path}`;
     if (emailEnabled()) {
       const inviter = await db.company.findUniqueOrThrow({ where: { id: companyId }, select: { legalName: true, tradeName: true } });
       const name = inviter.tradeName || inviter.legalName;
-      const { html, text } = renderEmail({ title: ka.sgba.inviteEmailTitle(name), body: ka.sgba.inviteEmailBody(name, parsed.data.email), link: "/register?invited=1", button: ka.sgba.inviteEmailButton, footer: ka.email.footer });
+      const { html, text } = renderEmail({ title: ka.sgba.inviteEmailTitle(name), body: ka.sgba.inviteEmailBody(name, parsed.data.email), link: path, button: ka.sgba.inviteEmailButton, footer: ka.email.footer });
       await sendEmail({ to: parsed.data.email, subject: ka.sgba.inviteEmailTitle(name), html, text });
     }
     await audit({ actorId: user.id, action: "company.member_invited", entityType: "Company", entityId: companyId, metadata: { email: parsed.data.email, role: parsed.data.role } });

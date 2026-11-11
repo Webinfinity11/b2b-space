@@ -441,6 +441,8 @@ model Conversation {
   amount        Decimal?  @db.Decimal(18, 2)
   /// Commission percent for this deal (falls back to the offer's).
   commissionPct Decimal?  @db.Decimal(5, 2)
+  /// Direct chats (no offer): which side sells. null = the contacted company (AUTHOR) sells.
+  sellerSide    ParticipantSide?
   lastMessageAt DateTime  @default(now())
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -641,6 +643,8 @@ model Invoice {
   deliveryCost       Decimal       @default(0) @db.Decimal(18, 2)
   total              Decimal       @db.Decimal(18, 2)
   paidAmount         Decimal       @default(0) @db.Decimal(18, 2)
+  /// Commission percent frozen when the invoice was issued (null = use the deal's current one).
+  commissionPct      Decimal?      @db.Decimal(5, 2)
   paymentTerms       String?
   notes              String?
   /// Frozen copy of seller/buyer legal data and terms at the moment of creation.
