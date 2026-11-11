@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ka } from "@/i18n/ka";
+import { NotificationLink } from "@/components/panel/NotificationLink";
 import { getActiveMembership, requireUser } from "@/lib/authz";
 import { otherPartyLabel, partySelect } from "@/lib/chat";
 import { db } from "@/lib/db";
@@ -153,7 +154,7 @@ export default async function DashboardPage() {
             <ul className="space-y-1">
               {notifications.map((n) => (
                 <li key={n.id}>
-                  <Link href={`/app/notifications/${n.id}`} className="flex items-start gap-3 rounded-[10px] px-2 py-2.5 hover:bg-canvas">
+                  <NotificationLink id={n.id} href={(n.link && n.link.startsWith("/") && !n.link.startsWith("//") ? n.link : "/app/notifications")} unread={!n.readAt} className="flex items-start gap-3 rounded-[10px] px-2 py-2.5 hover:bg-canvas">
                     <span className={`grid size-9 shrink-0 place-items-center rounded-lg ${n.readAt ? "bg-chip text-muted" : "bg-blue-soft text-accent"}`}>
                       <Icon name={n.type.startsWith("INVOICE") || n.type.startsWith("PAYMENT") ? "invoice" : n.type === "NEW_MESSAGE" ? "chat" : "bell"} size={16} />
                     </span>
@@ -161,7 +162,7 @@ export default async function DashboardPage() {
                       <span className={`block text-sm ${n.readAt ? "text-secondary" : "font-medium text-ink"}`}>{n.title}</span>
                       <RelativeTime date={n.createdAt.toISOString()} className="text-xs text-muted" />
                     </span>
-                  </Link>
+                  </NotificationLink>
                 </li>
               ))}
             </ul>

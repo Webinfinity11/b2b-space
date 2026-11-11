@@ -20,3 +20,10 @@ export async function markNotificationsReadAction() {
   await db.notification.updateMany({ where: { userId: user.id, readAt: null }, data: { readAt: new Date() } });
   revalidatePath("/app", "layout");
 }
+
+/** One notification opened: mark it read (the badge updates on the next render). */
+export async function markNotificationReadAction(id: string) {
+  const user = await assertUser();
+  await db.notification.updateMany({ where: { id, userId: user.id, readAt: null }, data: { readAt: new Date() } });
+  revalidatePath("/app", "layout");
+}

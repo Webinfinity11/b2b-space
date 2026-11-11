@@ -40,5 +40,12 @@ export function ButtonLink({
   className = "",
   ...props
 }: ComponentProps<typeof Link> & { variant?: Variant; size?: Size }) {
+  const href = typeof props.href === "string" ? props.href : "";
+  // Route handlers (PDFs, files) are not pages — client-side routing can't render them.
+  if (href.startsWith("/api/")) {
+    const { href: _h, prefetch: _p, replace: _r, scroll: _s, ...rest } = props;
+    void _h; void _p; void _r; void _s;
+    return <a href={href} className={buttonClass(variant, size, className)} {...(rest as ComponentProps<"a">)} />;
+  }
   return <Link className={buttonClass(variant, size, className)} {...props} />;
 }

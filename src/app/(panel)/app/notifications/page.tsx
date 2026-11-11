@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ka } from "@/i18n/ka";
+import { NotificationLink } from "@/components/panel/NotificationLink";
 import { markNotificationsReadAction } from "@/actions/panel";
 import { requireUser } from "@/lib/authz";
 import { db } from "@/lib/db";
@@ -36,7 +36,7 @@ export default async function NotificationsPage() {
                 <span aria-hidden="true" className={`mt-1.5 size-2 shrink-0 rounded-full ${n.readAt ? "bg-line" : "bg-accent-strong"}`} />
                 <div className="min-w-0">
                   {n.link ? (
-                    <Link href={`/app/notifications/${n.id}`} className="text-sm font-medium hover:underline">{n.title}</Link>
+                    <NotificationLink id={n.id} href={(n.link && n.link.startsWith("/") && !n.link.startsWith("//") ? n.link : "/app/notifications")} unread={!n.readAt} className="text-sm font-medium hover:underline">{n.title}</NotificationLink>
                   ) : (
                     <p className="text-sm font-medium">{n.title}</p>
                   )}
