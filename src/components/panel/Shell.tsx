@@ -68,7 +68,7 @@ export function Shell({
                   {item.badge ? (
                     <span className="absolute right-1 top-0.5 grid h-[19px] min-w-[19px] place-items-center rounded-full border-2 border-surface bg-accent px-1 text-[10px] font-bold text-white tabular-nums">{item.badge}</span>
                   ) : null}
-                  <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 hidden -translate-y-1/2 whitespace-nowrap rounded-[8px] bg-ink px-2.5 py-1.5 text-xs font-medium text-white shadow-lg group-hover:block group-focus-visible:block">
+                  <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 hidden -translate-y-1/2 whitespace-nowrap nav-tip rounded-[8px] border border-white/10 bg-deep px-2.5 py-1.5 text-xs font-medium text-white shadow-lg group-hover:block group-focus-visible:block">
                     {item.label}
                   </span>
                 </Link>

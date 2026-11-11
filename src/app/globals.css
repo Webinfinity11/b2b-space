@@ -167,6 +167,8 @@ input[type="radio"] {
   :root[data-theme="dark"] .hover\:border-accent\/50:hover { border-color: rgb(125 155 255 / 0.55); }
   :root[data-theme="dark"] .hover\:border-line-strong:hover { border-color: #3d4d75; }
   :root[data-theme="dark"] .hover\:ring-\[\#c9d5ef\]:hover { --tw-ring-color: #3d4d75; }}
+/* Sidebar tooltip: lighter chip so it stands off the dark canvas */
+:root[data-theme="dark"] .nav-tip { background-color: #2c3d68; border-color: #3d4f80; color: #fff; }
 /* Decorative banner art blends into the dark card */
 :root[data-theme="dark"] img[src="/images/banner-art.webp"] { opacity: 0.55; }
 
