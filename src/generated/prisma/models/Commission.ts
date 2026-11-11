@@ -48,6 +48,9 @@ export type CommissionMinAggregateOutputType = {
   pct: runtime.Decimal | null
   amount: runtime.Decimal | null
   status: $Enums.CommissionStatus | null
+  number: string | null
+  ruleId: string | null
+  note: string | null
   settledAt: Date | null
   createdAt: Date | null
 }
@@ -62,6 +65,9 @@ export type CommissionMaxAggregateOutputType = {
   pct: runtime.Decimal | null
   amount: runtime.Decimal | null
   status: $Enums.CommissionStatus | null
+  number: string | null
+  ruleId: string | null
+  note: string | null
   settledAt: Date | null
   createdAt: Date | null
 }
@@ -76,6 +82,9 @@ export type CommissionCountAggregateOutputType = {
   pct: number
   amount: number
   status: number
+  number: number
+  ruleId: number
+  note: number
   settledAt: number
   createdAt: number
   _all: number
@@ -104,6 +113,9 @@ export type CommissionMinAggregateInputType = {
   pct?: true
   amount?: true
   status?: true
+  number?: true
+  ruleId?: true
+  note?: true
   settledAt?: true
   createdAt?: true
 }
@@ -118,6 +130,9 @@ export type CommissionMaxAggregateInputType = {
   pct?: true
   amount?: true
   status?: true
+  number?: true
+  ruleId?: true
+  note?: true
   settledAt?: true
   createdAt?: true
 }
@@ -132,6 +147,9 @@ export type CommissionCountAggregateInputType = {
   pct?: true
   amount?: true
   status?: true
+  number?: true
+  ruleId?: true
+  note?: true
   settledAt?: true
   createdAt?: true
   _all?: true
@@ -233,6 +251,9 @@ export type CommissionGroupByOutputType = {
   pct: runtime.Decimal
   amount: runtime.Decimal
   status: $Enums.CommissionStatus
+  number: string | null
+  ruleId: string | null
+  note: string | null
   settledAt: Date | null
   createdAt: Date
   _count: CommissionCountAggregateOutputType | null
@@ -270,8 +291,12 @@ export type CommissionWhereInput = {
   pct?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   amount?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFilter<"Commission"> | $Enums.CommissionStatus
+  number?: Prisma.StringNullableFilter<"Commission"> | string | null
+  ruleId?: Prisma.StringNullableFilter<"Commission"> | string | null
+  note?: Prisma.StringNullableFilter<"Commission"> | string | null
   settledAt?: Prisma.DateTimeNullableFilter<"Commission"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Commission"> | Date | string
+  rule?: Prisma.XOR<Prisma.CommissionRuleNullableScalarRelationFilter, Prisma.CommissionRuleWhereInput> | null
   invoice?: Prisma.XOR<Prisma.InvoiceScalarRelationFilter, Prisma.InvoiceWhereInput>
   conversation?: Prisma.XOR<Prisma.ConversationNullableScalarRelationFilter, Prisma.ConversationWhereInput> | null
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
@@ -287,8 +312,12 @@ export type CommissionOrderByWithRelationInput = {
   pct?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  number?: Prisma.SortOrderInput | Prisma.SortOrder
+  ruleId?: Prisma.SortOrderInput | Prisma.SortOrder
+  note?: Prisma.SortOrderInput | Prisma.SortOrder
   settledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  rule?: Prisma.CommissionRuleOrderByWithRelationInput
   invoice?: Prisma.InvoiceOrderByWithRelationInput
   conversation?: Prisma.ConversationOrderByWithRelationInput
   company?: Prisma.CompanyOrderByWithRelationInput
@@ -297,6 +326,7 @@ export type CommissionOrderByWithRelationInput = {
 export type CommissionWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   invoiceId?: string
+  number?: string
   AND?: Prisma.CommissionWhereInput | Prisma.CommissionWhereInput[]
   OR?: Prisma.CommissionWhereInput[]
   NOT?: Prisma.CommissionWhereInput | Prisma.CommissionWhereInput[]
@@ -307,12 +337,15 @@ export type CommissionWhereUniqueInput = Prisma.AtLeast<{
   pct?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   amount?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFilter<"Commission"> | $Enums.CommissionStatus
+  ruleId?: Prisma.StringNullableFilter<"Commission"> | string | null
+  note?: Prisma.StringNullableFilter<"Commission"> | string | null
   settledAt?: Prisma.DateTimeNullableFilter<"Commission"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Commission"> | Date | string
+  rule?: Prisma.XOR<Prisma.CommissionRuleNullableScalarRelationFilter, Prisma.CommissionRuleWhereInput> | null
   invoice?: Prisma.XOR<Prisma.InvoiceScalarRelationFilter, Prisma.InvoiceWhereInput>
   conversation?: Prisma.XOR<Prisma.ConversationNullableScalarRelationFilter, Prisma.ConversationWhereInput> | null
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
-}, "id" | "invoiceId">
+}, "id" | "invoiceId" | "number">
 
 export type CommissionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -324,6 +357,9 @@ export type CommissionOrderByWithAggregationInput = {
   pct?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  number?: Prisma.SortOrderInput | Prisma.SortOrder
+  ruleId?: Prisma.SortOrderInput | Prisma.SortOrder
+  note?: Prisma.SortOrderInput | Prisma.SortOrder
   settledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.CommissionCountOrderByAggregateInput
@@ -346,6 +382,9 @@ export type CommissionScalarWhereWithAggregatesInput = {
   pct?: Prisma.DecimalWithAggregatesFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   amount?: Prisma.DecimalWithAggregatesFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusWithAggregatesFilter<"Commission"> | $Enums.CommissionStatus
+  number?: Prisma.StringNullableWithAggregatesFilter<"Commission"> | string | null
+  ruleId?: Prisma.StringNullableWithAggregatesFilter<"Commission"> | string | null
+  note?: Prisma.StringNullableWithAggregatesFilter<"Commission"> | string | null
   settledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Commission"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Commission"> | Date | string
 }
@@ -357,8 +396,11 @@ export type CommissionCreateInput = {
   pct: runtime.Decimal | runtime.DecimalJsLike | number | string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  number?: string | null
+  note?: string | null
   settledAt?: Date | string | null
   createdAt?: Date | string
+  rule?: Prisma.CommissionRuleCreateNestedOneWithoutCommissionsInput
   invoice: Prisma.InvoiceCreateNestedOneWithoutCommissionInput
   conversation?: Prisma.ConversationCreateNestedOneWithoutCommissionsInput
   company?: Prisma.CompanyCreateNestedOneWithoutCommissionsInput
@@ -374,6 +416,9 @@ export type CommissionUncheckedCreateInput = {
   pct: runtime.Decimal | runtime.DecimalJsLike | number | string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  number?: string | null
+  ruleId?: string | null
+  note?: string | null
   settledAt?: Date | string | null
   createdAt?: Date | string
 }
@@ -385,8 +430,11 @@ export type CommissionUpdateInput = {
   pct?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rule?: Prisma.CommissionRuleUpdateOneWithoutCommissionsNestedInput
   invoice?: Prisma.InvoiceUpdateOneRequiredWithoutCommissionNestedInput
   conversation?: Prisma.ConversationUpdateOneWithoutCommissionsNestedInput
   company?: Prisma.CompanyUpdateOneWithoutCommissionsNestedInput
@@ -402,6 +450,9 @@ export type CommissionUncheckedUpdateInput = {
   pct?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -416,6 +467,9 @@ export type CommissionCreateManyInput = {
   pct: runtime.Decimal | runtime.DecimalJsLike | number | string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  number?: string | null
+  ruleId?: string | null
+  note?: string | null
   settledAt?: Date | string | null
   createdAt?: Date | string
 }
@@ -427,6 +481,8 @@ export type CommissionUpdateManyMutationInput = {
   pct?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -441,6 +497,9 @@ export type CommissionUncheckedUpdateManyInput = {
   pct?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -470,6 +529,9 @@ export type CommissionCountOrderByAggregateInput = {
   pct?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  number?: Prisma.SortOrder
+  ruleId?: Prisma.SortOrder
+  note?: Prisma.SortOrder
   settledAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -490,6 +552,9 @@ export type CommissionMaxOrderByAggregateInput = {
   pct?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  number?: Prisma.SortOrder
+  ruleId?: Prisma.SortOrder
+  note?: Prisma.SortOrder
   settledAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -504,6 +569,9 @@ export type CommissionMinOrderByAggregateInput = {
   pct?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  number?: Prisma.SortOrder
+  ruleId?: Prisma.SortOrder
+  note?: Prisma.SortOrder
   settledAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -634,6 +702,48 @@ export type EnumCommissionStatusFieldUpdateOperationsInput = {
   set?: $Enums.CommissionStatus
 }
 
+export type CommissionCreateNestedManyWithoutRuleInput = {
+  create?: Prisma.XOR<Prisma.CommissionCreateWithoutRuleInput, Prisma.CommissionUncheckedCreateWithoutRuleInput> | Prisma.CommissionCreateWithoutRuleInput[] | Prisma.CommissionUncheckedCreateWithoutRuleInput[]
+  connectOrCreate?: Prisma.CommissionCreateOrConnectWithoutRuleInput | Prisma.CommissionCreateOrConnectWithoutRuleInput[]
+  createMany?: Prisma.CommissionCreateManyRuleInputEnvelope
+  connect?: Prisma.CommissionWhereUniqueInput | Prisma.CommissionWhereUniqueInput[]
+}
+
+export type CommissionUncheckedCreateNestedManyWithoutRuleInput = {
+  create?: Prisma.XOR<Prisma.CommissionCreateWithoutRuleInput, Prisma.CommissionUncheckedCreateWithoutRuleInput> | Prisma.CommissionCreateWithoutRuleInput[] | Prisma.CommissionUncheckedCreateWithoutRuleInput[]
+  connectOrCreate?: Prisma.CommissionCreateOrConnectWithoutRuleInput | Prisma.CommissionCreateOrConnectWithoutRuleInput[]
+  createMany?: Prisma.CommissionCreateManyRuleInputEnvelope
+  connect?: Prisma.CommissionWhereUniqueInput | Prisma.CommissionWhereUniqueInput[]
+}
+
+export type CommissionUpdateManyWithoutRuleNestedInput = {
+  create?: Prisma.XOR<Prisma.CommissionCreateWithoutRuleInput, Prisma.CommissionUncheckedCreateWithoutRuleInput> | Prisma.CommissionCreateWithoutRuleInput[] | Prisma.CommissionUncheckedCreateWithoutRuleInput[]
+  connectOrCreate?: Prisma.CommissionCreateOrConnectWithoutRuleInput | Prisma.CommissionCreateOrConnectWithoutRuleInput[]
+  upsert?: Prisma.CommissionUpsertWithWhereUniqueWithoutRuleInput | Prisma.CommissionUpsertWithWhereUniqueWithoutRuleInput[]
+  createMany?: Prisma.CommissionCreateManyRuleInputEnvelope
+  set?: Prisma.CommissionWhereUniqueInput | Prisma.CommissionWhereUniqueInput[]
+  disconnect?: Prisma.CommissionWhereUniqueInput | Prisma.CommissionWhereUniqueInput[]
+  delete?: Prisma.CommissionWhereUniqueInput | Prisma.CommissionWhereUniqueInput[]
+  connect?: Prisma.CommissionWhereUniqueInput | Prisma.CommissionWhereUniqueInput[]
+  update?: Prisma.CommissionUpdateWithWhereUniqueWithoutRuleInput | Prisma.CommissionUpdateWithWhereUniqueWithoutRuleInput[]
+  updateMany?: Prisma.CommissionUpdateManyWithWhereWithoutRuleInput | Prisma.CommissionUpdateManyWithWhereWithoutRuleInput[]
+  deleteMany?: Prisma.CommissionScalarWhereInput | Prisma.CommissionScalarWhereInput[]
+}
+
+export type CommissionUncheckedUpdateManyWithoutRuleNestedInput = {
+  create?: Prisma.XOR<Prisma.CommissionCreateWithoutRuleInput, Prisma.CommissionUncheckedCreateWithoutRuleInput> | Prisma.CommissionCreateWithoutRuleInput[] | Prisma.CommissionUncheckedCreateWithoutRuleInput[]
+  connectOrCreate?: Prisma.CommissionCreateOrConnectWithoutRuleInput | Prisma.CommissionCreateOrConnectWithoutRuleInput[]
+  upsert?: Prisma.CommissionUpsertWithWhereUniqueWithoutRuleInput | Prisma.CommissionUpsertWithWhereUniqueWithoutRuleInput[]
+  createMany?: Prisma.CommissionCreateManyRuleInputEnvelope
+  set?: Prisma.CommissionWhereUniqueInput | Prisma.CommissionWhereUniqueInput[]
+  disconnect?: Prisma.CommissionWhereUniqueInput | Prisma.CommissionWhereUniqueInput[]
+  delete?: Prisma.CommissionWhereUniqueInput | Prisma.CommissionWhereUniqueInput[]
+  connect?: Prisma.CommissionWhereUniqueInput | Prisma.CommissionWhereUniqueInput[]
+  update?: Prisma.CommissionUpdateWithWhereUniqueWithoutRuleInput | Prisma.CommissionUpdateWithWhereUniqueWithoutRuleInput[]
+  updateMany?: Prisma.CommissionUpdateManyWithWhereWithoutRuleInput | Prisma.CommissionUpdateManyWithWhereWithoutRuleInput[]
+  deleteMany?: Prisma.CommissionScalarWhereInput | Prisma.CommissionScalarWhereInput[]
+}
+
 export type CommissionCreateWithoutCompanyInput = {
   id?: string
   currency: string
@@ -641,8 +751,11 @@ export type CommissionCreateWithoutCompanyInput = {
   pct: runtime.Decimal | runtime.DecimalJsLike | number | string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  number?: string | null
+  note?: string | null
   settledAt?: Date | string | null
   createdAt?: Date | string
+  rule?: Prisma.CommissionRuleCreateNestedOneWithoutCommissionsInput
   invoice: Prisma.InvoiceCreateNestedOneWithoutCommissionInput
   conversation?: Prisma.ConversationCreateNestedOneWithoutCommissionsInput
 }
@@ -656,6 +769,9 @@ export type CommissionUncheckedCreateWithoutCompanyInput = {
   pct: runtime.Decimal | runtime.DecimalJsLike | number | string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  number?: string | null
+  ruleId?: string | null
+  note?: string | null
   settledAt?: Date | string | null
   createdAt?: Date | string
 }
@@ -699,6 +815,9 @@ export type CommissionScalarWhereInput = {
   pct?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   amount?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFilter<"Commission"> | $Enums.CommissionStatus
+  number?: Prisma.StringNullableFilter<"Commission"> | string | null
+  ruleId?: Prisma.StringNullableFilter<"Commission"> | string | null
+  note?: Prisma.StringNullableFilter<"Commission"> | string | null
   settledAt?: Prisma.DateTimeNullableFilter<"Commission"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Commission"> | Date | string
 }
@@ -710,8 +829,11 @@ export type CommissionCreateWithoutConversationInput = {
   pct: runtime.Decimal | runtime.DecimalJsLike | number | string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  number?: string | null
+  note?: string | null
   settledAt?: Date | string | null
   createdAt?: Date | string
+  rule?: Prisma.CommissionRuleCreateNestedOneWithoutCommissionsInput
   invoice: Prisma.InvoiceCreateNestedOneWithoutCommissionInput
   company?: Prisma.CompanyCreateNestedOneWithoutCommissionsInput
 }
@@ -725,6 +847,9 @@ export type CommissionUncheckedCreateWithoutConversationInput = {
   pct: runtime.Decimal | runtime.DecimalJsLike | number | string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  number?: string | null
+  ruleId?: string | null
+  note?: string | null
   settledAt?: Date | string | null
   createdAt?: Date | string
 }
@@ -762,8 +887,11 @@ export type CommissionCreateWithoutInvoiceInput = {
   pct: runtime.Decimal | runtime.DecimalJsLike | number | string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  number?: string | null
+  note?: string | null
   settledAt?: Date | string | null
   createdAt?: Date | string
+  rule?: Prisma.CommissionRuleCreateNestedOneWithoutCommissionsInput
   conversation?: Prisma.ConversationCreateNestedOneWithoutCommissionsInput
   company?: Prisma.CompanyCreateNestedOneWithoutCommissionsInput
 }
@@ -777,6 +905,9 @@ export type CommissionUncheckedCreateWithoutInvoiceInput = {
   pct: runtime.Decimal | runtime.DecimalJsLike | number | string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  number?: string | null
+  ruleId?: string | null
+  note?: string | null
   settledAt?: Date | string | null
   createdAt?: Date | string
 }
@@ -804,8 +935,11 @@ export type CommissionUpdateWithoutInvoiceInput = {
   pct?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rule?: Prisma.CommissionRuleUpdateOneWithoutCommissionsNestedInput
   conversation?: Prisma.ConversationUpdateOneWithoutCommissionsNestedInput
   company?: Prisma.CompanyUpdateOneWithoutCommissionsNestedInput
 }
@@ -819,8 +953,69 @@ export type CommissionUncheckedUpdateWithoutInvoiceInput = {
   pct?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CommissionCreateWithoutRuleInput = {
+  id?: string
+  currency: string
+  baseAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pct: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.CommissionStatus
+  number?: string | null
+  note?: string | null
+  settledAt?: Date | string | null
+  createdAt?: Date | string
+  invoice: Prisma.InvoiceCreateNestedOneWithoutCommissionInput
+  conversation?: Prisma.ConversationCreateNestedOneWithoutCommissionsInput
+  company?: Prisma.CompanyCreateNestedOneWithoutCommissionsInput
+}
+
+export type CommissionUncheckedCreateWithoutRuleInput = {
+  id?: string
+  invoiceId: string
+  conversationId?: string | null
+  companyId?: string | null
+  currency: string
+  baseAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pct: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.CommissionStatus
+  number?: string | null
+  note?: string | null
+  settledAt?: Date | string | null
+  createdAt?: Date | string
+}
+
+export type CommissionCreateOrConnectWithoutRuleInput = {
+  where: Prisma.CommissionWhereUniqueInput
+  create: Prisma.XOR<Prisma.CommissionCreateWithoutRuleInput, Prisma.CommissionUncheckedCreateWithoutRuleInput>
+}
+
+export type CommissionCreateManyRuleInputEnvelope = {
+  data: Prisma.CommissionCreateManyRuleInput | Prisma.CommissionCreateManyRuleInput[]
+  skipDuplicates?: boolean
+}
+
+export type CommissionUpsertWithWhereUniqueWithoutRuleInput = {
+  where: Prisma.CommissionWhereUniqueInput
+  update: Prisma.XOR<Prisma.CommissionUpdateWithoutRuleInput, Prisma.CommissionUncheckedUpdateWithoutRuleInput>
+  create: Prisma.XOR<Prisma.CommissionCreateWithoutRuleInput, Prisma.CommissionUncheckedCreateWithoutRuleInput>
+}
+
+export type CommissionUpdateWithWhereUniqueWithoutRuleInput = {
+  where: Prisma.CommissionWhereUniqueInput
+  data: Prisma.XOR<Prisma.CommissionUpdateWithoutRuleInput, Prisma.CommissionUncheckedUpdateWithoutRuleInput>
+}
+
+export type CommissionUpdateManyWithWhereWithoutRuleInput = {
+  where: Prisma.CommissionScalarWhereInput
+  data: Prisma.XOR<Prisma.CommissionUpdateManyMutationInput, Prisma.CommissionUncheckedUpdateManyWithoutRuleInput>
 }
 
 export type CommissionCreateManyCompanyInput = {
@@ -832,6 +1027,9 @@ export type CommissionCreateManyCompanyInput = {
   pct: runtime.Decimal | runtime.DecimalJsLike | number | string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  number?: string | null
+  ruleId?: string | null
+  note?: string | null
   settledAt?: Date | string | null
   createdAt?: Date | string
 }
@@ -843,8 +1041,11 @@ export type CommissionUpdateWithoutCompanyInput = {
   pct?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rule?: Prisma.CommissionRuleUpdateOneWithoutCommissionsNestedInput
   invoice?: Prisma.InvoiceUpdateOneRequiredWithoutCommissionNestedInput
   conversation?: Prisma.ConversationUpdateOneWithoutCommissionsNestedInput
 }
@@ -858,6 +1059,9 @@ export type CommissionUncheckedUpdateWithoutCompanyInput = {
   pct?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -871,6 +1075,9 @@ export type CommissionUncheckedUpdateManyWithoutCompanyInput = {
   pct?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -884,6 +1091,9 @@ export type CommissionCreateManyConversationInput = {
   pct: runtime.Decimal | runtime.DecimalJsLike | number | string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.CommissionStatus
+  number?: string | null
+  ruleId?: string | null
+  note?: string | null
   settledAt?: Date | string | null
   createdAt?: Date | string
 }
@@ -895,8 +1105,11 @@ export type CommissionUpdateWithoutConversationInput = {
   pct?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rule?: Prisma.CommissionRuleUpdateOneWithoutCommissionsNestedInput
   invoice?: Prisma.InvoiceUpdateOneRequiredWithoutCommissionNestedInput
   company?: Prisma.CompanyUpdateOneWithoutCommissionsNestedInput
 }
@@ -910,6 +1123,9 @@ export type CommissionUncheckedUpdateWithoutConversationInput = {
   pct?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -923,6 +1139,73 @@ export type CommissionUncheckedUpdateManyWithoutConversationInput = {
   pct?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CommissionCreateManyRuleInput = {
+  id?: string
+  invoiceId: string
+  conversationId?: string | null
+  companyId?: string | null
+  currency: string
+  baseAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pct: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.CommissionStatus
+  number?: string | null
+  note?: string | null
+  settledAt?: Date | string | null
+  createdAt?: Date | string
+}
+
+export type CommissionUpdateWithoutRuleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  baseAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pct?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoice?: Prisma.InvoiceUpdateOneRequiredWithoutCommissionNestedInput
+  conversation?: Prisma.ConversationUpdateOneWithoutCommissionsNestedInput
+  company?: Prisma.CompanyUpdateOneWithoutCommissionsNestedInput
+}
+
+export type CommissionUncheckedUpdateWithoutRuleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceId?: Prisma.StringFieldUpdateOperationsInput | string
+  conversationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  baseAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pct?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CommissionUncheckedUpdateManyWithoutRuleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceId?: Prisma.StringFieldUpdateOperationsInput | string
+  conversationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  baseAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pct?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
+  number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -939,8 +1222,12 @@ export type CommissionSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   pct?: boolean
   amount?: boolean
   status?: boolean
+  number?: boolean
+  ruleId?: boolean
+  note?: boolean
   settledAt?: boolean
   createdAt?: boolean
+  rule?: boolean | Prisma.Commission$ruleArgs<ExtArgs>
   invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
   conversation?: boolean | Prisma.Commission$conversationArgs<ExtArgs>
   company?: boolean | Prisma.Commission$companyArgs<ExtArgs>
@@ -956,8 +1243,12 @@ export type CommissionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   pct?: boolean
   amount?: boolean
   status?: boolean
+  number?: boolean
+  ruleId?: boolean
+  note?: boolean
   settledAt?: boolean
   createdAt?: boolean
+  rule?: boolean | Prisma.Commission$ruleArgs<ExtArgs>
   invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
   conversation?: boolean | Prisma.Commission$conversationArgs<ExtArgs>
   company?: boolean | Prisma.Commission$companyArgs<ExtArgs>
@@ -973,8 +1264,12 @@ export type CommissionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   pct?: boolean
   amount?: boolean
   status?: boolean
+  number?: boolean
+  ruleId?: boolean
+  note?: boolean
   settledAt?: boolean
   createdAt?: boolean
+  rule?: boolean | Prisma.Commission$ruleArgs<ExtArgs>
   invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
   conversation?: boolean | Prisma.Commission$conversationArgs<ExtArgs>
   company?: boolean | Prisma.Commission$companyArgs<ExtArgs>
@@ -990,22 +1285,28 @@ export type CommissionSelectScalar = {
   pct?: boolean
   amount?: boolean
   status?: boolean
+  number?: boolean
+  ruleId?: boolean
+  note?: boolean
   settledAt?: boolean
   createdAt?: boolean
 }
 
-export type CommissionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "invoiceId" | "conversationId" | "companyId" | "currency" | "baseAmount" | "pct" | "amount" | "status" | "settledAt" | "createdAt", ExtArgs["result"]["commission"]>
+export type CommissionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "invoiceId" | "conversationId" | "companyId" | "currency" | "baseAmount" | "pct" | "amount" | "status" | "number" | "ruleId" | "note" | "settledAt" | "createdAt", ExtArgs["result"]["commission"]>
 export type CommissionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  rule?: boolean | Prisma.Commission$ruleArgs<ExtArgs>
   invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
   conversation?: boolean | Prisma.Commission$conversationArgs<ExtArgs>
   company?: boolean | Prisma.Commission$companyArgs<ExtArgs>
 }
 export type CommissionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  rule?: boolean | Prisma.Commission$ruleArgs<ExtArgs>
   invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
   conversation?: boolean | Prisma.Commission$conversationArgs<ExtArgs>
   company?: boolean | Prisma.Commission$companyArgs<ExtArgs>
 }
 export type CommissionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  rule?: boolean | Prisma.Commission$ruleArgs<ExtArgs>
   invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
   conversation?: boolean | Prisma.Commission$conversationArgs<ExtArgs>
   company?: boolean | Prisma.Commission$companyArgs<ExtArgs>
@@ -1014,6 +1315,7 @@ export type CommissionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.E
 export type $CommissionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Commission"
   objects: {
+    rule: Prisma.$CommissionRulePayload<ExtArgs> | null
     invoice: Prisma.$InvoicePayload<ExtArgs>
     conversation: Prisma.$ConversationPayload<ExtArgs> | null
     company: Prisma.$CompanyPayload<ExtArgs> | null
@@ -1028,6 +1330,15 @@ export type $CommissionPayload<ExtArgs extends runtime.Types.Extensions.Internal
     pct: runtime.Decimal
     amount: runtime.Decimal
     status: $Enums.CommissionStatus
+    /**
+     * SGBA commission invoice number issued to the seller (SGBA-YYYY-000001).
+     */
+    number: string | null
+    ruleId: string | null
+    /**
+     * Why an admin cancelled / adjusted it.
+     */
+    note: string | null
     settledAt: Date | null
     createdAt: Date
   }, ExtArgs["result"]["commission"]>
@@ -1424,6 +1735,7 @@ readonly fields: CommissionFieldRefs;
  */
 export interface Prisma__CommissionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  rule<T extends Prisma.Commission$ruleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Commission$ruleArgs<ExtArgs>>): Prisma.Prisma__CommissionRuleClient<runtime.Types.Result.GetResult<Prisma.$CommissionRulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   invoice<T extends Prisma.InvoiceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InvoiceDefaultArgs<ExtArgs>>): Prisma.Prisma__InvoiceClient<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   conversation<T extends Prisma.Commission$conversationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Commission$conversationArgs<ExtArgs>>): Prisma.Prisma__ConversationClient<runtime.Types.Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   company<T extends Prisma.Commission$companyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Commission$companyArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -1465,6 +1777,9 @@ export interface CommissionFieldRefs {
   readonly pct: Prisma.FieldRef<"Commission", 'Decimal'>
   readonly amount: Prisma.FieldRef<"Commission", 'Decimal'>
   readonly status: Prisma.FieldRef<"Commission", 'CommissionStatus'>
+  readonly number: Prisma.FieldRef<"Commission", 'String'>
+  readonly ruleId: Prisma.FieldRef<"Commission", 'String'>
+  readonly note: Prisma.FieldRef<"Commission", 'String'>
   readonly settledAt: Prisma.FieldRef<"Commission", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Commission", 'DateTime'>
 }
@@ -1865,6 +2180,25 @@ export type CommissionDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Limit how many Commissions to delete.
    */
   limit?: number
+}
+
+/**
+ * Commission.rule
+ */
+export type Commission$ruleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommissionRule
+   */
+  select?: Prisma.CommissionRuleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CommissionRule
+   */
+  omit?: Prisma.CommissionRuleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissionRuleInclude<ExtArgs> | null
+  where?: Prisma.CommissionRuleWhereInput
 }
 
 /**

@@ -290,7 +290,10 @@ export async function adminInvoiceStatusAction(_: FormState, formData: FormData)
     if (r.count !== 1) return false;
     await tx.invoiceStatusChange.create({ data: { invoiceId: inv.id, fromStatus: inv.status, toStatus: status, changedById: admin.id, comment: `${ka.admin.byPlatform}: ${comment}` } });
     // A refunded deal owes no commission.
-    if (status === "REFUNDED") await tx.commission.updateMany({ where: { invoiceId: inv.id, status: "CONFIRMED" }, data: { status: "CANCELLED" } });
+    // (A settled one is cancelled too — the platform then owes the seller a refund, noted on it.)
+    if (status === "REFUNDED") {
+      await tx.commission.updateMany({ where: { invoiceId: inv.id, status: { in: ["CONFIRMED", "SETTLED"] } }, data: { status: "CANCELLED", note: `${ka.admin.commissionRefundNote}: ${comment}` } });
+    }
     return true;
   });
   if (!updated) return fail(ka.errors.generic);
@@ -361,19 +364,29 @@ export async function settleCommissionAction(formData: FormData) {
 export async function adminCampaignAction(_: FormState, formData: FormData): Promise<FormState> {
   const admin = await assertAdmin();
   const id = String(formData.get("requestId"));
-  const op = z.enum(["review", "approve", "launch", "finish", "reject"]).parse(formData.get("op"));
+  const op = z.enum(["review", "approve", "paid", "launch", "finish", "reject"]).parse(formData.get("op"));
   const adminNote = String(formData.get("adminNote") ?? "").trim().slice(0, 1000) || null;
   const req = await db.campaignRequest.findUnique({ where: { id } });
   if (!req) return fail(ka.errors.generic);
   const allowed: Record<typeof op, string[]> = {
     review: ["NEW"],
     approve: ["NEW", "IN_PROGRESS"],
+    paid: ["APPROVED"],
     launch: ["APPROVED"],
     finish: ["RUNNING"],
     reject: ["NEW", "IN_PROGRESS", "APPROVED"],
   };
   if (!allowed[op].includes(req.status)) return fail(ka.admin.transitionNotAllowed, formData);
   if (op === "reject" && !adminNote) return fail(ka.validation.formErrors, formData, { adminNote: ka.validation.required });
+  // Payment is its own step: mark it received, then launch.
+  if (op === "paid") {
+    const r = await db.campaignRequest.updateMany({ where: { id, status: "APPROVED", paidAt: null }, data: { paidAt: new Date() } });
+    if (r.count) await audit({ actorId: admin.id, action: "campaign.paid", entityType: "CampaignRequest", entityId: id });
+    revalidatePath("/admin", "layout");
+    revalidatePath(`/app/campaigns/${id}`);
+    return { ok: true, message: ka.common.saved };
+  }
+  if (op === "launch" && !req.paidAt) return fail(ka.sgba.campNotPaid, formData);
 
   let price: Prisma.Decimal | null = req.price;
   if (op === "approve") {
@@ -381,7 +394,7 @@ export async function adminCampaignAction(_: FormState, formData: FormData): Pro
     if (!raw || !Number.isFinite(Number(raw)) || Number(raw) < 0) return fail(ka.validation.formErrors, formData, { price: ka.validation.number });
     price = new Prisma.Decimal(raw);
   }
-  const status = ({ review: "IN_PROGRESS", approve: "APPROVED", launch: "RUNNING", finish: "DONE", reject: "REJECTED" } as const)[op];
+  const status = ({ review: "IN_PROGRESS", approve: "APPROVED", launch: "RUNNING", finish: "DONE", reject: "REJECTED" } as const)[op as Exclude<typeof op, "paid">];
   const now = new Date();
   // Status guard: a double submit must not launch (and notify the audience) twice.
   const moved = await db.campaignRequest.updateMany({
@@ -390,7 +403,7 @@ export async function adminCampaignAction(_: FormState, formData: FormData): Pro
       status,
       price,
       adminNote: adminNote ?? req.adminNote,
-      ...(op === "launch" ? { paidAt: now, launchedAt: now } : {}),
+      ...(op === "launch" ? { launchedAt: now } : {}),
       ...(op === "finish" ? { finishedAt: now } : {}),
     },
   });
@@ -512,4 +525,122 @@ export async function reorderBadgesAction(ids: string[]) {
   const list = z.array(z.string().min(1)).max(200).parse(ids);
   await db.$transaction(list.map((id, i) => db.offerBadge.update({ where: { id }, data: { sortOrder: i * 10 } })));
   revalidatePath("/admin/badges");
+}
+
+
+// ─────────────────────────────── Commission rules & adjustments ───────────────────────────────
+
+const zMoneyOpt = z
+  .string()
+  .optional()
+  .transform((s) => (s ? s.replace(/\s/g, "").replace(",", ".") : ""))
+  .refine((s) => s === "" || (Number.isFinite(Number(s)) && Number(s) >= 0 && Number(s) < 1e13), { error: ka.validation.number })
+  .transform((s) => (s === "" ? null : new Prisma.Decimal(s)));
+
+const ruleSchema = z.object({
+  title: zText(2, 120),
+  rate: zText(1, 60),
+  pct: zPct,
+  minAmount: zMoneyOpt,
+  capAmount: zMoneyOpt,
+  isDefault: zCheckbox,
+  isActive: zCheckbox,
+  sortOrder: z.coerce.number({ error: ka.validation.number }).int().min(0).max(9999).default(0),
+});
+
+/** "ავტომატური წესი": create / edit a commission rule (percent, categories, large-deal threshold, cap). */
+export async function saveCommissionRuleAction(_: FormState, formData: FormData): Promise<FormState> {
+  const admin = await assertAdmin();
+  const id = String(formData.get("id") ?? "") || null;
+  const parsed = ruleSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const categoryIds = [...new Set(formData.getAll("categoryIds").map(String).filter(Boolean))];
+  if (categoryIds.length && (await db.category.count({ where: { id: { in: categoryIds }, kind: "OFFER" } })) !== categoryIds.length) return fail(ka.errors.generic);
+  const data = { ...parsed.data, categoryIds };
+  const saved = await db.$transaction(async (tx) => {
+    // Only one fallback rule.
+    if (data.isDefault) await tx.commissionRule.updateMany({ where: { isDefault: true, ...(id ? { NOT: { id } } : {}) }, data: { isDefault: false } });
+    return id ? tx.commissionRule.update({ where: { id }, data }) : tx.commissionRule.create({ data });
+  });
+  await audit({
+    actorId: admin.id,
+    action: id ? "commission_rule.updated" : "commission_rule.created",
+    entityType: "CommissionRule",
+    entityId: saved.id,
+    metadata: { title: data.title, pct: data.pct?.toString() ?? null, minAmount: data.minAmount?.toString() ?? null, capAmount: data.capAmount?.toString() ?? null, categoryIds, isDefault: data.isDefault },
+  });
+  revalidatePath("/admin/commissions");
+  revalidatePath("/app/finance");
+  return { ok: true, message: ka.common.saved };
+}
+
+export async function deleteCommissionRuleAction(formData: FormData) {
+  const admin = await assertAdmin();
+  const id = String(formData.get("id"));
+  const rule = await db.commissionRule.findUnique({ where: { id }, select: { title: true } });
+  if (!rule) return;
+  await db.commissionRule.delete({ where: { id } });
+  await audit({ actorId: admin.id, action: "commission_rule.deleted", entityType: "CommissionRule", entityId: id, metadata: { title: rule.title } });
+  revalidatePath("/admin/commissions");
+  revalidatePath("/app/finance");
+}
+
+/** Admin corrections of a commission: cancel (waive), change the amount, or undo "settled" — always with a reason. */
+export async function adjustCommissionAction(_: FormState, formData: FormData): Promise<FormState> {
+  const admin = await assertAdmin();
+  const id = String(formData.get("commissionId"));
+  const op = z.enum(["cancel", "amount", "unsettle"]).safeParse(formData.get("op"));
+  const note = String(formData.get("note") ?? "").trim().slice(0, 500);
+  if (!op.success) return fail(ka.errors.generic);
+  if (note.length < 3) return fail(ka.validation.formErrors, formData, { note: ka.validation.required });
+  const c = await db.commission.findUnique({ where: { id } });
+  if (!c) return fail(ka.errors.generic);
+  let data: Prisma.CommissionUpdateInput;
+  if (op.data === "cancel") {
+    if (c.status === "CANCELLED") return fail(ka.admin.transitionNotAllowed);
+    data = { status: "CANCELLED", note };
+  } else if (op.data === "unsettle") {
+    if (c.status !== "SETTLED") return fail(ka.admin.transitionNotAllowed);
+    data = { status: "CONFIRMED", settledAt: null, note };
+  } else {
+    const amount = zMoneyOpt.safeParse(formData.get("amount") ?? "");
+    if (!amount.success || !amount.data) return fail(ka.validation.formErrors, formData, { amount: ka.validation.number });
+    if (c.status === "CANCELLED") return fail(ka.admin.transitionNotAllowed);
+    data = { amount: amount.data, note };
+  }
+  await db.commission.update({ where: { id }, data });
+  await audit({ actorId: admin.id, action: `commission.${op.data}`, entityType: "Commission", entityId: id, metadata: { note, from: c.amount.toString(), status: c.status } });
+  revalidatePath("/admin/commissions");
+  revalidatePath("/app/finance");
+  return { ok: true, message: ka.common.saved };
+}
+
+/** Voids a mistaken payment entry (kept for history); the invoice's paid amount and status are recomputed. */
+export async function voidPaymentAction(_: FormState, formData: FormData): Promise<FormState> {
+  const admin = await assertAdmin();
+  const paymentId = String(formData.get("paymentId"));
+  const reason = String(formData.get("reason") ?? "").trim().slice(0, 500);
+  if (reason.length < 3) return fail(ka.validation.formErrors, formData, { reason: ka.validation.required });
+  const p = await db.paymentRecord.findUnique({ where: { id: paymentId }, include: { invoice: true } });
+  if (!p || p.voidedAt) return fail(ka.errors.generic);
+  const inv = p.invoice;
+  if (["CANCELLED", "REFUNDED"].includes(inv.status)) return fail(ka.admin.transitionNotAllowed);
+  const left = inv.paidAmount.sub(p.amount);
+  const paid = left.lt(0) ? new Prisma.Decimal(0) : left;
+  const status = paid.lte(0) ? "SENT" : paid.gte(inv.total) ? "PAID" : "PARTIALLY_PAID";
+  await db.$transaction([
+    db.paymentRecord.update({ where: { id: p.id }, data: { voidedAt: new Date(), voidReason: reason } }),
+    db.invoice.update({ where: { id: inv.id }, data: { paidAmount: paid, status } }),
+    ...(status !== inv.status
+      ? [db.invoiceStatusChange.create({ data: { invoiceId: inv.id, fromStatus: inv.status, toStatus: status, changedById: admin.id, comment: `${ka.admin.byPlatform}: ${reason}` } })]
+      : []),
+    // No longer paid → a commission that came from "paid" (not from the buyer's confirmation) is cancelled.
+    ...(inv.status === "PAID" && status !== "PAID" && !inv.buyerConfirmedAt
+      ? [db.commission.updateMany({ where: { invoiceId: inv.id, status: "CONFIRMED" }, data: { status: "CANCELLED", note: `${ka.admin.paymentVoided}: ${reason}` } })]
+      : []),
+  ]);
+  await audit({ actorId: admin.id, action: "invoice.payment_voided", entityType: "Invoice", entityId: inv.id, metadata: { paymentId, amount: p.amount.toString(), reason } });
+  revalidatePath(`/admin/invoices/${inv.id}`);
+  revalidatePath(`/app/invoices/${inv.id}`);
+  return { ok: true, message: ka.common.saved };
 }

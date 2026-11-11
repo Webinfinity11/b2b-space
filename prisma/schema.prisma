@@ -656,6 +656,13 @@ model Invoice {
   deliveryCost       Decimal       @default(0) @db.Decimal(18, 2)
   total              Decimal       @db.Decimal(18, 2)
   paidAmount         Decimal       @default(0) @db.Decimal(18, 2)
+  /// Buyer confirmed delivery / payment (triggers the SGBA commission).
+  buyerConfirmedAt   DateTime?
+  buyerConfirmedById String?
+  /// Seller's own signed invoice or contract attached to this deal invoice (private storage key).
+  documentKey        String?
+  documentName       String?
+  documentMime       String?
   /// Commission percent frozen when the invoice was issued (null = use the deal's current one).
   commissionPct      Decimal?      @db.Decimal(5, 2)
   paymentTerms       String?
@@ -725,6 +732,9 @@ model PaymentRecord {
   reference    String?
   note         String?
   recordedById String
+  /// Admin voided a mistaken entry (kept for the audit trail, excluded from totals).
+  voidedAt     DateTime?
+  voidReason   String?
   createdAt    DateTime @default(now())
 
   invoice    Invoice @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
@@ -831,8 +841,15 @@ model Commission {
   pct            Decimal          @db.Decimal(5, 2)
   amount         Decimal          @db.Decimal(18, 2)
   status         CommissionStatus @default(CONFIRMED)
+  /// SGBA commission invoice number issued to the seller (SGBA-YYYY-000001).
+  number         String?          @unique
+  ruleId         String?
+  /// Why an admin cancelled / adjusted it.
+  note           String?
   settledAt      DateTime?
   createdAt      DateTime         @default(now())
+
+  rule         CommissionRule? @relation(fields: [ruleId], references: [id], onDelete: SetNull)
 
   invoice      Invoice       @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
   conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
@@ -844,10 +861,24 @@ model Commission {
 
 /// Commission models shown in Finance (managed by admins).
 model CommissionRule {
-  id        String @id @default(cuid())
-  title     String
-  rate      String
-  sortOrder Int    @default(0)
+  id          String   @id @default(cuid())
+  title       String
+  /// Shown to users, e.g. "1–3%".
+  rate        String
+  /// Percent applied automatically (null = display only).
+  pct         Decimal? @db.Decimal(5, 2)
+  /// Offer categories this rule covers (empty = any category).
+  categoryIds String[] @default([])
+  /// Applies only when the deal base is at least this amount (large corporate deals).
+  minAmount   Decimal? @db.Decimal(18, 2)
+  /// Upper limit of the commission amount.
+  capAmount   Decimal? @db.Decimal(18, 2)
+  /// Fallback when no other rule matches.
+  isDefault   Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+
+  commissions Commission[]
 }
 
 /// Paid campaign packages.

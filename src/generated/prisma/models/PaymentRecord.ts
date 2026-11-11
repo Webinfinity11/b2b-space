@@ -44,6 +44,8 @@ export type PaymentRecordMinAggregateOutputType = {
   reference: string | null
   note: string | null
   recordedById: string | null
+  voidedAt: Date | null
+  voidReason: string | null
   createdAt: Date | null
 }
 
@@ -57,6 +59,8 @@ export type PaymentRecordMaxAggregateOutputType = {
   reference: string | null
   note: string | null
   recordedById: string | null
+  voidedAt: Date | null
+  voidReason: string | null
   createdAt: Date | null
 }
 
@@ -70,6 +74,8 @@ export type PaymentRecordCountAggregateOutputType = {
   reference: number
   note: number
   recordedById: number
+  voidedAt: number
+  voidReason: number
   createdAt: number
   _all: number
 }
@@ -93,6 +99,8 @@ export type PaymentRecordMinAggregateInputType = {
   reference?: true
   note?: true
   recordedById?: true
+  voidedAt?: true
+  voidReason?: true
   createdAt?: true
 }
 
@@ -106,6 +114,8 @@ export type PaymentRecordMaxAggregateInputType = {
   reference?: true
   note?: true
   recordedById?: true
+  voidedAt?: true
+  voidReason?: true
   createdAt?: true
 }
 
@@ -119,6 +129,8 @@ export type PaymentRecordCountAggregateInputType = {
   reference?: true
   note?: true
   recordedById?: true
+  voidedAt?: true
+  voidReason?: true
   createdAt?: true
   _all?: true
 }
@@ -219,6 +231,8 @@ export type PaymentRecordGroupByOutputType = {
   reference: string | null
   note: string | null
   recordedById: string
+  voidedAt: Date | null
+  voidReason: string | null
   createdAt: Date
   _count: PaymentRecordCountAggregateOutputType | null
   _avg: PaymentRecordAvgAggregateOutputType | null
@@ -255,6 +269,8 @@ export type PaymentRecordWhereInput = {
   reference?: Prisma.StringNullableFilter<"PaymentRecord"> | string | null
   note?: Prisma.StringNullableFilter<"PaymentRecord"> | string | null
   recordedById?: Prisma.StringFilter<"PaymentRecord"> | string
+  voidedAt?: Prisma.DateTimeNullableFilter<"PaymentRecord"> | Date | string | null
+  voidReason?: Prisma.StringNullableFilter<"PaymentRecord"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PaymentRecord"> | Date | string
   invoice?: Prisma.XOR<Prisma.InvoiceScalarRelationFilter, Prisma.InvoiceWhereInput>
   recordedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -270,6 +286,8 @@ export type PaymentRecordOrderByWithRelationInput = {
   reference?: Prisma.SortOrderInput | Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
   recordedById?: Prisma.SortOrder
+  voidedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  voidReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   invoice?: Prisma.InvoiceOrderByWithRelationInput
   recordedBy?: Prisma.UserOrderByWithRelationInput
@@ -288,6 +306,8 @@ export type PaymentRecordWhereUniqueInput = Prisma.AtLeast<{
   reference?: Prisma.StringNullableFilter<"PaymentRecord"> | string | null
   note?: Prisma.StringNullableFilter<"PaymentRecord"> | string | null
   recordedById?: Prisma.StringFilter<"PaymentRecord"> | string
+  voidedAt?: Prisma.DateTimeNullableFilter<"PaymentRecord"> | Date | string | null
+  voidReason?: Prisma.StringNullableFilter<"PaymentRecord"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PaymentRecord"> | Date | string
   invoice?: Prisma.XOR<Prisma.InvoiceScalarRelationFilter, Prisma.InvoiceWhereInput>
   recordedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -303,6 +323,8 @@ export type PaymentRecordOrderByWithAggregationInput = {
   reference?: Prisma.SortOrderInput | Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
   recordedById?: Prisma.SortOrder
+  voidedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  voidReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.PaymentRecordCountOrderByAggregateInput
   _avg?: Prisma.PaymentRecordAvgOrderByAggregateInput
@@ -324,6 +346,8 @@ export type PaymentRecordScalarWhereWithAggregatesInput = {
   reference?: Prisma.StringNullableWithAggregatesFilter<"PaymentRecord"> | string | null
   note?: Prisma.StringNullableWithAggregatesFilter<"PaymentRecord"> | string | null
   recordedById?: Prisma.StringWithAggregatesFilter<"PaymentRecord"> | string
+  voidedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PaymentRecord"> | Date | string | null
+  voidReason?: Prisma.StringNullableWithAggregatesFilter<"PaymentRecord"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PaymentRecord"> | Date | string
 }
 
@@ -335,6 +359,8 @@ export type PaymentRecordCreateInput = {
   method?: string | null
   reference?: string | null
   note?: string | null
+  voidedAt?: Date | string | null
+  voidReason?: string | null
   createdAt?: Date | string
   invoice: Prisma.InvoiceCreateNestedOneWithoutPaymentsInput
   recordedBy: Prisma.UserCreateNestedOneWithoutPaymentRecordsInput
@@ -350,6 +376,8 @@ export type PaymentRecordUncheckedCreateInput = {
   reference?: string | null
   note?: string | null
   recordedById: string
+  voidedAt?: Date | string | null
+  voidReason?: string | null
   createdAt?: Date | string
 }
 
@@ -361,6 +389,8 @@ export type PaymentRecordUpdateInput = {
   method?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   invoice?: Prisma.InvoiceUpdateOneRequiredWithoutPaymentsNestedInput
   recordedBy?: Prisma.UserUpdateOneRequiredWithoutPaymentRecordsNestedInput
@@ -376,6 +406,8 @@ export type PaymentRecordUncheckedUpdateInput = {
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -389,6 +421,8 @@ export type PaymentRecordCreateManyInput = {
   reference?: string | null
   note?: string | null
   recordedById: string
+  voidedAt?: Date | string | null
+  voidReason?: string | null
   createdAt?: Date | string
 }
 
@@ -400,6 +434,8 @@ export type PaymentRecordUpdateManyMutationInput = {
   method?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -413,6 +449,8 @@ export type PaymentRecordUncheckedUpdateManyInput = {
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -436,6 +474,8 @@ export type PaymentRecordCountOrderByAggregateInput = {
   reference?: Prisma.SortOrder
   note?: Prisma.SortOrder
   recordedById?: Prisma.SortOrder
+  voidedAt?: Prisma.SortOrder
+  voidReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -453,6 +493,8 @@ export type PaymentRecordMaxOrderByAggregateInput = {
   reference?: Prisma.SortOrder
   note?: Prisma.SortOrder
   recordedById?: Prisma.SortOrder
+  voidedAt?: Prisma.SortOrder
+  voidReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -466,6 +508,8 @@ export type PaymentRecordMinOrderByAggregateInput = {
   reference?: Prisma.SortOrder
   note?: Prisma.SortOrder
   recordedById?: Prisma.SortOrder
+  voidedAt?: Prisma.SortOrder
+  voidReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -565,6 +609,8 @@ export type PaymentRecordCreateWithoutRecordedByInput = {
   method?: string | null
   reference?: string | null
   note?: string | null
+  voidedAt?: Date | string | null
+  voidReason?: string | null
   createdAt?: Date | string
   invoice: Prisma.InvoiceCreateNestedOneWithoutPaymentsInput
 }
@@ -578,6 +624,8 @@ export type PaymentRecordUncheckedCreateWithoutRecordedByInput = {
   method?: string | null
   reference?: string | null
   note?: string | null
+  voidedAt?: Date | string | null
+  voidReason?: string | null
   createdAt?: Date | string
 }
 
@@ -620,6 +668,8 @@ export type PaymentRecordScalarWhereInput = {
   reference?: Prisma.StringNullableFilter<"PaymentRecord"> | string | null
   note?: Prisma.StringNullableFilter<"PaymentRecord"> | string | null
   recordedById?: Prisma.StringFilter<"PaymentRecord"> | string
+  voidedAt?: Prisma.DateTimeNullableFilter<"PaymentRecord"> | Date | string | null
+  voidReason?: Prisma.StringNullableFilter<"PaymentRecord"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PaymentRecord"> | Date | string
 }
 
@@ -631,6 +681,8 @@ export type PaymentRecordCreateWithoutInvoiceInput = {
   method?: string | null
   reference?: string | null
   note?: string | null
+  voidedAt?: Date | string | null
+  voidReason?: string | null
   createdAt?: Date | string
   recordedBy: Prisma.UserCreateNestedOneWithoutPaymentRecordsInput
 }
@@ -644,6 +696,8 @@ export type PaymentRecordUncheckedCreateWithoutInvoiceInput = {
   reference?: string | null
   note?: string | null
   recordedById: string
+  voidedAt?: Date | string | null
+  voidReason?: string | null
   createdAt?: Date | string
 }
 
@@ -682,6 +736,8 @@ export type PaymentRecordCreateManyRecordedByInput = {
   method?: string | null
   reference?: string | null
   note?: string | null
+  voidedAt?: Date | string | null
+  voidReason?: string | null
   createdAt?: Date | string
 }
 
@@ -693,6 +749,8 @@ export type PaymentRecordUpdateWithoutRecordedByInput = {
   method?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   invoice?: Prisma.InvoiceUpdateOneRequiredWithoutPaymentsNestedInput
 }
@@ -706,6 +764,8 @@ export type PaymentRecordUncheckedUpdateWithoutRecordedByInput = {
   method?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -718,6 +778,8 @@ export type PaymentRecordUncheckedUpdateManyWithoutRecordedByInput = {
   method?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -730,6 +792,8 @@ export type PaymentRecordCreateManyInvoiceInput = {
   reference?: string | null
   note?: string | null
   recordedById: string
+  voidedAt?: Date | string | null
+  voidReason?: string | null
   createdAt?: Date | string
 }
 
@@ -741,6 +805,8 @@ export type PaymentRecordUpdateWithoutInvoiceInput = {
   method?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   recordedBy?: Prisma.UserUpdateOneRequiredWithoutPaymentRecordsNestedInput
 }
@@ -754,6 +820,8 @@ export type PaymentRecordUncheckedUpdateWithoutInvoiceInput = {
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -766,6 +834,8 @@ export type PaymentRecordUncheckedUpdateManyWithoutInvoiceInput = {
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -781,6 +851,8 @@ export type PaymentRecordSelect<ExtArgs extends runtime.Types.Extensions.Interna
   reference?: boolean
   note?: boolean
   recordedById?: boolean
+  voidedAt?: boolean
+  voidReason?: boolean
   createdAt?: boolean
   invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
   recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -796,6 +868,8 @@ export type PaymentRecordSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   reference?: boolean
   note?: boolean
   recordedById?: boolean
+  voidedAt?: boolean
+  voidReason?: boolean
   createdAt?: boolean
   invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
   recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -811,6 +885,8 @@ export type PaymentRecordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   reference?: boolean
   note?: boolean
   recordedById?: boolean
+  voidedAt?: boolean
+  voidReason?: boolean
   createdAt?: boolean
   invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
   recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -826,10 +902,12 @@ export type PaymentRecordSelectScalar = {
   reference?: boolean
   note?: boolean
   recordedById?: boolean
+  voidedAt?: boolean
+  voidReason?: boolean
   createdAt?: boolean
 }
 
-export type PaymentRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "invoiceId" | "amount" | "currency" | "paidAt" | "method" | "reference" | "note" | "recordedById" | "createdAt", ExtArgs["result"]["paymentRecord"]>
+export type PaymentRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "invoiceId" | "amount" | "currency" | "paidAt" | "method" | "reference" | "note" | "recordedById" | "voidedAt" | "voidReason" | "createdAt", ExtArgs["result"]["paymentRecord"]>
 export type PaymentRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   invoice?: boolean | Prisma.InvoiceDefaultArgs<ExtArgs>
   recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -859,6 +937,11 @@ export type $PaymentRecordPayload<ExtArgs extends runtime.Types.Extensions.Inter
     reference: string | null
     note: string | null
     recordedById: string
+    /**
+     * Admin voided a mistaken entry (kept for the audit trail, excluded from totals).
+     */
+    voidedAt: Date | null
+    voidReason: string | null
     createdAt: Date
   }, ExtArgs["result"]["paymentRecord"]>
   composites: {}
@@ -1294,6 +1377,8 @@ export interface PaymentRecordFieldRefs {
   readonly reference: Prisma.FieldRef<"PaymentRecord", 'String'>
   readonly note: Prisma.FieldRef<"PaymentRecord", 'String'>
   readonly recordedById: Prisma.FieldRef<"PaymentRecord", 'String'>
+  readonly voidedAt: Prisma.FieldRef<"PaymentRecord", 'DateTime'>
+  readonly voidReason: Prisma.FieldRef<"PaymentRecord", 'String'>
   readonly createdAt: Prisma.FieldRef<"PaymentRecord", 'DateTime'>
 }
     

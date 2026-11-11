@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ka } from "@/i18n/ka";
 import { sendMessageAction, updateDealInfoAction } from "@/actions/chat";
-import { dealCommissionPct } from "@/lib/commission";
+import { activeRules, dealCommissionPct, resolveCommission } from "@/lib/commission";
 import { getActiveMembership, requireUser } from "@/lib/authz";
 import { partyLabel, partySelect } from "@/lib/chat";
 import { db } from "@/lib/db";
@@ -30,11 +30,11 @@ export default async function ConversationPage({ params }: PageProps<"/app/conve
     include: {
       participants: { select: partySelect, orderBy: { createdAt: "asc" } },
       messages: { orderBy: { createdAt: "asc" }, take: 500 },
-      offer: { select: { id: true, title: true, type: true, commissionPct: true } },
+      offer: { select: { id: true, title: true, type: true, commissionPct: true, categoryId: true } },
     },
   });
   if (!c) notFound();
-  const pct = dealCommissionPct(c);
+  const { pct } = resolveCommission(dealCommissionPct(c), await activeRules(), c.offer?.categoryId ?? null, c.amount);
   const deal = await loadDealContext(c.id);
   const canInvoice = Boolean(deal && deal.dealSide === "SELLER" && deal.can("invoices.manage"));
   const offerFull = canInvoice && c.offer ? await db.offer.findUnique({ where: { id: c.offer.id }, select: { title: true, currency: true, priceMin: true, priceType: true } }) : null;

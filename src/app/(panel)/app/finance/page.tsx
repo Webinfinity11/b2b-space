@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ka } from "@/i18n/ka";
 import { getActiveMembership, requireUser } from "@/lib/authz";
-import { dealCommissionPct } from "@/lib/commission";
+import { activeRules, expectedCommission } from "@/lib/commission";
 import { db } from "@/lib/db";
 import { dealSideFor } from "@/lib/deals";
 import { formatDate } from "@/lib/format";
@@ -26,10 +26,11 @@ export default async function FinancePage() {
   const since = new Date();
   since.setDate(since.getDate() - 30);
 
+  const ruleRows = await activeRules();
   const [deals, commissions, rules] = await Promise.all([
     db.conversation.findMany({
       where: { AND: [visibleConversations(user.id, m), { stage: { not: "CONTRACT" } }, { amount: { not: null } }] },
-      select: { amount: true, commissionPct: true, sellerSide: true, offer: { select: { type: true, commissionPct: true } }, participants: { select: { side: true, userId: true, companyId: true } } },
+      select: { amount: true, commissionPct: true, sellerSide: true, offer: { select: { type: true, commissionPct: true, categoryId: true } }, participants: { select: { side: true, userId: true, companyId: true } } },
     }),
     m
       ? db.commission.findMany({
@@ -39,14 +40,14 @@ export default async function FinancePage() {
           include: { invoice: { select: { id: true, number: true } }, conversation: { select: { subject: true } } },
         })
       : Promise.resolve([]),
-    db.commissionRule.findMany({ orderBy: { sortOrder: "asc" } }),
+    db.commissionRule.findMany({ where: { isActive: true }, orderBy: { sortOrder: "asc" } }),
   ]);
 
   // Generated: expected commission from open deals where we are the seller.
   const generated = deals.reduce((sum, d) => {
     const mine = d.participants.find((p) => (m ? p.companyId === m.companyId : p.userId === user.id));
     if (!mine || dealSideFor(mine.side, d.offer?.type ?? null, d.sellerSide) !== "SELLER") return sum;
-    return sum + (Number(d.amount) * Number(dealCommissionPct(d) ?? 0)) / 100;
+    return sum + expectedCommission(d, ruleRows);
   }, 0);
   const gel = commissions.filter((c) => c.currency === "GEL");
   const confirmed = gel.filter((c) => c.status === "CONFIRMED").reduce((s, c) => s + Number(c.amount), 0);
@@ -178,6 +179,12 @@ export default async function FinancePage() {
                 <div className="min-w-0">
                   <Link href={`/app/invoices/${c.invoice.id}`} className="font-medium text-accent-strong hover:underline">{ka.invoice.invoiceWord} {c.invoice.number}</Link>
                   <div className="truncate text-xs text-muted">{c.conversation?.subject} · {formatDate(c.createdAt)}</div>
+                  {c.number && (
+                    <a href={`/api/commissions/${c.id}/pdf`} target="_blank" className="mt-0.5 inline-block text-xs font-medium text-accent-strong hover:underline">
+                      {ka.finance.commissionPdf} · {c.number}
+                    </a>
+                  )}
+                  {c.note && <div className="text-xs text-muted">{c.note}</div>}
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-xs text-muted tabular-nums">{formatAmount(Number(c.baseAmount), c.currency)} × {c.pct.toString()}%</span>

@@ -470,6 +470,11 @@ export const InvoiceScalarFieldEnum = {
   deliveryCost: 'deliveryCost',
   total: 'total',
   paidAmount: 'paidAmount',
+  buyerConfirmedAt: 'buyerConfirmedAt',
+  buyerConfirmedById: 'buyerConfirmedById',
+  documentKey: 'documentKey',
+  documentName: 'documentName',
+  documentMime: 'documentMime',
   commissionPct: 'commissionPct',
   paymentTerms: 'paymentTerms',
   notes: 'notes',
@@ -520,6 +525,8 @@ export const PaymentRecordScalarFieldEnum = {
   reference: 'reference',
   note: 'note',
   recordedById: 'recordedById',
+  voidedAt: 'voidedAt',
+  voidReason: 'voidReason',
   createdAt: 'createdAt'
 } as const
 
@@ -589,6 +596,9 @@ export const CommissionScalarFieldEnum = {
   pct: 'pct',
   amount: 'amount',
   status: 'status',
+  number: 'number',
+  ruleId: 'ruleId',
+  note: 'note',
   settledAt: 'settledAt',
   createdAt: 'createdAt'
 } as const
@@ -600,6 +610,12 @@ export const CommissionRuleScalarFieldEnum = {
   id: 'id',
   title: 'title',
   rate: 'rate',
+  pct: 'pct',
+  categoryIds: 'categoryIds',
+  minAmount: 'minAmount',
+  capAmount: 'capAmount',
+  isDefault: 'isDefault',
+  isActive: 'isActive',
   sortOrder: 'sortOrder'
 } as const
 

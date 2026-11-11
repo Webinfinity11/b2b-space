@@ -27,10 +27,16 @@ export type AggregateCommissionRule = {
 }
 
 export type CommissionRuleAvgAggregateOutputType = {
+  pct: runtime.Decimal | null
+  minAmount: runtime.Decimal | null
+  capAmount: runtime.Decimal | null
   sortOrder: number | null
 }
 
 export type CommissionRuleSumAggregateOutputType = {
+  pct: runtime.Decimal | null
+  minAmount: runtime.Decimal | null
+  capAmount: runtime.Decimal | null
   sortOrder: number | null
 }
 
@@ -38,6 +44,11 @@ export type CommissionRuleMinAggregateOutputType = {
   id: string | null
   title: string | null
   rate: string | null
+  pct: runtime.Decimal | null
+  minAmount: runtime.Decimal | null
+  capAmount: runtime.Decimal | null
+  isDefault: boolean | null
+  isActive: boolean | null
   sortOrder: number | null
 }
 
@@ -45,6 +56,11 @@ export type CommissionRuleMaxAggregateOutputType = {
   id: string | null
   title: string | null
   rate: string | null
+  pct: runtime.Decimal | null
+  minAmount: runtime.Decimal | null
+  capAmount: runtime.Decimal | null
+  isDefault: boolean | null
+  isActive: boolean | null
   sortOrder: number | null
 }
 
@@ -52,16 +68,28 @@ export type CommissionRuleCountAggregateOutputType = {
   id: number
   title: number
   rate: number
+  pct: number
+  categoryIds: number
+  minAmount: number
+  capAmount: number
+  isDefault: number
+  isActive: number
   sortOrder: number
   _all: number
 }
 
 
 export type CommissionRuleAvgAggregateInputType = {
+  pct?: true
+  minAmount?: true
+  capAmount?: true
   sortOrder?: true
 }
 
 export type CommissionRuleSumAggregateInputType = {
+  pct?: true
+  minAmount?: true
+  capAmount?: true
   sortOrder?: true
 }
 
@@ -69,6 +97,11 @@ export type CommissionRuleMinAggregateInputType = {
   id?: true
   title?: true
   rate?: true
+  pct?: true
+  minAmount?: true
+  capAmount?: true
+  isDefault?: true
+  isActive?: true
   sortOrder?: true
 }
 
@@ -76,6 +109,11 @@ export type CommissionRuleMaxAggregateInputType = {
   id?: true
   title?: true
   rate?: true
+  pct?: true
+  minAmount?: true
+  capAmount?: true
+  isDefault?: true
+  isActive?: true
   sortOrder?: true
 }
 
@@ -83,6 +121,12 @@ export type CommissionRuleCountAggregateInputType = {
   id?: true
   title?: true
   rate?: true
+  pct?: true
+  categoryIds?: true
+  minAmount?: true
+  capAmount?: true
+  isDefault?: true
+  isActive?: true
   sortOrder?: true
   _all?: true
 }
@@ -177,6 +221,12 @@ export type CommissionRuleGroupByOutputType = {
   id: string
   title: string
   rate: string
+  pct: runtime.Decimal | null
+  categoryIds: string[]
+  minAmount: runtime.Decimal | null
+  capAmount: runtime.Decimal | null
+  isDefault: boolean
+  isActive: boolean
   sortOrder: number
   _count: CommissionRuleCountAggregateOutputType | null
   _avg: CommissionRuleAvgAggregateOutputType | null
@@ -207,14 +257,28 @@ export type CommissionRuleWhereInput = {
   id?: Prisma.StringFilter<"CommissionRule"> | string
   title?: Prisma.StringFilter<"CommissionRule"> | string
   rate?: Prisma.StringFilter<"CommissionRule"> | string
+  pct?: Prisma.DecimalNullableFilter<"CommissionRule"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  categoryIds?: Prisma.StringNullableListFilter<"CommissionRule">
+  minAmount?: Prisma.DecimalNullableFilter<"CommissionRule"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  capAmount?: Prisma.DecimalNullableFilter<"CommissionRule"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isDefault?: Prisma.BoolFilter<"CommissionRule"> | boolean
+  isActive?: Prisma.BoolFilter<"CommissionRule"> | boolean
   sortOrder?: Prisma.IntFilter<"CommissionRule"> | number
+  commissions?: Prisma.CommissionListRelationFilter
 }
 
 export type CommissionRuleOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   rate?: Prisma.SortOrder
+  pct?: Prisma.SortOrderInput | Prisma.SortOrder
+  categoryIds?: Prisma.SortOrder
+  minAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  capAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDefault?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
+  commissions?: Prisma.CommissionOrderByRelationAggregateInput
 }
 
 export type CommissionRuleWhereUniqueInput = Prisma.AtLeast<{
@@ -224,13 +288,26 @@ export type CommissionRuleWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.CommissionRuleWhereInput | Prisma.CommissionRuleWhereInput[]
   title?: Prisma.StringFilter<"CommissionRule"> | string
   rate?: Prisma.StringFilter<"CommissionRule"> | string
+  pct?: Prisma.DecimalNullableFilter<"CommissionRule"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  categoryIds?: Prisma.StringNullableListFilter<"CommissionRule">
+  minAmount?: Prisma.DecimalNullableFilter<"CommissionRule"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  capAmount?: Prisma.DecimalNullableFilter<"CommissionRule"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isDefault?: Prisma.BoolFilter<"CommissionRule"> | boolean
+  isActive?: Prisma.BoolFilter<"CommissionRule"> | boolean
   sortOrder?: Prisma.IntFilter<"CommissionRule"> | number
+  commissions?: Prisma.CommissionListRelationFilter
 }, "id">
 
 export type CommissionRuleOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   rate?: Prisma.SortOrder
+  pct?: Prisma.SortOrderInput | Prisma.SortOrder
+  categoryIds?: Prisma.SortOrder
+  minAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  capAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDefault?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   _count?: Prisma.CommissionRuleCountOrderByAggregateInput
   _avg?: Prisma.CommissionRuleAvgOrderByAggregateInput
@@ -246,6 +323,12 @@ export type CommissionRuleScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"CommissionRule"> | string
   title?: Prisma.StringWithAggregatesFilter<"CommissionRule"> | string
   rate?: Prisma.StringWithAggregatesFilter<"CommissionRule"> | string
+  pct?: Prisma.DecimalNullableWithAggregatesFilter<"CommissionRule"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  categoryIds?: Prisma.StringNullableListFilter<"CommissionRule">
+  minAmount?: Prisma.DecimalNullableWithAggregatesFilter<"CommissionRule"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  capAmount?: Prisma.DecimalNullableWithAggregatesFilter<"CommissionRule"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isDefault?: Prisma.BoolWithAggregatesFilter<"CommissionRule"> | boolean
+  isActive?: Prisma.BoolWithAggregatesFilter<"CommissionRule"> | boolean
   sortOrder?: Prisma.IntWithAggregatesFilter<"CommissionRule"> | number
 }
 
@@ -253,34 +336,68 @@ export type CommissionRuleCreateInput = {
   id?: string
   title: string
   rate: string
+  pct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  categoryIds?: Prisma.CommissionRuleCreatecategoryIdsInput | string[]
+  minAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  capAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isDefault?: boolean
+  isActive?: boolean
   sortOrder?: number
+  commissions?: Prisma.CommissionCreateNestedManyWithoutRuleInput
 }
 
 export type CommissionRuleUncheckedCreateInput = {
   id?: string
   title: string
   rate: string
+  pct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  categoryIds?: Prisma.CommissionRuleCreatecategoryIdsInput | string[]
+  minAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  capAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isDefault?: boolean
+  isActive?: boolean
   sortOrder?: number
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutRuleInput
 }
 
 export type CommissionRuleUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   rate?: Prisma.StringFieldUpdateOperationsInput | string
+  pct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  categoryIds?: Prisma.CommissionRuleUpdatecategoryIdsInput | string[]
+  minAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  capAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  commissions?: Prisma.CommissionUpdateManyWithoutRuleNestedInput
 }
 
 export type CommissionRuleUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   rate?: Prisma.StringFieldUpdateOperationsInput | string
+  pct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  categoryIds?: Prisma.CommissionRuleUpdatecategoryIdsInput | string[]
+  minAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  capAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutRuleNestedInput
 }
 
 export type CommissionRuleCreateManyInput = {
   id?: string
   title: string
   rate: string
+  pct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  categoryIds?: Prisma.CommissionRuleCreatecategoryIdsInput | string[]
+  minAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  capAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isDefault?: boolean
+  isActive?: boolean
   sortOrder?: number
 }
 
@@ -288,6 +405,12 @@ export type CommissionRuleUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   rate?: Prisma.StringFieldUpdateOperationsInput | string
+  pct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  categoryIds?: Prisma.CommissionRuleUpdatecategoryIdsInput | string[]
+  minAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  capAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -295,17 +418,37 @@ export type CommissionRuleUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   rate?: Prisma.StringFieldUpdateOperationsInput | string
+  pct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  categoryIds?: Prisma.CommissionRuleUpdatecategoryIdsInput | string[]
+  minAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  capAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type CommissionRuleNullableScalarRelationFilter = {
+  is?: Prisma.CommissionRuleWhereInput | null
+  isNot?: Prisma.CommissionRuleWhereInput | null
 }
 
 export type CommissionRuleCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   rate?: Prisma.SortOrder
+  pct?: Prisma.SortOrder
+  categoryIds?: Prisma.SortOrder
+  minAmount?: Prisma.SortOrder
+  capAmount?: Prisma.SortOrder
+  isDefault?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
 }
 
 export type CommissionRuleAvgOrderByAggregateInput = {
+  pct?: Prisma.SortOrder
+  minAmount?: Prisma.SortOrder
+  capAmount?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
 }
 
@@ -313,6 +456,11 @@ export type CommissionRuleMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   rate?: Prisma.SortOrder
+  pct?: Prisma.SortOrder
+  minAmount?: Prisma.SortOrder
+  capAmount?: Prisma.SortOrder
+  isDefault?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
 }
 
@@ -320,26 +468,170 @@ export type CommissionRuleMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   rate?: Prisma.SortOrder
+  pct?: Prisma.SortOrder
+  minAmount?: Prisma.SortOrder
+  capAmount?: Prisma.SortOrder
+  isDefault?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
 }
 
 export type CommissionRuleSumOrderByAggregateInput = {
+  pct?: Prisma.SortOrder
+  minAmount?: Prisma.SortOrder
+  capAmount?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
 }
 
+export type CommissionRuleCreateNestedOneWithoutCommissionsInput = {
+  create?: Prisma.XOR<Prisma.CommissionRuleCreateWithoutCommissionsInput, Prisma.CommissionRuleUncheckedCreateWithoutCommissionsInput>
+  connectOrCreate?: Prisma.CommissionRuleCreateOrConnectWithoutCommissionsInput
+  connect?: Prisma.CommissionRuleWhereUniqueInput
+}
+
+export type CommissionRuleUpdateOneWithoutCommissionsNestedInput = {
+  create?: Prisma.XOR<Prisma.CommissionRuleCreateWithoutCommissionsInput, Prisma.CommissionRuleUncheckedCreateWithoutCommissionsInput>
+  connectOrCreate?: Prisma.CommissionRuleCreateOrConnectWithoutCommissionsInput
+  upsert?: Prisma.CommissionRuleUpsertWithoutCommissionsInput
+  disconnect?: Prisma.CommissionRuleWhereInput | boolean
+  delete?: Prisma.CommissionRuleWhereInput | boolean
+  connect?: Prisma.CommissionRuleWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CommissionRuleUpdateToOneWithWhereWithoutCommissionsInput, Prisma.CommissionRuleUpdateWithoutCommissionsInput>, Prisma.CommissionRuleUncheckedUpdateWithoutCommissionsInput>
+}
+
+export type CommissionRuleCreatecategoryIdsInput = {
+  set: string[]
+}
+
+export type CommissionRuleUpdatecategoryIdsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type CommissionRuleCreateWithoutCommissionsInput = {
+  id?: string
+  title: string
+  rate: string
+  pct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  categoryIds?: Prisma.CommissionRuleCreatecategoryIdsInput | string[]
+  minAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  capAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isDefault?: boolean
+  isActive?: boolean
+  sortOrder?: number
+}
+
+export type CommissionRuleUncheckedCreateWithoutCommissionsInput = {
+  id?: string
+  title: string
+  rate: string
+  pct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  categoryIds?: Prisma.CommissionRuleCreatecategoryIdsInput | string[]
+  minAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  capAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isDefault?: boolean
+  isActive?: boolean
+  sortOrder?: number
+}
+
+export type CommissionRuleCreateOrConnectWithoutCommissionsInput = {
+  where: Prisma.CommissionRuleWhereUniqueInput
+  create: Prisma.XOR<Prisma.CommissionRuleCreateWithoutCommissionsInput, Prisma.CommissionRuleUncheckedCreateWithoutCommissionsInput>
+}
+
+export type CommissionRuleUpsertWithoutCommissionsInput = {
+  update: Prisma.XOR<Prisma.CommissionRuleUpdateWithoutCommissionsInput, Prisma.CommissionRuleUncheckedUpdateWithoutCommissionsInput>
+  create: Prisma.XOR<Prisma.CommissionRuleCreateWithoutCommissionsInput, Prisma.CommissionRuleUncheckedCreateWithoutCommissionsInput>
+  where?: Prisma.CommissionRuleWhereInput
+}
+
+export type CommissionRuleUpdateToOneWithWhereWithoutCommissionsInput = {
+  where?: Prisma.CommissionRuleWhereInput
+  data: Prisma.XOR<Prisma.CommissionRuleUpdateWithoutCommissionsInput, Prisma.CommissionRuleUncheckedUpdateWithoutCommissionsInput>
+}
+
+export type CommissionRuleUpdateWithoutCommissionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  rate?: Prisma.StringFieldUpdateOperationsInput | string
+  pct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  categoryIds?: Prisma.CommissionRuleUpdatecategoryIdsInput | string[]
+  minAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  capAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type CommissionRuleUncheckedUpdateWithoutCommissionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  rate?: Prisma.StringFieldUpdateOperationsInput | string
+  pct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  categoryIds?: Prisma.CommissionRuleUpdatecategoryIdsInput | string[]
+  minAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  capAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+
+/**
+ * Count Type CommissionRuleCountOutputType
+ */
+
+export type CommissionRuleCountOutputType = {
+  commissions: number
+}
+
+export type CommissionRuleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  commissions?: boolean | CommissionRuleCountOutputTypeCountCommissionsArgs
+}
+
+/**
+ * CommissionRuleCountOutputType without action
+ */
+export type CommissionRuleCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommissionRuleCountOutputType
+   */
+  select?: Prisma.CommissionRuleCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * CommissionRuleCountOutputType without action
+ */
+export type CommissionRuleCountOutputTypeCountCommissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CommissionWhereInput
+}
 
 
 export type CommissionRuleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   title?: boolean
   rate?: boolean
+  pct?: boolean
+  categoryIds?: boolean
+  minAmount?: boolean
+  capAmount?: boolean
+  isDefault?: boolean
+  isActive?: boolean
   sortOrder?: boolean
+  commissions?: boolean | Prisma.CommissionRule$commissionsArgs<ExtArgs>
+  _count?: boolean | Prisma.CommissionRuleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["commissionRule"]>
 
 export type CommissionRuleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   title?: boolean
   rate?: boolean
+  pct?: boolean
+  categoryIds?: boolean
+  minAmount?: boolean
+  capAmount?: boolean
+  isDefault?: boolean
+  isActive?: boolean
   sortOrder?: boolean
 }, ExtArgs["result"]["commissionRule"]>
 
@@ -347,6 +639,12 @@ export type CommissionRuleSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   id?: boolean
   title?: boolean
   rate?: boolean
+  pct?: boolean
+  categoryIds?: boolean
+  minAmount?: boolean
+  capAmount?: boolean
+  isDefault?: boolean
+  isActive?: boolean
   sortOrder?: boolean
 }, ExtArgs["result"]["commissionRule"]>
 
@@ -354,18 +652,56 @@ export type CommissionRuleSelectScalar = {
   id?: boolean
   title?: boolean
   rate?: boolean
+  pct?: boolean
+  categoryIds?: boolean
+  minAmount?: boolean
+  capAmount?: boolean
+  isDefault?: boolean
+  isActive?: boolean
   sortOrder?: boolean
 }
 
-export type CommissionRuleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "rate" | "sortOrder", ExtArgs["result"]["commissionRule"]>
+export type CommissionRuleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "rate" | "pct" | "categoryIds" | "minAmount" | "capAmount" | "isDefault" | "isActive" | "sortOrder", ExtArgs["result"]["commissionRule"]>
+export type CommissionRuleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  commissions?: boolean | Prisma.CommissionRule$commissionsArgs<ExtArgs>
+  _count?: boolean | Prisma.CommissionRuleCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type CommissionRuleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type CommissionRuleIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $CommissionRulePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CommissionRule"
-  objects: {}
+  objects: {
+    commissions: Prisma.$CommissionPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     title: string
+    /**
+     * Shown to users, e.g. "1–3%".
+     */
     rate: string
+    /**
+     * Percent applied automatically (null = display only).
+     */
+    pct: runtime.Decimal | null
+    /**
+     * Offer categories this rule covers (empty = any category).
+     */
+    categoryIds: string[]
+    /**
+     * Applies only when the deal base is at least this amount (large corporate deals).
+     */
+    minAmount: runtime.Decimal | null
+    /**
+     * Upper limit of the commission amount.
+     */
+    capAmount: runtime.Decimal | null
+    /**
+     * Fallback when no other rule matches.
+     */
+    isDefault: boolean
+    isActive: boolean
     sortOrder: number
   }, ExtArgs["result"]["commissionRule"]>
   composites: {}
@@ -761,6 +1097,7 @@ readonly fields: CommissionRuleFieldRefs;
  */
 export interface Prisma__CommissionRuleClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  commissions<T extends Prisma.CommissionRule$commissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CommissionRule$commissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -793,6 +1130,12 @@ export interface CommissionRuleFieldRefs {
   readonly id: Prisma.FieldRef<"CommissionRule", 'String'>
   readonly title: Prisma.FieldRef<"CommissionRule", 'String'>
   readonly rate: Prisma.FieldRef<"CommissionRule", 'String'>
+  readonly pct: Prisma.FieldRef<"CommissionRule", 'Decimal'>
+  readonly categoryIds: Prisma.FieldRef<"CommissionRule", 'String[]'>
+  readonly minAmount: Prisma.FieldRef<"CommissionRule", 'Decimal'>
+  readonly capAmount: Prisma.FieldRef<"CommissionRule", 'Decimal'>
+  readonly isDefault: Prisma.FieldRef<"CommissionRule", 'Boolean'>
+  readonly isActive: Prisma.FieldRef<"CommissionRule", 'Boolean'>
   readonly sortOrder: Prisma.FieldRef<"CommissionRule", 'Int'>
 }
     
@@ -810,6 +1153,10 @@ export type CommissionRuleFindUniqueArgs<ExtArgs extends runtime.Types.Extension
    * Omit specific fields from the CommissionRule
    */
   omit?: Prisma.CommissionRuleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissionRuleInclude<ExtArgs> | null
   /**
    * Filter, which CommissionRule to fetch.
    */
@@ -829,6 +1176,10 @@ export type CommissionRuleFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Ex
    */
   omit?: Prisma.CommissionRuleOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissionRuleInclude<ExtArgs> | null
+  /**
    * Filter, which CommissionRule to fetch.
    */
   where: Prisma.CommissionRuleWhereUniqueInput
@@ -846,6 +1197,10 @@ export type CommissionRuleFindFirstArgs<ExtArgs extends runtime.Types.Extensions
    * Omit specific fields from the CommissionRule
    */
   omit?: Prisma.CommissionRuleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissionRuleInclude<ExtArgs> | null
   /**
    * Filter, which CommissionRule to fetch.
    */
@@ -895,6 +1250,10 @@ export type CommissionRuleFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Ext
    */
   omit?: Prisma.CommissionRuleOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissionRuleInclude<ExtArgs> | null
+  /**
    * Filter, which CommissionRule to fetch.
    */
   where?: Prisma.CommissionRuleWhereInput
@@ -942,6 +1301,10 @@ export type CommissionRuleFindManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Omit specific fields from the CommissionRule
    */
   omit?: Prisma.CommissionRuleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissionRuleInclude<ExtArgs> | null
   /**
    * Filter, which CommissionRules to fetch.
    */
@@ -991,6 +1354,10 @@ export type CommissionRuleCreateArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   omit?: Prisma.CommissionRuleOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissionRuleInclude<ExtArgs> | null
+  /**
    * The data needed to create a CommissionRule.
    */
   data: Prisma.XOR<Prisma.CommissionRuleCreateInput, Prisma.CommissionRuleUncheckedCreateInput>
@@ -1038,6 +1405,10 @@ export type CommissionRuleUpdateArgs<ExtArgs extends runtime.Types.Extensions.In
    * Omit specific fields from the CommissionRule
    */
   omit?: Prisma.CommissionRuleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissionRuleInclude<ExtArgs> | null
   /**
    * The data needed to update a CommissionRule.
    */
@@ -1105,6 +1476,10 @@ export type CommissionRuleUpsertArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   omit?: Prisma.CommissionRuleOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissionRuleInclude<ExtArgs> | null
+  /**
    * The filter to search for the CommissionRule to update in case it exists.
    */
   where: Prisma.CommissionRuleWhereUniqueInput
@@ -1131,6 +1506,10 @@ export type CommissionRuleDeleteArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   omit?: Prisma.CommissionRuleOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissionRuleInclude<ExtArgs> | null
+  /**
    * Filter which CommissionRule to delete.
    */
   where: Prisma.CommissionRuleWhereUniqueInput
@@ -1151,6 +1530,30 @@ export type CommissionRuleDeleteManyArgs<ExtArgs extends runtime.Types.Extension
 }
 
 /**
+ * CommissionRule.commissions
+ */
+export type CommissionRule$commissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Commission
+   */
+  select?: Prisma.CommissionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Commission
+   */
+  omit?: Prisma.CommissionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissionInclude<ExtArgs> | null
+  where?: Prisma.CommissionWhereInput
+  orderBy?: Prisma.CommissionOrderByWithRelationInput | Prisma.CommissionOrderByWithRelationInput[]
+  cursor?: Prisma.CommissionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CommissionScalarFieldEnum | Prisma.CommissionScalarFieldEnum[]
+}
+
+/**
  * CommissionRule without action
  */
 export type CommissionRuleDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1162,4 +1565,8 @@ export type CommissionRuleDefaultArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the CommissionRule
    */
   omit?: Prisma.CommissionRuleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommissionRuleInclude<ExtArgs> | null
 }

@@ -22,11 +22,11 @@ export const INDUSTRIES = [
   "ღონისძიებები", "აგრობიზნესი", "დისტრიბუცია", "HR და განათლება",
 ];
 
-const COMMISSION_RULES: [string, string][] = [
-  ["საწვავი და დაბალმარჟიანი პროდუქტი", "ფიქსირებული ან 0.5–1%"],
-  ["სტანდარტული B2B სერვისი", "1–3%"],
-  ["პროფესიული მაღალი მარჟა", "3–5%"],
-  ["დიდი კორპორაციული გარიგება", "ინდივიდუალური ზედა ზღვარი"],
+const COMMISSION_RULES: { title: string; rate: string; pct: number; isDefault?: boolean; minAmount?: number; capAmount?: number }[] = [
+  { title: "საწვავი და დაბალმარჟიანი პროდუქტი", rate: "ფიქსირებული ან 0.5–1%", pct: 0.5 },
+  { title: "სტანდარტული B2B სერვისი", rate: "1–3%", pct: 2, isDefault: true },
+  { title: "პროფესიული მაღალი მარჟა", rate: "3–5%", pct: 4 },
+  { title: "დიდი კორპორაციული გარიგება", rate: "ინდივიდუალური ზედა ზღვარი", pct: 1, minAmount: 100000, capAmount: 5000 },
 ];
 
 const CAMPAIGNS = [
@@ -85,7 +85,7 @@ async function main() {
     await db.category.upsert({ where: { slug }, update: { name, kind: "INDUSTRY", sortOrder: i * 10 }, create: { name, slug, kind: "INDUSTRY", sortOrder: i * 10 } });
   }
   if ((await db.commissionRule.count()) === 0) {
-    await db.commissionRule.createMany({ data: COMMISSION_RULES.map(([title, rate], i) => ({ title, rate, sortOrder: i * 10 })) });
+    await db.commissionRule.createMany({ data: COMMISSION_RULES.map((r, i) => ({ ...r, sortOrder: i * 10 })) });
   }
   if ((await db.campaignPackage.count()) === 0) {
     await db.campaignPackage.createMany({ data: CAMPAIGNS.map((c, i) => ({ ...c, sortOrder: i * 10 })) });

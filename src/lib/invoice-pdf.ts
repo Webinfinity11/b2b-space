@@ -32,6 +32,10 @@ export type PdfInvoice = {
   snapshot: InvoiceSnapshot;
   /** Number of the invoice this one corrects, if any. */
   correctsNumber?: string | null;
+  /** Overrides the "deal" reference line (e.g. the SGBA commission invoice cites the deal invoice). */
+  dealRefText?: string;
+  /** Overrides the document title (default: invoice). */
+  title?: string;
   items: { name: string; description: string | null; quantity: Dec; unit: string; unitPrice: Dec; lineTotal: Dec }[];
 };
 
@@ -60,7 +64,7 @@ export function renderInvoicePdf(inv: PdfInvoice): Promise<Buffer> {
   doc.rect(L, 44, 12, 12).fill("#FFFFFF");
   doc.rect(L + 14, 44, 12, 12).lineWidth(1.5).stroke("#1D45D1");
   doc.fillColor("#FFFFFF").font("b").fontSize(16).text(ka.brand, L + 36, 34);
-  doc.font("b").fontSize(18).text(i.invoiceWord, L, 28, { width: W, align: "right" });
+  doc.font("b").fontSize(18).text(inv.title ?? i.invoiceWord, L, 28, { width: W, align: "right" });
   doc.font("r").fontSize(10).fillColor("#1D45D1").text(inv.number, L, 54, { width: W, align: "right" });
 
   // Meta
@@ -69,7 +73,7 @@ export function renderInvoicePdf(inv: PdfInvoice): Promise<Buffer> {
   const meta: [string, string][] = [
     [i.issuedAt, formatDate(inv.issuedAt)],
     [i.dueDate, inv.dueDate ? formatDate(inv.dueDate) : "—"],
-    [i.dealRef, `${t.version(inv.snapshot.deal.versionNumber)} · ${inv.snapshot.deal.dealTermsId}`],
+    [i.dealRef, inv.dealRefText ?? `${t.version(inv.snapshot.deal.versionNumber)} · ${inv.snapshot.deal.dealTermsId}`],
   ];
   if (inv.correctsNumber) meta.push([i.correctsLabelPdf, inv.correctsNumber]);
   for (const [label, value] of meta) {

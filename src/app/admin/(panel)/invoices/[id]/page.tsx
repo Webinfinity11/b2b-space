@@ -3,14 +3,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { InvoiceStatus } from "@/generated/prisma/enums";
 import { ka } from "@/i18n/ka";
-import { adminInvoiceStatusAction } from "@/actions/admin";
+import { adminInvoiceStatusAction, voidPaymentAction } from "@/actions/admin";
 import { requireAdmin } from "@/lib/authz";
 import { db } from "@/lib/db";
 import { formatDate, formatDateTime, formatMoney, formatNumber } from "@/lib/format";
 import { effectiveStatus, type InvoiceParty, type InvoiceSnapshot } from "@/lib/invoices";
 import { ButtonLink } from "@/components/ui/Button";
 import { Card, CardBody, CardHeader, PageHeader } from "@/components/ui/Card";
-import { ActionForm, Field, Select, SubmitButton, Textarea } from "@/components/ui/Form";
+import { ActionForm, Field, Input, Select, SubmitButton, Textarea } from "@/components/ui/Form";
 import { InvoiceStatusBadge } from "@/components/panel/InvoiceStatusBadge";
 
 export const metadata: Metadata = { title: ka.invoice.invoiceWord };
@@ -113,11 +113,27 @@ export default async function AdminInvoicePage({ params }: PageProps<"/admin/inv
                 <ul className="divide-y divide-line text-sm">
                   {inv.payments.map((p) => (
                     <li key={p.id} className="flex flex-wrap justify-between gap-2 py-2">
-                      <span>
+                      <span className={p.voidedAt ? "text-muted line-through" : ""}>
                         <span className="font-medium tabular-nums">{formatMoney(p.amount, p.currency)}</span>
                         <span className="text-muted"> · {formatDate(p.paidAt)}{p.method ? ` · ${p.method}` : ""}{p.reference ? ` · ${p.reference}` : ""}</span>
                       </span>
                       <span className="text-xs text-muted">{p.recordedBy.firstName} {p.recordedBy.lastName}</span>
+                      {p.voidedAt ? (
+                        <span className="w-full text-xs text-danger">{ka.admin.paymentVoided}: {p.voidReason}</span>
+                      ) : (
+                        !["CANCELLED", "REFUNDED"].includes(inv.status) && (
+                          <details className="w-full">
+                            <summary className="cursor-pointer text-xs text-danger">{ka.admin.voidPayment}</summary>
+                            <ActionForm action={voidPaymentAction} className="mt-2 flex flex-wrap items-end gap-2" toast>
+                              <input type="hidden" name="paymentId" value={p.id} />
+                              <Field label={ka.commissionAdmin.reason} name="reason">
+                                <Input name="reason" required minLength={3} maxLength={500} className="h-9" />
+                              </Field>
+                              <SubmitButton size="sm" variant="danger">{ka.admin.voidPayment}</SubmitButton>
+                            </ActionForm>
+                          </details>
+                        )
+                      )}
                     </li>
                   ))}
                 </ul>

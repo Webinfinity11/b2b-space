@@ -6,7 +6,7 @@ import { adminCampaignAction } from "@/actions/admin";
 import { requireAdmin } from "@/lib/authz";
 import { audienceWhere } from "@/lib/campaigns";
 import { db } from "@/lib/db";
-import { formatDateTime } from "@/lib/format";
+import { formatDate, formatDateTime } from "@/lib/format";
 import { companyName } from "@/lib/public";
 import { Card, CardBody, CardHeader, PageHeader } from "@/components/ui/Card";
 import { ActionForm, Field, Input, SubmitButton, Textarea } from "@/components/ui/Form";
@@ -71,7 +71,9 @@ export default async function AdminCampaignPage({ params }: PageProps<"/admin/ca
             <CardBody className="space-y-4">
               {r.status === "NEW" && op("review", c.campReview, "secondary")}
               {(r.status === "NEW" || r.status === "IN_PROGRESS") && op("approve", c.campApprove)}
-              {r.status === "APPROVED" && op("launch", c.campLaunch)}
+              {r.status === "APPROVED" && !r.paidAt && op("paid", c.campMarkPaid)}
+              {r.status === "APPROVED" && r.paidAt && <p className="text-sm text-success">✓ {c.campPaidAt(formatDate(r.paidAt))}</p>}
+              {r.status === "APPROVED" && r.paidAt && op("launch", c.campLaunch)}
               {r.status === "RUNNING" && op("finish", c.campFinish, "secondary")}
               {["NEW", "IN_PROGRESS", "APPROVED"].includes(r.status) && op("reject", c.campReject, "danger")}
               {(r.status === "DONE" || r.status === "REJECTED") && <p className="text-sm text-muted">{c.campStatus[r.status]}</p>}

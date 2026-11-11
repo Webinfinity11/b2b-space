@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ka } from "@/i18n/ka";
 import { getActiveMembership, requireUser } from "@/lib/authz";
 import { partySelect } from "@/lib/chat";
-import { dealCommissionPct } from "@/lib/commission";
+import { activeRules, dealCommissionPct, expectedCommission, resolveCommission } from "@/lib/commission";
 import { db } from "@/lib/db";
 import { dealSideFor } from "@/lib/deals";
 import { formatAmount } from "@/lib/money";
@@ -32,17 +32,18 @@ export default async function DealsPage({ searchParams }: PageProps<"/app/conver
     take: 200,
     include: {
       participants: { select: partySelect },
-      offer: { select: { title: true, type: true, commissionPct: true } },
+      offer: { select: { title: true, type: true, commissionPct: true, categoryId: true } },
       _count: { select: { messages: true } },
     },
   });
+  const rules = await activeRules();
 
   const monthStart = new Date();
   monthStart.setDate(1);
   monthStart.setHours(0, 0, 0, 0);
   const active = rows.filter((r) => r.stage !== "CONTRACT");
   const total = active.reduce((s, r) => s + Number(r.amount ?? 0), 0);
-  const commission = active.reduce((s, r) => s + Number(r.amount ?? 0) * Number(dealCommissionPct(r) ?? 0) / 100, 0);
+  const commission = active.reduce((s, r) => s + expectedCommission(r, rules), 0);
   const closing = rows.filter((r) => (r.stage === "CONTRACT" || r.stage === "MEETING") && r.updatedAt >= monthStart).length;
 
   return (
@@ -84,7 +85,7 @@ export default async function DealsPage({ searchParams }: PageProps<"/app/conver
                 {rows.map((c) => {
                   const seller = c.participants.find((p) => dealSideFor(p.side, c.offer?.type ?? null, c.sellerSide) === "SELLER");
                   const buyer = c.participants.find((p) => p !== seller);
-                  const pct = dealCommissionPct(c);
+                  const { pct } = resolveCommission(dealCommissionPct(c), rules, c.offer?.categoryId ?? null, c.amount);
                   const amount = c.amount ? Number(c.amount) : null;
                   return (
                     <tr key={c.id} className="hover:bg-canvas/50">
@@ -96,7 +97,7 @@ export default async function DealsPage({ searchParams }: PageProps<"/app/conver
                       <td className="px-5 py-3.5"><StagePill stage={c.stage} /></td>
                       <td className="px-5 py-3.5 text-right font-semibold tabular-nums">{amount !== null ? formatAmount(amount, "GEL") : "—"}</td>
                       <td className="px-5 py-3.5 text-right text-xs font-semibold text-success tabular-nums">
-                        {amount !== null && pct ? ka.sgba.commissionLine(formatAmount((amount * Number(pct)) / 100, "GEL"), pct.toString()) : "—"}
+                        {amount !== null && pct ? ka.sgba.commissionLine(formatAmount(expectedCommission(c, rules), "GEL"), pct.toString()) : "—"}
                       </td>
                       <td className="px-5 py-3.5 text-right">
                         <Link href={`/app/conversations/${c.id}`} className="whitespace-nowrap text-sm font-medium text-accent-strong hover:underline">{ka.sgba.open} →</Link>

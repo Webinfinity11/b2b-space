@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { InvoiceStatus } from "@/generated/prisma/enums";
 import { ka } from "@/i18n/ka";
-import { cancelInvoiceAction, markInvoiceSentAction, markInvoiceViewed, markPaidInFullAction, recordPaymentAction } from "@/actions/invoices";
+import { attachInvoiceDocumentAction, cancelInvoiceAction, confirmByBuyerAction, markInvoiceSentAction, markInvoiceViewed, markPaidInFullAction, recordPaymentAction } from "@/actions/invoices";
+import { hasPermission } from "@/lib/permissions";
 import { todayInGeorgia } from "@/lib/money";
 import { getActiveMembership, requireUser } from "@/lib/authz";
 import { db } from "@/lib/db";
@@ -36,6 +37,7 @@ export default async function InvoicePage({ params }: PageProps<"/app/invoices/[
   });
   const snap = inv.snapshot as unknown as InvoiceSnapshot;
   const manager = canManageInvoice(inv, user.id, m);
+  const buyerManager = inv.buyerCompanyId ? inv.buyerCompanyId === m?.companyId && hasPermission(m, "invoices.manage") : inv.buyerUserId === user.id;
   const shown = effectiveStatus(inv) as InvoiceStatus;
   const remaining = Number(inv.total) - Number(inv.paidAmount);
   const i = ka.invoice;
@@ -134,7 +136,7 @@ export default async function InvoicePage({ params }: PageProps<"/app/invoices/[
                 <ul className="divide-y divide-line text-sm">
                   {inv.payments.map((p) => (
                     <li key={p.id} className="flex flex-wrap justify-between gap-2 py-2">
-                      <span>
+                      <span className={p.voidedAt ? "text-muted line-through" : ""} title={p.voidReason ?? undefined}>
                         <span className="font-medium tabular-nums">{formatMoney(p.amount, p.currency)}</span>
                         <span className="text-muted"> · {formatDate(p.paidAt)}{p.method ? ` · ${p.method}` : ""}{p.reference ? ` · ${p.reference}` : ""}</span>
                       </span>
@@ -148,6 +150,44 @@ export default async function InvoicePage({ params }: PageProps<"/app/invoices/[
         </div>
 
         <aside className="space-y-6">
+          {/* SGBA settlement: seller attaches the signed invoice/contract, buyer confirms. */}
+          <Card>
+            <CardHeader title={i.documentTitle} text={manager ? i.documentHint : undefined} />
+            <CardBody className="space-y-3 text-sm">
+              {inv.documentKey ? (
+                <a href={`/api/invoices/${inv.id}/document`} target="_blank" className="inline-flex items-center gap-1.5 font-medium text-accent-strong hover:underline">📎 {inv.documentName}</a>
+              ) : (
+                !manager && <p className="text-muted">{i.documentNone}</p>
+              )}
+              {manager && !["CANCELLED", "REFUNDED"].includes(inv.status) && (
+                <ActionForm action={attachInvoiceDocumentAction} resetOnSuccess className="space-y-2">
+                  <input type="hidden" name="invoiceId" value={inv.id} />
+                  <Field label={inv.documentKey ? i.documentReplace : i.documentUpload} name="document">
+                    <Input name="document" type="file" accept="application/pdf,image/jpeg,image/png,image/webp" className="pt-1.5 text-xs" />
+                  </Field>
+                  <SubmitButton size="sm" variant="secondary">{i.documentUpload}</SubmitButton>
+                </ActionForm>
+              )}
+            </CardBody>
+          </Card>
+          {!["CANCELLED", "REFUNDED", "DRAFT"].includes(inv.status) && (
+            <Card>
+              <CardHeader title={i.buyerConfirmTitle} />
+              <CardBody className="space-y-3 text-sm">
+                {inv.buyerConfirmedAt ? (
+                  <p className="font-medium text-success">✓ {i.buyerConfirmedAt(formatDateTime(inv.buyerConfirmedAt))}</p>
+                ) : buyerManager ? (
+                  <ActionForm action={confirmByBuyerAction} className="space-y-3">
+                    <input type="hidden" name="invoiceId" value={inv.id} />
+                    <p className="text-secondary">{i.buyerConfirmText}</p>
+                    <SubmitButton className="w-full">{i.buyerConfirmButton}</SubmitButton>
+                  </ActionForm>
+                ) : (
+                  <p className="text-muted">{i.buyerConfirmedWaiting}</p>
+                )}
+              </CardBody>
+            </Card>
+          )}
           {manager && !["CANCELLED", "REFUNDED", "PAID"].includes(inv.status) && (
             <Card>
               <CardHeader title={i.recordPayment} text={i.paymentHint} />

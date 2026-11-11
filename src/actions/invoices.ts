@@ -14,7 +14,9 @@ import { fail, type FormState } from "@/lib/forms";
 import { assertInvoiceManager, buildInvoiceSnapshot } from "@/lib/invoices";
 import { notify } from "@/lib/notify";
 import { todayInGeorgia } from "@/lib/money";
-import { createCommissionForPaidInvoice } from "@/lib/commission";
+import { createCommissionForInvoice, createCommissionForPaidInvoice } from "@/lib/commission";
+import { hasPermission } from "@/lib/permissions";
+import { DOCUMENT_TYPES, UploadError, filesFrom, storeFile } from "@/lib/storage";
 
 const i18n = ka.invoice;
 
@@ -198,4 +200,52 @@ export async function markInvoiceViewed(invoiceId: string) {
   const isBuyer = inv.buyerCompanyId ? inv.buyerCompanyId === m?.companyId : inv.buyerUserId === user.id;
   if (!isBuyer) return;
   await changeStatus(inv.id, inv.status, "VIEWED", user.id);
+}
+
+
+/** People who manage the given side of an invoice (company members with invoices.manage, or the person). */
+async function sideUserIds(companyId: string | null, userId: string) {
+  if (!companyId) return [userId];
+  const ms = await db.companyMember.findMany({ where: { companyId, status: "ACTIVE" }, select: { userId: true, role: true, permissions: true } });
+  return ms.filter((x) => hasPermission(x, "invoices.manage")).map((x) => x.userId);
+}
+
+/**
+ * Settlement step 3 (SGBA): the buyer confirms delivery / payment. This is what makes the deal
+ * "confirmed" — the SGBA commission invoice is issued to the seller.
+ */
+export async function confirmByBuyerAction(_: FormState, formData: FormData): Promise<FormState> {
+  const user = await assertUser();
+  const m = await getActiveMembership(user.id);
+  const inv = await db.invoice.findUnique({ where: { id: String(formData.get("invoiceId")) } });
+  if (!inv) return fail(ka.errors.forbidden);
+  const isBuyer = inv.buyerCompanyId ? inv.buyerCompanyId === m?.companyId && hasPermission(m, "invoices.manage") : inv.buyerUserId === user.id;
+  if (!isBuyer || inv.buyerConfirmedAt || ["CANCELLED", "REFUNDED", "DRAFT"].includes(inv.status)) return fail(ka.errors.forbidden);
+  const r = await db.invoice.updateMany({ where: { id: inv.id, buyerConfirmedAt: null }, data: { buyerConfirmedAt: new Date(), buyerConfirmedById: user.id } });
+  if (!r.count) return fail(i18n.paymentConflict);
+  await audit({ actorId: user.id, action: "invoice.buyer_confirmed", entityType: "Invoice", entityId: inv.id });
+  await notify(await sideUserIds(inv.sellerCompanyId, inv.sellerUserId), { type: "INVOICE_CREATED", title: i18n.buyerConfirmedNotify(inv.number), link: `/app/invoices/${inv.id}` });
+  await createCommissionForInvoice(inv.id);
+  revalidatePath(`/app/invoices/${inv.id}`);
+  revalidatePath("/app/finance");
+  return { ok: true, message: i18n.buyerConfirmedDone };
+}
+
+/** Settlement step 2 (SGBA): the seller attaches their own signed invoice or contract to the deal invoice. */
+export async function attachInvoiceDocumentAction(_: FormState, formData: FormData): Promise<FormState> {
+  const { user, inv } = await assertInvoiceManager(String(formData.get("invoiceId")));
+  const [file] = filesFrom(formData, "document");
+  if (!file) return fail(ka.validation.formErrors, formData, { document: ka.validation.required });
+  let stored;
+  try {
+    stored = await storeFile(file, { visibility: "private", folder: `invoices/${inv.id}`, allowed: DOCUMENT_TYPES, maxMb: 10 });
+  } catch (e) {
+    if (e instanceof UploadError) return fail(ka.validation.formErrors, formData, { document: e.code === "size" ? ka.validation.fileSize(10) : ka.validation.fileType });
+    throw e;
+  }
+  await db.invoice.update({ where: { id: inv.id }, data: { documentKey: stored.key, documentName: stored.fileName, documentMime: stored.mimeType } });
+  await audit({ actorId: user.id, action: "invoice.document_attached", entityType: "Invoice", entityId: inv.id, metadata: { name: stored.fileName } });
+  await notify(await sideUserIds(inv.buyerCompanyId, inv.buyerUserId), { type: "INVOICE_CREATED", title: i18n.documentAttachedNotify(inv.number), link: `/app/invoices/${inv.id}` });
+  revalidatePath(`/app/invoices/${inv.id}`);
+  return { ok: true, message: i18n.documentAttached };
 }
