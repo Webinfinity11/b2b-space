@@ -1243,6 +1243,7 @@ export const ka = {
     adminButton: "აღდგენის ბმული",
     adminLink: (link: string) => `აღდგენის ბმული (მოქმედებს 2 სთ): ${link}`,
     back: "← შესვლაზე დაბრუნება",
+    newText: "შეიყვანეთ ახალი პაროლი.",
   },
 
   settings: {
