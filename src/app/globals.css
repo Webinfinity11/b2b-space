@@ -118,7 +118,7 @@ input[type="radio"] {
   --color-surface-2: #18233c;
   --color-accent: #3d65ee;
   --color-accent-strong: #7d9bff;
-  --color-accent-hover: #3157dc;
+  --color-accent-hover: #5479f5;
   --color-blue: #3d65ee;
   --color-blue-soft: #18264a;
   --color-blue-soft-2: #15213f;
@@ -150,6 +150,23 @@ input[type="radio"] {
 :root[data-theme="dark"] .text-\[\#6b46a3\], :root[data-theme="dark"] .text-\[\#6644ad\] { color: #b9a2ec; }
 :root[data-theme="dark"] .text-\[\#c53030\] { color: #f07878; }
 :root[data-theme="dark"] .border-\[\#f3d48a\] { border-color: rgb(232 176 75 / 0.35); }
+/* Hover states: on dark, hovers must lift (lighter), never sink into the canvas or go low-contrast blue */
+@media (hover: hover) {
+  :root[data-theme="dark"] .hover\:text-accent:hover,
+  :root[data-theme="dark"] .hover\:text-accent-hover:hover { color: #a9bcff; }
+  :root[data-theme="dark"] .hover\:bg-canvas:hover,
+  :root[data-theme="dark"] .hover\:bg-canvas\/50:hover,
+  :root[data-theme="dark"] .hover\:bg-canvas\/60:hover { background-color: rgb(255 255 255 / 0.045); }
+  :root[data-theme="dark"] .hover\:bg-chip:hover,
+  :root[data-theme="dark"] .hover\:bg-surface-2:hover { background-color: #213052; }
+  :root[data-theme="dark"] .hover\:bg-accent\/\[0\.04\]:hover,
+  :root[data-theme="dark"] .hover\:bg-accent\/\[0\.06\]:hover { background-color: rgb(125 155 255 / 0.09); }
+  :root[data-theme="dark"] .hover\:border-accent:hover,
+  :root[data-theme="dark"] .hover\:border-accent\/30:hover,
+  :root[data-theme="dark"] .hover\:border-accent\/40:hover,
+  :root[data-theme="dark"] .hover\:border-accent\/50:hover { border-color: rgb(125 155 255 / 0.55); }
+  :root[data-theme="dark"] .hover\:border-line-strong:hover { border-color: #3d4d75; }
+  :root[data-theme="dark"] .hover\:ring-\[\#c9d5ef\]:hover { --tw-ring-color: #3d4d75; }}
 /* Decorative banner art blends into the dark card */
 :root[data-theme="dark"] img[src="/images/banner-art.webp"] { opacity: 0.55; }
 
