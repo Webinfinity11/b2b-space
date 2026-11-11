@@ -57,7 +57,6 @@ export async function AuthScreen({ tab, next, registered, invited, inviteToken, 
           {c.enter} <Icon name="arrow" size={18} />
         </SubmitButton>
       </ActionForm>
-      <p className="mt-6 rounded-[12px] bg-surface-2 px-4 py-3 text-xs leading-relaxed text-secondary">{c.loginNote}</p>
     </>
   );
 
