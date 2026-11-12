@@ -8,8 +8,6 @@ import { getTheme } from "@/lib/theme";
 export const metadata: Metadata = {
   title: { default: ka.meta.title, template: `%s — ${ka.brand}` },
   description: ka.meta.description,
-  // Closed members-only platform: keep it out of search engines.
-  robots: { index: false, follow: false },
 };
 
 export const viewport: Viewport = {
