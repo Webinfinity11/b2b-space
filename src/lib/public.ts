@@ -1,6 +1,7 @@
 import "server-only";
 import type { Prisma } from "@/generated/prisma/client";
 import { db } from "./db";
+import { offersForIndustries } from "./sectors";
 
 /**
  * Public data access. Everything returned from here may be rendered to guests,
@@ -239,6 +240,8 @@ export type OfferFilters = {
   companyId?: string;
   /** Offer badge id. */
   badge?: string;
+  /** Only offers for these industries (targeted at one of them, or at all sectors). */
+  forIndustries?: string[];
   pageSize?: number;
   loggedIn: boolean;
 };
@@ -266,6 +269,7 @@ export async function searchOffers(f: OfferFilters) {
   }
   if (f.type) and.push({ type: f.type });
   if (f.badge) and.push({ badgeId: f.badge });
+  if (f.forIndustries) and.push(offersForIndustries(f.forIndustries));
   if (f.city) and.push({ city: { equals: f.city, mode: "insensitive" } });
   if (f.companyId) and.push({ companyId: f.companyId, isAnonymous: false });
   if (f.category) {

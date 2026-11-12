@@ -13,6 +13,7 @@ import { backfillDealCommissions } from "@/lib/commission";
 import { fail, invalid, zCheckbox, zEmail, zOptionalPhone, zText, type FormState } from "@/lib/forms";
 import { createResetLink } from "@/lib/password-reset";
 import { notify } from "@/lib/notify";
+import { companyAudience } from "@/lib/audience";
 import { slugify } from "@/lib/slug";
 import { loadDemoData, removeDemoData } from "@/lib/demo-data";
 import { invoiceSideUserIds } from "@/lib/invoices";
@@ -449,8 +450,7 @@ export async function adminCampaignAction(_: FormState, formData: FormData): Pro
     delivered = targets.length;
   }
 
-  const owners = await db.companyMember.findMany({ where: { companyId: req.companyId, status: "ACTIVE", role: "OWNER" }, select: { userId: true } });
-  await notify([...new Set([req.userId, ...owners.map((o) => o.userId)])], {
+  await notify([req.userId, ...(await companyAudience(req.companyId, "campaigns.manage"))], {
     type: "CAMPAIGN",
     title: ka.sgba.campStatusNotify(req.title, ka.sgba.campStatus[status]),
     body: op === "approve" && price ? ka.sgba.campPriceNotify(price.toFixed(2)) : (adminNote ?? undefined),

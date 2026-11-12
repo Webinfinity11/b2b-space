@@ -2,16 +2,15 @@
 
 import { ka } from "@/i18n/ka";
 import { useFormState } from "@/components/ui/Form";
-
-const ROLES = ["EMPLOYEE", "FINANCE", "OWNER"] as const;
+import { MEMBER_ROLES } from "@/lib/permissions";
 
 /** Role as large radio cards with a one-line explanation of what each role can do. */
-export function RolePicker({ name, defaultValue, idPrefix }: { name: string; defaultValue: string; idPrefix: string }) {
+export function RolePicker({ name, defaultValue, idPrefix, allowOwner = true }: { name: string; defaultValue: string; idPrefix: string; allowOwner?: boolean }) {
   const state = useFormState();
   const current = state.values?.[name] ?? defaultValue;
   return (
     <div className="grid gap-2" key={current}>
-      {ROLES.map((r) => (
+      {MEMBER_ROLES.filter((r) => allowOwner || r !== "OWNER").map((r) => (
         <label
           key={r}
           htmlFor={`${idPrefix}-${r}`}

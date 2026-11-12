@@ -35,7 +35,7 @@ export default async function EditOfferPage({ params }: PageProps<"/company/offe
     },
   });
   if (!offer) notFound();
-  const categories = await getCategoryTree("OFFER");
+  const [categories, industries] = await Promise.all([getCategoryTree("OFFER"), getCategoryTree("INDUSTRY")]);
 
   return (
     <>
@@ -66,6 +66,7 @@ export default async function EditOfferPage({ params }: PageProps<"/company/offe
           )}
           <OfferForm
             categories={categories}
+            industries={industries}
             publishAs={[]}
             lockedPublisher={offer.company ? companyName(offer.company) : ka.offer.asMyself}
             defaults={{
@@ -88,6 +89,8 @@ export default async function EditOfferPage({ params }: PageProps<"/company/offe
               validUntil: offer.validUntil ? offer.validUntil.toISOString().slice(0, 10) : null,
               visibility: offer.visibility,
               isAnonymous: offer.isAnonymous,
+              targetIndustryIds: offer.targetIndustryIds,
+              allSectors: offer.allSectors,
               status: offer.status,
             }}
           />

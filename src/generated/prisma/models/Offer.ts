@@ -60,6 +60,7 @@ export type OfferMinAggregateOutputType = {
   authorUserId: string | null
   companyId: string | null
   isAnonymous: boolean | null
+  allSectors: boolean | null
   perk: string | null
   audience: string | null
   badgeId: string | null
@@ -94,6 +95,7 @@ export type OfferMaxAggregateOutputType = {
   authorUserId: string | null
   companyId: string | null
   isAnonymous: boolean | null
+  allSectors: boolean | null
   perk: string | null
   audience: string | null
   badgeId: string | null
@@ -128,6 +130,8 @@ export type OfferCountAggregateOutputType = {
   authorUserId: number
   companyId: number
   isAnonymous: number
+  targetIndustryIds: number
+  allSectors: number
   perk: number
   audience: number
   badgeId: number
@@ -178,6 +182,7 @@ export type OfferMinAggregateInputType = {
   authorUserId?: true
   companyId?: true
   isAnonymous?: true
+  allSectors?: true
   perk?: true
   audience?: true
   badgeId?: true
@@ -212,6 +217,7 @@ export type OfferMaxAggregateInputType = {
   authorUserId?: true
   companyId?: true
   isAnonymous?: true
+  allSectors?: true
   perk?: true
   audience?: true
   badgeId?: true
@@ -246,6 +252,8 @@ export type OfferCountAggregateInputType = {
   authorUserId?: true
   companyId?: true
   isAnonymous?: true
+  targetIndustryIds?: true
+  allSectors?: true
   perk?: true
   audience?: true
   badgeId?: true
@@ -367,6 +375,8 @@ export type OfferGroupByOutputType = {
   authorUserId: string
   companyId: string | null
   isAnonymous: boolean
+  targetIndustryIds: string[]
+  allSectors: boolean
   perk: string | null
   audience: string | null
   badgeId: string | null
@@ -424,6 +434,8 @@ export type OfferWhereInput = {
   authorUserId?: Prisma.StringFilter<"Offer"> | string
   companyId?: Prisma.StringNullableFilter<"Offer"> | string | null
   isAnonymous?: Prisma.BoolFilter<"Offer"> | boolean
+  targetIndustryIds?: Prisma.StringNullableListFilter<"Offer">
+  allSectors?: Prisma.BoolFilter<"Offer"> | boolean
   perk?: Prisma.StringNullableFilter<"Offer"> | string | null
   audience?: Prisma.StringNullableFilter<"Offer"> | string | null
   badgeId?: Prisma.StringNullableFilter<"Offer"> | string | null
@@ -465,6 +477,8 @@ export type OfferOrderByWithRelationInput = {
   authorUserId?: Prisma.SortOrder
   companyId?: Prisma.SortOrderInput | Prisma.SortOrder
   isAnonymous?: Prisma.SortOrder
+  targetIndustryIds?: Prisma.SortOrder
+  allSectors?: Prisma.SortOrder
   perk?: Prisma.SortOrderInput | Prisma.SortOrder
   audience?: Prisma.SortOrderInput | Prisma.SortOrder
   badgeId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -509,6 +523,8 @@ export type OfferWhereUniqueInput = Prisma.AtLeast<{
   authorUserId?: Prisma.StringFilter<"Offer"> | string
   companyId?: Prisma.StringNullableFilter<"Offer"> | string | null
   isAnonymous?: Prisma.BoolFilter<"Offer"> | boolean
+  targetIndustryIds?: Prisma.StringNullableListFilter<"Offer">
+  allSectors?: Prisma.BoolFilter<"Offer"> | boolean
   perk?: Prisma.StringNullableFilter<"Offer"> | string | null
   audience?: Prisma.StringNullableFilter<"Offer"> | string | null
   badgeId?: Prisma.StringNullableFilter<"Offer"> | string | null
@@ -550,6 +566,8 @@ export type OfferOrderByWithAggregationInput = {
   authorUserId?: Prisma.SortOrder
   companyId?: Prisma.SortOrderInput | Prisma.SortOrder
   isAnonymous?: Prisma.SortOrder
+  targetIndustryIds?: Prisma.SortOrder
+  allSectors?: Prisma.SortOrder
   perk?: Prisma.SortOrderInput | Prisma.SortOrder
   audience?: Prisma.SortOrderInput | Prisma.SortOrder
   badgeId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -592,6 +610,8 @@ export type OfferScalarWhereWithAggregatesInput = {
   authorUserId?: Prisma.StringWithAggregatesFilter<"Offer"> | string
   companyId?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
   isAnonymous?: Prisma.BoolWithAggregatesFilter<"Offer"> | boolean
+  targetIndustryIds?: Prisma.StringNullableListFilter<"Offer">
+  allSectors?: Prisma.BoolWithAggregatesFilter<"Offer"> | boolean
   perk?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
   audience?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
   badgeId?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
@@ -623,6 +643,8 @@ export type OfferCreateInput = {
   city?: string | null
   validUntil?: Date | string | null
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -663,6 +685,8 @@ export type OfferUncheckedCreateInput = {
   authorUserId: string
   companyId?: string | null
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   badgeId?: string | null
@@ -697,6 +721,8 @@ export type OfferUpdateInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -737,6 +763,8 @@ export type OfferUncheckedUpdateInput = {
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -774,6 +802,8 @@ export type OfferCreateManyInput = {
   authorUserId: string
   companyId?: string | null
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   badgeId?: string | null
@@ -805,6 +835,8 @@ export type OfferUpdateManyMutationInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -838,6 +870,8 @@ export type OfferUncheckedUpdateManyInput = {
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -882,6 +916,8 @@ export type OfferCountOrderByAggregateInput = {
   authorUserId?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
   isAnonymous?: Prisma.SortOrder
+  targetIndustryIds?: Prisma.SortOrder
+  allSectors?: Prisma.SortOrder
   perk?: Prisma.SortOrder
   audience?: Prisma.SortOrder
   badgeId?: Prisma.SortOrder
@@ -923,6 +959,7 @@ export type OfferMaxOrderByAggregateInput = {
   authorUserId?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
   isAnonymous?: Prisma.SortOrder
+  allSectors?: Prisma.SortOrder
   perk?: Prisma.SortOrder
   audience?: Prisma.SortOrder
   badgeId?: Prisma.SortOrder
@@ -957,6 +994,7 @@ export type OfferMinOrderByAggregateInput = {
   authorUserId?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
   isAnonymous?: Prisma.SortOrder
+  allSectors?: Prisma.SortOrder
   perk?: Prisma.SortOrder
   audience?: Prisma.SortOrder
   badgeId?: Prisma.SortOrder
@@ -1114,6 +1152,10 @@ export type OfferUncheckedUpdateManyWithoutCompanyNestedInput = {
   deleteMany?: Prisma.OfferScalarWhereInput | Prisma.OfferScalarWhereInput[]
 }
 
+export type OfferCreatetargetIndustryIdsInput = {
+  set: string[]
+}
+
 export type EnumOfferTypeFieldUpdateOperationsInput = {
   set?: $Enums.OfferType
 }
@@ -1132,6 +1174,11 @@ export type NullableDecimalFieldUpdateOperationsInput = {
   decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
   multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
+export type OfferUpdatetargetIndustryIdsInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type EnumOfferVisibilityFieldUpdateOperationsInput = {
@@ -1245,6 +1292,8 @@ export type OfferCreateWithoutAuthorInput = {
   city?: string | null
   validUntil?: Date | string | null
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1283,6 +1332,8 @@ export type OfferUncheckedCreateWithoutAuthorInput = {
   validUntil?: Date | string | null
   companyId?: string | null
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   badgeId?: string | null
@@ -1349,6 +1400,8 @@ export type OfferScalarWhereInput = {
   authorUserId?: Prisma.StringFilter<"Offer"> | string
   companyId?: Prisma.StringNullableFilter<"Offer"> | string | null
   isAnonymous?: Prisma.BoolFilter<"Offer"> | boolean
+  targetIndustryIds?: Prisma.StringNullableListFilter<"Offer">
+  allSectors?: Prisma.BoolFilter<"Offer"> | boolean
   perk?: Prisma.StringNullableFilter<"Offer"> | string | null
   audience?: Prisma.StringNullableFilter<"Offer"> | string | null
   badgeId?: Prisma.StringNullableFilter<"Offer"> | string | null
@@ -1380,6 +1433,8 @@ export type OfferCreateWithoutCategoryInput = {
   city?: string | null
   validUntil?: Date | string | null
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1418,6 +1473,8 @@ export type OfferUncheckedCreateWithoutCategoryInput = {
   authorUserId: string
   companyId?: string | null
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   badgeId?: string | null
@@ -1478,6 +1535,8 @@ export type OfferCreateWithoutCompanyInput = {
   city?: string | null
   validUntil?: Date | string | null
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1516,6 +1575,8 @@ export type OfferUncheckedCreateWithoutCompanyInput = {
   validUntil?: Date | string | null
   authorUserId: string
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   badgeId?: string | null
@@ -1576,6 +1637,8 @@ export type OfferCreateWithoutAttachmentsInput = {
   city?: string | null
   validUntil?: Date | string | null
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1615,6 +1678,8 @@ export type OfferUncheckedCreateWithoutAttachmentsInput = {
   authorUserId: string
   companyId?: string | null
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   badgeId?: string | null
@@ -1664,6 +1729,8 @@ export type OfferUpdateWithoutAttachmentsInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1703,6 +1770,8 @@ export type OfferUncheckedUpdateWithoutAttachmentsInput = {
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1736,6 +1805,8 @@ export type OfferCreateWithoutResponsesInput = {
   city?: string | null
   validUntil?: Date | string | null
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1775,6 +1846,8 @@ export type OfferUncheckedCreateWithoutResponsesInput = {
   authorUserId: string
   companyId?: string | null
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   badgeId?: string | null
@@ -1824,6 +1897,8 @@ export type OfferUpdateWithoutResponsesInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1863,6 +1938,8 @@ export type OfferUncheckedUpdateWithoutResponsesInput = {
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1896,6 +1973,8 @@ export type OfferCreateWithoutConversationsInput = {
   city?: string | null
   validUntil?: Date | string | null
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1935,6 +2014,8 @@ export type OfferUncheckedCreateWithoutConversationsInput = {
   authorUserId: string
   companyId?: string | null
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   badgeId?: string | null
@@ -1984,6 +2065,8 @@ export type OfferUpdateWithoutConversationsInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -2023,6 +2106,8 @@ export type OfferUncheckedUpdateWithoutConversationsInput = {
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2056,6 +2141,8 @@ export type OfferCreateWithoutBadgeInput = {
   city?: string | null
   validUntil?: Date | string | null
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -2095,6 +2182,8 @@ export type OfferUncheckedCreateWithoutBadgeInput = {
   authorUserId: string
   companyId?: string | null
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -2156,6 +2245,8 @@ export type OfferCreateManyAuthorInput = {
   validUntil?: Date | string | null
   companyId?: string | null
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   badgeId?: string | null
@@ -2187,6 +2278,8 @@ export type OfferUpdateWithoutAuthorInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -2225,6 +2318,8 @@ export type OfferUncheckedUpdateWithoutAuthorInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2261,6 +2356,8 @@ export type OfferUncheckedUpdateManyWithoutAuthorInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2294,6 +2391,8 @@ export type OfferCreateManyCategoryInput = {
   authorUserId: string
   companyId?: string | null
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   badgeId?: string | null
@@ -2325,6 +2424,8 @@ export type OfferUpdateWithoutCategoryInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -2363,6 +2464,8 @@ export type OfferUncheckedUpdateWithoutCategoryInput = {
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2399,6 +2502,8 @@ export type OfferUncheckedUpdateManyWithoutCategoryInput = {
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2432,6 +2537,8 @@ export type OfferCreateManyCompanyInput = {
   validUntil?: Date | string | null
   authorUserId: string
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   badgeId?: string | null
@@ -2463,6 +2570,8 @@ export type OfferUpdateWithoutCompanyInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -2501,6 +2610,8 @@ export type OfferUncheckedUpdateWithoutCompanyInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2537,6 +2648,8 @@ export type OfferUncheckedUpdateManyWithoutCompanyInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2571,6 +2684,8 @@ export type OfferCreateManyBadgeInput = {
   authorUserId: string
   companyId?: string | null
   isAnonymous?: boolean
+  targetIndustryIds?: Prisma.OfferCreatetargetIndustryIdsInput | string[]
+  allSectors?: boolean
   perk?: string | null
   audience?: string | null
   commissionPct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -2601,6 +2716,8 @@ export type OfferUpdateWithoutBadgeInput = {
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -2640,6 +2757,8 @@ export type OfferUncheckedUpdateWithoutBadgeInput = {
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -2676,6 +2795,8 @@ export type OfferUncheckedUpdateManyWithoutBadgeInput = {
   authorUserId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAnonymous?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetIndustryIds?: Prisma.OfferUpdatetargetIndustryIdsInput | string[]
+  allSectors?: Prisma.BoolFieldUpdateOperationsInput | boolean
   perk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   commissionPct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -2758,6 +2879,8 @@ export type OfferSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   authorUserId?: boolean
   companyId?: boolean
   isAnonymous?: boolean
+  targetIndustryIds?: boolean
+  allSectors?: boolean
   perk?: boolean
   audience?: boolean
   badgeId?: boolean
@@ -2800,6 +2923,8 @@ export type OfferSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   authorUserId?: boolean
   companyId?: boolean
   isAnonymous?: boolean
+  targetIndustryIds?: boolean
+  allSectors?: boolean
   perk?: boolean
   audience?: boolean
   badgeId?: boolean
@@ -2838,6 +2963,8 @@ export type OfferSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   authorUserId?: boolean
   companyId?: boolean
   isAnonymous?: boolean
+  targetIndustryIds?: boolean
+  allSectors?: boolean
   perk?: boolean
   audience?: boolean
   badgeId?: boolean
@@ -2876,6 +3003,8 @@ export type OfferSelectScalar = {
   authorUserId?: boolean
   companyId?: boolean
   isAnonymous?: boolean
+  targetIndustryIds?: boolean
+  allSectors?: boolean
   perk?: boolean
   audience?: boolean
   badgeId?: boolean
@@ -2890,7 +3019,7 @@ export type OfferSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "title" | "description" | "categoryId" | "itemKind" | "priceType" | "priceMin" | "priceMax" | "currency" | "quantity" | "unit" | "deliveryTerms" | "country" | "city" | "validUntil" | "authorUserId" | "companyId" | "isAnonymous" | "perk" | "audience" | "badgeId" | "commissionPct" | "commissionText" | "visibility" | "status" | "hiddenAt" | "hiddenReason" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
+export type OfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "title" | "description" | "categoryId" | "itemKind" | "priceType" | "priceMin" | "priceMax" | "currency" | "quantity" | "unit" | "deliveryTerms" | "country" | "city" | "validUntil" | "authorUserId" | "companyId" | "isAnonymous" | "targetIndustryIds" | "allSectors" | "perk" | "audience" | "badgeId" | "commissionPct" | "commissionText" | "visibility" | "status" | "hiddenAt" | "hiddenReason" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
 export type OfferInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.Offer$categoryArgs<ExtArgs>
   badge?: boolean | Prisma.Offer$badgeArgs<ExtArgs>
@@ -2948,6 +3077,14 @@ export type $OfferPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
      * When true the public site/API never exposes author or company identity.
      */
     isAnonymous: boolean
+    /**
+     * Target industries (Category kind INDUSTRY ids) — the supply chain this offer is meant for.
+     */
+    targetIndustryIds: string[]
+    /**
+     * Relevant to every sector (insurance, marketing, accounting…).
+     */
+    allSectors: boolean
     /**
      * Special member condition shown in green, e.g. "−20%".
      */
@@ -3424,6 +3561,8 @@ export interface OfferFieldRefs {
   readonly authorUserId: Prisma.FieldRef<"Offer", 'String'>
   readonly companyId: Prisma.FieldRef<"Offer", 'String'>
   readonly isAnonymous: Prisma.FieldRef<"Offer", 'Boolean'>
+  readonly targetIndustryIds: Prisma.FieldRef<"Offer", 'String[]'>
+  readonly allSectors: Prisma.FieldRef<"Offer", 'Boolean'>
   readonly perk: Prisma.FieldRef<"Offer", 'String'>
   readonly audience: Prisma.FieldRef<"Offer", 'String'>
   readonly badgeId: Prisma.FieldRef<"Offer", 'String'>

@@ -36,6 +36,8 @@ model User {
   phoneVerifiedAt    DateTime?
   lastLoginAt        DateTime?
   emailNotifications Boolean      @default(true)
+  /// Notification topics the user turned off (see src/lib/notify-topics.ts).
+  mutedTopics        String[]     @default([])
   createdAt          DateTime     @default(now())
   updatedAt          DateTime     @updatedAt
 
@@ -114,6 +116,10 @@ enum MemberRole {
   OWNER
   EMPLOYEE
   FINANCE
+  PROCUREMENT
+  SALES
+  HR
+  MARKETING
 }
 
 enum MemberStatus {
@@ -353,43 +359,47 @@ enum OfferStatus {
 }
 
 model Offer {
-  id             String          @id @default(cuid())
-  type           OfferType
-  title          String
-  description    String
-  categoryId     String?
-  itemKind       ItemKind        @default(PRODUCT)
-  priceType      PriceType       @default(NONE)
-  priceMin       Decimal?        @db.Decimal(18, 2)
-  priceMax       Decimal?        @db.Decimal(18, 2)
-  currency       String?
-  quantity       Decimal?        @db.Decimal(18, 3)
-  unit           String?
-  deliveryTerms  String?
-  country        String?         @default("GE")
-  city           String?
-  validUntil     DateTime?
-  authorUserId   String
-  companyId      String?
+  id                String          @id @default(cuid())
+  type              OfferType
+  title             String
+  description       String
+  categoryId        String?
+  itemKind          ItemKind        @default(PRODUCT)
+  priceType         PriceType       @default(NONE)
+  priceMin          Decimal?        @db.Decimal(18, 2)
+  priceMax          Decimal?        @db.Decimal(18, 2)
+  currency          String?
+  quantity          Decimal?        @db.Decimal(18, 3)
+  unit              String?
+  deliveryTerms     String?
+  country           String?         @default("GE")
+  city              String?
+  validUntil        DateTime?
+  authorUserId      String
+  companyId         String?
   /// When true the public site/API never exposes author or company identity.
-  isAnonymous    Boolean         @default(false)
+  isAnonymous       Boolean         @default(false)
+  /// Target industries (Category kind INDUSTRY ids) — the supply chain this offer is meant for.
+  targetIndustryIds String[]        @default([])
+  /// Relevant to every sector (insurance, marketing, accounting…).
+  allSectors        Boolean         @default(false)
   /// Special member condition shown in green, e.g. "−20%".
-  perk           String?
+  perk              String?
   /// Who the offer is for.
-  audience       String?
+  audience          String?
   /// Badge set by platform admins (მთავარი პარტნიორი, …).
-  badgeId        String?
+  badgeId           String?
   /// Platform commission for deals from this offer (percent) and its display text.
-  commissionPct  Decimal?        @db.Decimal(5, 2)
-  commissionText String?
-  visibility     OfferVisibility @default(PUBLIC)
-  status         OfferStatus     @default(DRAFT)
+  commissionPct     Decimal?        @db.Decimal(5, 2)
+  commissionText    String?
+  visibility        OfferVisibility @default(PUBLIC)
+  status            OfferStatus     @default(DRAFT)
   /// Hidden by a platform admin (moderation) — invisible everywhere until restored.
-  hiddenAt       DateTime?
-  hiddenReason   String?
-  publishedAt    DateTime?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  hiddenAt          DateTime?
+  hiddenReason      String?
+  publishedAt       DateTime?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
 
   category      Category?         @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   badge         OfferBadge?       @relation(fields: [badgeId], references: [id], onDelete: SetNull)
@@ -404,6 +414,7 @@ model Offer {
   @@index([companyId])
   @@index([authorUserId])
   @@index([badgeId])
+  @@index([allSectors])
 }
 
 model OfferAttachment {
@@ -730,9 +741,9 @@ model InvoiceStatusChange {
 
 /// Manually recorded payment (no payment provider yet). Never created automatically.
 model PaymentRecord {
-  id           String   @id @default(cuid())
+  id           String    @id @default(cuid())
   invoiceId    String
-  amount       Decimal  @db.Decimal(18, 2)
+  amount       Decimal   @db.Decimal(18, 2)
   currency     String
   paidAt       DateTime
   method       String?
@@ -742,7 +753,7 @@ model PaymentRecord {
   /// Admin voided a mistaken entry (kept for the audit trail, excluded from totals).
   voidedAt     DateTime?
   voidReason   String?
-  createdAt    DateTime @default(now())
+  createdAt    DateTime  @default(now())
 
   invoice    Invoice @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
   recordedBy User    @relation(fields: [recordedById], references: [id], onDelete: Restrict)
@@ -765,6 +776,7 @@ enum NotificationType {
   COMPANY_STATUS_CHANGED
   MEMBER_INVITED
   CAMPAIGN
+  MATCHING_OFFER
 }
 
 model Notification {
@@ -856,7 +868,7 @@ model Commission {
   settledAt      DateTime?
   createdAt      DateTime         @default(now())
 
-  rule         CommissionRule? @relation(fields: [ruleId], references: [id], onDelete: SetNull)
+  rule CommissionRule? @relation(fields: [ruleId], references: [id], onDelete: SetNull)
 
   invoice      Invoice       @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
   conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
@@ -936,7 +948,7 @@ model CampaignRequest {
   fileUrl     String?
   fileName    String?
   /// More files (visual, PDF): [{ url, name }]. fileUrl/fileName keep the first one.
-  attachments Json      @default("[]")
+  attachments Json                  @default("[]")
   startDate   DateTime?
   /// Final price set by the admin.
   price       Decimal?              @db.Decimal(18, 2)

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { companyName } from "@/lib/public";
 import { CampaignStatusPill } from "@/components/panel/CampaignStatusPill";
 import { getActiveMembership, requireUser } from "@/lib/authz";
+import { hasPermission } from "@/lib/permissions";
 import { db } from "@/lib/db";
 import { formatDate } from "@/lib/format";
 import { formatAmount } from "@/lib/money";
@@ -37,7 +38,7 @@ export default async function CampaignsPage() {
         title={ka.sgba.campTitle}
         text={ka.sgba.campText}
         action={
-          m ? (
+          m && hasPermission(m, "campaigns.manage") ? (
             <Link href="/app/campaigns/new" className="inline-flex h-10 items-center gap-2 rounded-full bg-accent px-5 text-sm font-semibold text-white hover:bg-accent-hover">
               <Icon name="plus" size={16} /> {ka.sgba.campCreate}
             </Link>

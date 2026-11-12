@@ -34,8 +34,8 @@ const schema = z.object({
 export async function requestCampaignAction(_: FormState, formData: FormData): Promise<FormState> {
   const user = await assertUser();
   const m = await getActiveMembership(user.id);
-  // Running a paid campaign is a company decision: owners and members who manage offers.
-  if (!m || !hasPermission(m, "offers.manage") || !companyCanAct(m.company.verificationStatus)) throw new ForbiddenError();
+  // Running a paid campaign is a company decision: owners and marketing (campaigns.manage).
+  if (!m || !hasPermission(m, "campaigns.manage") || !companyCanAct(m.company.verificationStatus)) throw new ForbiddenError();
   if (!rateLimit(`campaign:${user.id}`, 20, 60 * 60_000)) return fail(ka.auth.tooManyAttempts, formData);
 
   const parsed = schema.safeParse(Object.fromEntries(formData));
@@ -94,7 +94,7 @@ export async function requestCampaignAction(_: FormState, formData: FormData): P
 export async function cancelCampaignAction(formData: FormData) {
   const user = await assertUser();
   const m = await getActiveMembership(user.id);
-  if (!m || !hasPermission(m, "offers.manage")) throw new ForbiddenError();
+  if (!m || !hasPermission(m, "campaigns.manage")) throw new ForbiddenError();
   const id = String(formData.get("requestId"));
   const r = await db.campaignRequest.updateMany({
     where: { id, companyId: m?.companyId ?? "__none__", status: { in: ["NEW", "IN_PROGRESS"] } },

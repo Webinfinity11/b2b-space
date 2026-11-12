@@ -15,12 +15,15 @@ export const OFFER_CATEGORIES = ["საწვავი", "ავტო", "დ�
 
 /** Company industries (ბიზნესების ფილტრი). */
 export const INDUSTRIES = [
-  "საწვავი და ენერგია", "დაზღვევა", "ავტომობილები", "HoReCa და ღონისძიებები", "მედია და მარკეტინგი", "HR და რეკრუტინგი",
-  "ლოჯისტიკა", "სასტუმროები", "რიტეილი და მშენებლობა", "ჯანდაცვა", "მშენებლობა", "IT და ტექნოლოგიები", "სურსათი და წარმოება",
-  "საოფისე მომარაგება", "შრომის უსაფრთხოება", "ფარმაცია", "ტურიზმი", "იურიდიული მომსახურება", "პოლიგრაფია და შეფუთვა",
-  "ღვინის წარმოება", "განათლება", "დასუფთავების სერვისი", "რიტეილი", "ტრანსპორტი და ლოჯისტიკა", "ბუღალტერია და ფინანსები",
-  "ღონისძიებები", "აგრობიზნესი", "დისტრიბუცია", "HR და განათლება",
+  "სასტუმროები", "რესტორნები და კაფეები", "სილამაზისა და ესთეტიკის სალონები", "ფიტნესი და სპორტი", "ჯანდაცვა", "ფარმაცია",
+  "მშენებლობა", "სამშენებლო მასალები", "უძრავი ქონება", "რიტეილი", "დისტრიბუცია", "სურსათი და წარმოება", "მრეწველობა და წარმოება",
+  "ლოჯისტიკა", "ავტომობილები", "საწვავი და ენერგია", "აგრობიზნესი", "ღვინის წარმოება", "ტურიზმი", "ღონისძიებები", "განათლება",
+  "IT და ტექნოლოგიები", "ტელეკომუნიკაცია", "მედია და მარკეტინგი", "პოლიგრაფია და შეფუთვა", "დაზღვევა", "ბანკები და ფინანსები",
+  "ბუღალტერია და ფინანსები", "იურიდიული მომსახურება", "HR და რეკრუტინგი", "დასუფთავების სერვისი", "შრომის უსაფრთხოება", "საოფისე მომარაგება",
 ];
+
+/** Old industry names replaced by the list above — hidden from pickers once no company uses them. */
+const RETIRED_INDUSTRIES = ["HoReCa და ღონისძიებები", "რიტეილი და მშენებლობა", "ტრანსპორტი და ლოჯისტიკა", "HR და განათლება"];
 
 const COMMISSION_RULES: { title: string; rate: string; pct: number; isDefault?: boolean; minAmount?: number; capAmount?: number }[] = [
   { title: "საწვავი და დაბალმარჟიანი პროდუქტი", rate: "ფიქსირებული ან 0.5–1%", pct: 0.5 },
@@ -83,6 +86,9 @@ async function main() {
   for (const [i, name] of INDUSTRIES.entries()) {
     const slug = slugify(name) || `industry-${i}`;
     await db.category.upsert({ where: { slug }, update: { name, kind: "INDUSTRY", sortOrder: i * 10 }, create: { name, slug, kind: "INDUSTRY", sortOrder: i * 10 } });
+  }
+  for (const name of RETIRED_INDUSTRIES) {
+    await db.category.updateMany({ where: { kind: "INDUSTRY", name, companies: { none: {} } }, data: { isActive: false } });
   }
   if ((await db.commissionRule.count()) === 0) {
     await db.commissionRule.createMany({ data: COMMISSION_RULES.map((r, i) => ({ ...r, sortOrder: i * 10 })) });

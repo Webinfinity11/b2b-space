@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ka } from "@/i18n/ka";
 import { requestCampaignAction } from "@/actions/campaigns";
 import { getActiveMembership, requireUser } from "@/lib/authz";
+import { hasPermission } from "@/lib/permissions";
 import { CITIES } from "@/lib/cities";
 import { db } from "@/lib/db";
 import { formatAmount } from "@/lib/money";
@@ -35,7 +36,7 @@ export default async function NewCampaignPage({ searchParams }: PageProps<"/app/
         text={c.campFormText}
         action={<Link href="/app/campaigns" className="text-sm font-medium text-accent-strong hover:underline">← {c.campBack}</Link>}
       />
-      {!m ? (
+      {!m || !hasPermission(m, "campaigns.manage") ? (
         <p className="text-sm text-muted">{ka.errors.forbidden}</p>
       ) : (
         <ActionForm action={requestCampaignAction} className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">

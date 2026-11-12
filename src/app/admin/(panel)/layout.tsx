@@ -53,6 +53,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
         { href: "/admin/invoices", label: ka.admin.invoices, icon: "invoice" },
         { href: "/admin/commissions", label: ka.sgba.commissionsAdmin, icon: "check" },
         { href: "/admin/finance", label: ka.admin.finance, icon: "chart" },
+        { href: "/admin/analytics", label: ka.analyticsFilter.adminTitle, icon: "trend" },
       ],
     },
     {

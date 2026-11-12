@@ -5,7 +5,8 @@ import { getMemberships, requireUser } from "@/lib/authz";
 import { companyName } from "@/lib/public";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardBody, CardHeader, PageHeader } from "@/components/ui/Card";
-import { ActionForm, Checkbox, Field, Input, SubmitButton } from "@/components/ui/Form";
+import { ActionForm, Checkbox, CheckboxGroup, Field, Input, SubmitButton } from "@/components/ui/Form";
+import { NOTIFY_TOPICS } from "@/lib/notify-topics";
 import { VerificationBadge } from "@/components/panel/StatusBadges";
 
 export const metadata: Metadata = { title: ka.profile.title };
@@ -73,6 +74,16 @@ export default async function ProfilePage() {
             <CardHeader title={ka.email.prefsTitle} text={ka.email.prefsText} />
             <CardBody>
               <ActionForm action={updateEmailPrefsAction} className="space-y-4">
+                <div>
+                  <p className="text-sm font-semibold">{ka.notifications.topicsTitle}</p>
+                  <p className="mb-2 text-xs text-muted">{ka.notifications.topicsText}</p>
+                  <CheckboxGroup
+                    name="topics"
+                    columns={1}
+                    options={NOTIFY_TOPICS.map((t) => ({ value: t, label: ka.notifications.topics[t] }))}
+                    defaultValues={NOTIFY_TOPICS.filter((t) => !user.mutedTopics.includes(t))}
+                  />
+                </div>
                 <Checkbox name="emailNotifications" label={ka.email.prefsLabel} defaultChecked={user.emailNotifications} />
                 <SubmitButton variant="secondary">{ka.common.save}</SubmitButton>
               </ActionForm>

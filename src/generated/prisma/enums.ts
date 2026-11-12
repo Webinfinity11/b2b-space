@@ -71,7 +71,11 @@ export type VerificationStatus = (typeof VerificationStatus)[keyof typeof Verifi
 export const MemberRole = {
   OWNER: 'OWNER',
   EMPLOYEE: 'EMPLOYEE',
-  FINANCE: 'FINANCE'
+  FINANCE: 'FINANCE',
+  PROCUREMENT: 'PROCUREMENT',
+  SALES: 'SALES',
+  HR: 'HR',
+  MARKETING: 'MARKETING'
 } as const
 
 export type MemberRole = (typeof MemberRole)[keyof typeof MemberRole]
@@ -226,7 +230,8 @@ export const NotificationType = {
   INVOICE_OVERDUE: 'INVOICE_OVERDUE',
   COMPANY_STATUS_CHANGED: 'COMPANY_STATUS_CHANGED',
   MEMBER_INVITED: 'MEMBER_INVITED',
-  CAMPAIGN: 'CAMPAIGN'
+  CAMPAIGN: 'CAMPAIGN',
+  MATCHING_OFFER: 'MATCHING_OFFER'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]

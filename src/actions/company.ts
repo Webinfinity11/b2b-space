@@ -11,9 +11,10 @@ import { ForbiddenError, assertCompanyPermission, assertUser } from "@/lib/authz
 import { db } from "@/lib/db";
 import { fail, invalid, zCheckbox, zEmail, zOptionalPhone, zOptionalText, zOptionalUrl, zText, type FormState } from "@/lib/forms";
 import { notify } from "@/lib/notify";
+import { companyAudience } from "@/lib/audience";
 import { readPeopleFields } from "@/lib/people";
 import { emailEnabled, renderEmail, sendEmail } from "@/lib/email";
-import { DEFAULT_PERMISSIONS, sanitizePermissions } from "@/lib/permissions";
+import { DEFAULT_PERMISSIONS, MEMBER_ROLES, sanitizePermissions } from "@/lib/permissions";
 import { DOCUMENT_TYPES, IMAGE_TYPES, UploadError, VIDEO_MAX_MB, VIDEO_TYPES, deletePublicFile, filesFrom, storeFile } from "@/lib/storage";
 import { videoEmbedUrl } from "@/lib/video";
 
@@ -129,16 +130,18 @@ export async function updateCompanySettingsAction(_: FormState, formData: FormDa
 
 export async function addMemberAction(_: FormState, formData: FormData): Promise<FormState> {
   const companyId = String(formData.get("companyId"));
-  const { user } = await assertCompanyPermission(companyId, "owner");
+  const { user, member: me } = await assertCompanyPermission(companyId, "team.manage");
   const parsed = z
     .object({
       email: zEmail,
       firstName: zOptionalText(60),
       lastName: zOptionalText(60),
-      role: z.enum(["OWNER", "EMPLOYEE", "FINANCE"], { error: ka.validation.required }),
+      role: z.enum(MEMBER_ROLES, { error: ka.validation.required }),
     })
     .safeParse(Object.fromEntries(formData));
   if (!parsed.success) return invalid(parsed.error, formData);
+  // Only owners may appoint another owner (HR manages everyone else).
+  if (parsed.data.role === "OWNER" && me.role !== "OWNER") return fail(ka.validation.formErrors, formData, { role: ka.team.ownerOnly });
   const people = await readPeopleFields(formData);
   if (!people) return fail(ka.validation.formErrors, formData, { positionId: ka.validation.required });
   // No manual selection → permissions follow the chosen role.
@@ -204,8 +207,7 @@ export async function acceptInvitationAction(formData: FormData) {
     db.companyInvitation.update({ where: { id: inv.id }, data: { acceptedAt: new Date(), token: null } }),
   ]);
   await audit({ actorId: user.id, action: "company.invitation_accepted", entityType: "Company", entityId: inv.companyId, metadata: { invitationId: inv.id } });
-  const owners = await db.companyMember.findMany({ where: { companyId: inv.companyId, role: "OWNER", status: "ACTIVE" }, select: { userId: true } });
-  await notify(owners.map((o) => o.userId).filter((id) => id !== user.id), { type: "MEMBER_INVITED", title: ka.team.inviteAccepted(`${user.firstName} ${user.lastName}`), link: "/company/team" });
+  await notify(await companyAudience(inv.companyId, "team.manage", user.id), { type: "MEMBER_INVITED", title: ka.team.inviteAccepted(`${user.firstName} ${user.lastName}`), link: "/company/team" });
   redirect("/company/team");
 }
 
@@ -217,10 +219,11 @@ export async function updateMemberAction(_: FormState, formData: FormData): Prom
   const memberId = String(formData.get("memberId"));
   const member = await db.companyMember.findUnique({ where: { id: memberId } });
   if (!member) throw new ForbiddenError();
-  const { user } = await assertCompanyPermission(member.companyId, "owner");
-  const roleParsed = z.enum(["OWNER", "EMPLOYEE", "FINANCE"]).safeParse(formData.get("role"));
+  const { user, member: me } = await assertCompanyPermission(member.companyId, "team.manage");
+  const roleParsed = z.enum(MEMBER_ROLES).safeParse(formData.get("role"));
   if (!roleParsed.success) return fail(ka.validation.formErrors, formData, { role: ka.validation.required });
   const role = roleParsed.data;
+  if (me.role !== "OWNER" && (member.role === "OWNER" || role === "OWNER")) return fail(ka.team.ownerOnly);
   if (member.role === "OWNER" && role !== "OWNER" && (await ownerCount(member.companyId)) <= 1) {
     return fail(ka.team.cannotRemoveOwner);
   }
@@ -244,7 +247,8 @@ export async function removeMemberAction(_: FormState, formData: FormData): Prom
   const memberId = String(formData.get("memberId"));
   const member = await db.companyMember.findUnique({ where: { id: memberId } });
   if (!member) throw new ForbiddenError();
-  const { user } = await assertCompanyPermission(member.companyId, "owner");
+  const { user, member: me } = await assertCompanyPermission(member.companyId, "team.manage");
+  if (member.role === "OWNER" && me.role !== "OWNER") return fail(ka.team.ownerOnly);
   if (member.role === "OWNER" && (await ownerCount(member.companyId)) <= 1) return fail(ka.team.cannotRemoveOwner);
   await db.companyMember.update({ where: { id: memberId }, data: { status: "REMOVED" } });
   await audit({ actorId: user.id, action: "company.member_removed", entityType: "Company", entityId: member.companyId, metadata: { memberId } });
@@ -255,7 +259,7 @@ export async function removeMemberAction(_: FormState, formData: FormData): Prom
 export async function revokeInvitationAction(formData: FormData) {
   const inv = await db.companyInvitation.findUnique({ where: { id: String(formData.get("invitationId")) } });
   if (!inv) return;
-  const { user } = await assertCompanyPermission(inv.companyId, "owner");
+  const { user } = await assertCompanyPermission(inv.companyId, "team.manage");
   await db.companyInvitation.update({ where: { id: inv.id }, data: { revokedAt: new Date() } });
   await audit({ actorId: user.id, action: "company.invitation_revoked", entityType: "Company", entityId: inv.companyId, metadata: { email: inv.email } });
   revalidatePath("/company/team");

@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { formatAmount } from "@/lib/money";
 import { OPEN_STATUSES } from "@/lib/invoices";
 import { searchOffers } from "@/lib/public";
+import { companyIndustryIds } from "@/lib/sectors";
 import { activeContextConversations, visibleInvoices } from "@/lib/scope";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -20,6 +21,9 @@ export default async function DashboardPage() {
   const m = await getActiveMembership(user.id);
   const convScope = activeContextConversations(user.id, m);
   const invScope = visibleInvoices(user.id, m);
+  // Offers for my sector (targeted at my industry or at all sectors).
+  const industries = m ? await companyIndustryIds(m.companyId) : [];
+  const industryNames = industries.length ? (await db.category.findMany({ where: { id: { in: industries }, parentId: null }, select: { name: true } })).map((c) => c.name).join(", ") : "";
 
   const [deals, dealCount, notifications, unreadMsgLinks, invoices, perks] = await Promise.all([
     db.conversation.findMany({
@@ -35,7 +39,7 @@ export default async function DashboardPage() {
       where: { AND: [invScope, { status: { in: [...OPEN_STATUSES] } }] },
       select: { currency: true, total: true, paidAmount: true, sellerUserId: true, sellerCompanyId: true },
     }),
-    searchOffers({ loggedIn: true, type: "OFFER", page: 1, pageSize: 4 }),
+    searchOffers({ loggedIn: true, type: "OFFER", page: 1, pageSize: 4, forIndustries: industries.length ? industries : undefined }),
   ]);
   const banner = await db.offerBadge.findFirst({ where: { showBanner: true, isActive: true }, orderBy: { sortOrder: "asc" } });
   const activeDeals = await db.conversation.count({ where: { AND: [convScope, { stage: { not: "CONTRACT" } }] } });
@@ -99,8 +103,8 @@ export default async function DashboardPage() {
       {/* Special offers */}
       <section className="mt-8">
         <SectionTitle
-          eyebrow={ka.sgba.perksEyebrow}
-          title={ka.sgba.perksTitle}
+          eyebrow={industries.length ? ka.sectors.forYouText(industryNames) : ka.sgba.perksEyebrow}
+          title={industries.length ? ka.sectors.forYou : ka.sgba.perksTitle}
           action={<Link href="/offers" className="inline-flex items-center gap-2 text-[13px] font-bold text-accent hover:text-accent-hover">{ka.sgba.viewAll} <Icon name="arrow" size={18} /></Link>}
         />
         {perks.items.length === 0 ? (

@@ -3,7 +3,7 @@ import { saveOfferAction } from "@/actions/offers";
 import { CURRENCIES } from "@/lib/currencies";
 import type { CategoryNode } from "@/lib/public";
 import { Card, CardBody, CardHeader } from "@/components/ui/Card";
-import { ActionForm, Checkbox, Field, Input, Select, SubmitButton, Textarea } from "@/components/ui/Form";
+import { ActionForm, Checkbox, CheckboxGroup, Field, Input, Select, SubmitButton, Textarea } from "@/components/ui/Form";
 
 export type OfferDefaults = {
   id?: string;
@@ -26,6 +26,8 @@ export type OfferDefaults = {
   visibility?: string;
   isAnonymous?: boolean;
   status?: string;
+  targetIndustryIds?: string[];
+  allSectors?: boolean;
 };
 
 const opts = <T extends string>(map: Record<T, string>) => (Object.keys(map) as T[]).map((k) => ({ value: k, label: map[k] }));
@@ -33,11 +35,13 @@ const opts = <T extends string>(map: Record<T, string>) => (Object.keys(map) as 
 export function OfferForm({
   defaults,
   categories,
+  industries,
   publishAs,
   lockedPublisher,
 }: {
   defaults: OfferDefaults;
   categories: CategoryNode[];
+  industries: CategoryNode[];
   publishAs: { value: string; label: string }[];
   lockedPublisher?: string;
 }) {
@@ -65,6 +69,31 @@ export function OfferForm({
           </Field>
           <Field label={f.itemKind} name="itemKind">
             <Select name="itemKind" defaultValue={defaults.itemKind ?? "PRODUCT"} options={opts(ka.enums.itemKind)} />
+          </Field>
+        </CardBody>
+      </Card>
+
+      {/* Supply chain: which sectors this is for. Shown on their dashboards and notified to their procurement. */}
+      <Card>
+        <CardHeader
+          title={defaults.type === "REQUEST" ? ka.sectors.requestTitle : ka.sectors.offerTitle}
+          text={defaults.type === "REQUEST" ? ka.sectors.requestText : ka.sectors.offerText}
+        />
+        <CardBody className="space-y-3">
+          <div className="rounded-lg border border-accent/40 bg-blue-soft p-3">
+            <Checkbox
+              name="allSectors"
+              defaultChecked={defaults.allSectors}
+              label={<><span className="font-semibold">{ka.sectors.all}</span><span className="mt-0.5 block text-xs text-muted">{ka.sectors.allHint}</span></>}
+            />
+          </div>
+          <Field label={ka.sectors.pick} name="targetIndustryIds" hint={ka.sectors.pickHint}>
+            <CheckboxGroup
+              name="targetIndustryIds"
+              columns={3}
+              defaultValues={defaults.targetIndustryIds ?? []}
+              options={industries.flatMap((r) => [{ value: r.id, label: r.name }, ...r.children.map((c) => ({ value: c.id, label: c.name }))])}
+            />
           </Field>
         </CardBody>
       </Card>

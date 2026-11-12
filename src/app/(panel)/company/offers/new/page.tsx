@@ -12,14 +12,14 @@ export const metadata: Metadata = { title: ka.offerForm.newOffer };
 export default async function NewOfferPage({ searchParams }: PageProps<"/company/offers/new">) {
   const type = param((await searchParams).type) === "REQUEST" ? "REQUEST" : "OFFER";
   const user = await requireUser("/company/offers/new");
-  const [categories, publishAs] = await Promise.all([getCategoryTree("OFFER"), actingIdentities(user.id, "offers.manage")]);
+  const [categories, industries, publishAs] = await Promise.all([getCategoryTree("OFFER"), getCategoryTree("INDUSTRY"), actingIdentities(user.id, "offers.manage")]);
   return (
     <>
       <PageHeader
         title={type === "REQUEST" ? ka.offerForm.newRequest : ka.offerForm.newOffer}
         text={type === "REQUEST" ? ka.offerForm.requestsText : ka.offerForm.offersText}
       />
-      <OfferForm defaults={{ type, isAnonymous: false }} categories={categories} publishAs={publishAs} />
+      <OfferForm defaults={{ type, isAnonymous: false }} categories={categories} industries={industries} publishAs={publishAs} />
     </>
   );
 }

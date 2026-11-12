@@ -4,6 +4,7 @@ import { ka } from "@/i18n/ka";
 import { getActiveMembership, requireUser } from "@/lib/authz";
 import { pageParam, param } from "@/lib/params";
 import { getPopularCategories, searchOffers } from "@/lib/public";
+import { companyIndustryIds } from "@/lib/sectors";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { PageHeader } from "@/components/ui/Card";
@@ -21,14 +22,18 @@ export default async function OffersPage({ searchParams }: PageProps<"/offers">)
   const badge = param(sp.badge);
   const type = param(sp.type) === "REQUEST" ? ("REQUEST" as const) : ("OFFER" as const);
   const page = pageParam(sp.page);
+  // Default view: what fits my company's sector; "scope=all" is the general catalog.
+  const industries = m ? await companyIndustryIds(m.companyId) : [];
+  const forMe = industries.length > 0 && param(sp.scope) !== "all";
+  const scope = forMe ? undefined : industries.length > 0 ? "all" : undefined;
   const [result, categories] = await Promise.all([
-    searchOffers({ q, category, badge, type, page, pageSize: 16, loggedIn: true }),
+    searchOffers({ q, category, badge, type, page, pageSize: 16, loggedIn: true, forIndustries: forMe ? industries : undefined }),
     getPopularCategories(12, "OFFER"),
   ]);
 
   const href = (extra: Record<string, string | undefined>) => {
     const p = new URLSearchParams();
-    for (const [k, v] of Object.entries({ q, category, badge, type: type === "REQUEST" ? "REQUEST" : undefined, ...extra })) if (v) p.set(k, v);
+    for (const [k, v] of Object.entries({ q, category, badge, scope, type: type === "REQUEST" ? "REQUEST" : undefined, ...extra })) if (v) p.set(k, v);
     const s = p.toString();
     return s ? `/offers?${s}` : "/offers";
   };
@@ -59,7 +64,14 @@ export default async function OffersPage({ searchParams }: PageProps<"/offers">)
           <Link href={href({ type: undefined, page: undefined })} className={`rounded-lg px-3 py-1.5 ${type === "OFFER" ? "bg-chip font-semibold text-accent" : "text-muted"}`}>{ka.sgba.perksTitle}</Link>
           <Link href={href({ type: "REQUEST", page: undefined })} className={`rounded-lg px-3 py-1.5 ${type === "REQUEST" ? "bg-chip font-semibold text-accent" : "text-muted"}`}>{ka.sgba.requests}</Link>
         </div>
+        {industries.length > 0 && (
+          <div className="inline-flex rounded-[10px] border border-line bg-surface p-1 text-sm">
+            <Link href={href({ scope: undefined, page: undefined })} className={`rounded-lg px-3 py-1.5 ${forMe ? "bg-chip font-semibold text-accent" : "text-muted"}`}>{ka.sectors.filterForMe}</Link>
+            <Link href={href({ scope: "all", page: undefined })} className={`rounded-lg px-3 py-1.5 ${!forMe ? "bg-chip font-semibold text-accent" : "text-muted"}`}>{ka.sectors.filterAll}</Link>
+          </div>
+        )}
         <form action="/offers" className="w-full sm:w-auto" role="search">
+          {scope && <input type="hidden" name="scope" value={scope} />}
           {category && <input type="hidden" name="category" value={category} />}
           {badge && <input type="hidden" name="badge" value={badge} />}
           {type === "REQUEST" && <input type="hidden" name="type" value="REQUEST" />}
@@ -75,7 +87,7 @@ export default async function OffersPage({ searchParams }: PageProps<"/offers">)
       ) : (
         <OfferGrid offers={result.items} respondAs={m?.companyId ?? "personal"} ownSlug={m?.company.slug} />
       )}
-      <Pagination page={result.page} pages={result.pages} basePath="/offers" params={{ q, category, badge, type: type === "REQUEST" ? "REQUEST" : undefined }} />
+      <Pagination page={result.page} pages={result.pages} basePath="/offers" params={{ q, category, badge, scope, type: type === "REQUEST" ? "REQUEST" : undefined }} />
     </>
   );
 }

@@ -3094,6 +3094,7 @@ export const UserScalarFieldEnum = {
   phoneVerifiedAt: 'phoneVerifiedAt',
   lastLoginAt: 'lastLoginAt',
   emailNotifications: 'emailNotifications',
+  mutedTopics: 'mutedTopics',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -3273,6 +3274,8 @@ export const OfferScalarFieldEnum = {
   authorUserId: 'authorUserId',
   companyId: 'companyId',
   isAnonymous: 'isAnonymous',
+  targetIndustryIds: 'targetIndustryIds',
+  allSectors: 'allSectors',
   perk: 'perk',
   audience: 'audience',
   badgeId: 'badgeId',

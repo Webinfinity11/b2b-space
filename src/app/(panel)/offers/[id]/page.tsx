@@ -32,6 +32,10 @@ export default async function OfferPage({ params }: PageProps<"/offers/[id]">) {
   if (!data) notFound();
   const { offer, attachments, restricted, internal } = data;
   const isRequest = offer.type === "REQUEST";
+  const target = await db.offer.findUnique({ where: { id }, select: { allSectors: true, targetIndustryIds: true } });
+  const sectorNames = target?.targetIndustryIds.length
+    ? (await db.category.findMany({ where: { id: { in: target.targetIndustryIds } }, orderBy: { sortOrder: "asc" }, select: { name: true } })).map((c) => c.name)
+    : [];
 
   // Respond-state is computed server-side from internal ids, which are never rendered.
   let respondState: "guest" | "own" | "responded" | "can" = "guest";
@@ -118,6 +122,17 @@ export default async function OfferPage({ params }: PageProps<"/offers/[id]">) {
                     <h2 className="mb-2 text-sm font-semibold text-muted">{ka.offer.description}</h2>
                     <p className="whitespace-pre-line leading-relaxed">{offer.description}</p>
                   </div>
+                  {(target?.allSectors || sectorNames.length > 0) && (
+                    <div>
+                      <h2 className="mb-2 text-sm font-semibold text-muted">{isRequest ? ka.sectors.requestTitle : ka.sectors.offerTitle}</h2>
+                      <div className="flex flex-wrap gap-1.5">
+                        {target?.allSectors && <span className="rounded-full bg-blue-soft px-3 py-1 text-xs font-semibold text-accent">{ka.sectors.badgeAll}</span>}
+                        {sectorNames.map((n) => (
+                          <span key={n} className="rounded-full border border-line bg-surface px-3 py-1 text-xs text-secondary">{n}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   {offer.deliveryTerms && (
                     <div>
                       <h2 className="mb-2 text-sm font-semibold text-muted">{ka.offer.delivery}</h2>

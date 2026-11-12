@@ -4,6 +4,7 @@ import { ka } from "@/i18n/ka";
 import type { NotificationType } from "@/generated/prisma/client";
 import { db } from "./db";
 import { emailEnabled, renderEmail, sendEmail } from "./email";
+import { TOPIC_OF } from "./notify-topics";
 
 /**
  * Creates in-app notifications and (after the response is sent) emails the same text
@@ -13,8 +14,17 @@ export async function notify(
   userIds: string[],
   n: { type: NotificationType; title: string; body?: string; link?: string },
 ) {
-  const unique = [...new Set(userIds)];
+  let unique = [...new Set(userIds)];
   if (unique.length === 0) return;
+
+  // Users who switched this topic off in their profile get nothing (neither in-app nor email).
+  const topic = TOPIC_OF[n.type];
+  if (topic) {
+    const muted = await db.user.findMany({ where: { id: { in: unique }, mutedTopics: { has: topic } }, select: { id: true } });
+    const mutedIds = new Set(muted.map((u) => u.id));
+    unique = unique.filter((id) => !mutedIds.has(id));
+    if (unique.length === 0) return;
+  }
 
   // Chat messages: email only for the first unread message per conversation (no flood).
   let skipEmail = new Set<string>();

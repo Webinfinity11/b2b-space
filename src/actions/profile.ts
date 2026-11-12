@@ -10,6 +10,7 @@ import { db } from "@/lib/db";
 import { fail, invalid, zOptionalPhone, zPassword, zText, type FormState } from "@/lib/forms";
 import { rateLimit } from "@/lib/rate-limit";
 import { destroyOtherSessions } from "@/lib/session";
+import { NOTIFY_TOPICS } from "@/lib/notify-topics";
 import { IMAGE_TYPES, UploadError, deletePublicFile, filesFrom, storeFile } from "@/lib/storage";
 
 export async function updateProfileAction(_: FormState, formData: FormData): Promise<FormState> {
@@ -56,7 +57,10 @@ export async function changePasswordAction(_: FormState, formData: FormData): Pr
 export async function updateEmailPrefsAction(_: FormState, formData: FormData): Promise<FormState> {
   const user = await assertUser();
   const on = formData.get("emailNotifications") === "on";
-  await db.user.update({ where: { id: user.id }, data: { emailNotifications: on } });
+  // Checked topics stay on; unchecked ones are muted.
+  const enabled = formData.getAll("topics").map(String);
+  const mutedTopics = NOTIFY_TOPICS.filter((t) => !enabled.includes(t));
+  await db.user.update({ where: { id: user.id }, data: { emailNotifications: on, mutedTopics } });
   revalidatePath("/app/profile");
   return { ok: true, message: ka.common.saved };
 }

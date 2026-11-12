@@ -15,6 +15,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import { DOCUMENT_TYPES, UploadError, deletePublicFile, filesFrom, storeFile } from "@/lib/storage";
 import { CURRENCIES } from "@/lib/currencies";
 import { companyCanAct } from "@/lib/company-policy";
+import { notifyMatchingSectors } from "@/lib/sectors";
 
 const v = ka.validation;
 
@@ -108,6 +109,13 @@ export async function saveOfferAction(_: FormState, formData: FormData): Promise
     return fail(v.formErrors, formData, Object.fromEntries(parsed.error.issues.map((i) => [String(i.path[0]), i.message])));
   }
   const d = parsed.data;
+  // Target sectors: specific industries and/or "all sectors" — at least one is required.
+  const allSectors = formData.get("allSectors") === "on";
+  const pickedIndustries = [...new Set(formData.getAll("targetIndustryIds").map(String))].slice(0, 100);
+  const targetIndustryIds = pickedIndustries.length
+    ? (await db.category.findMany({ where: { id: { in: pickedIndustries }, kind: "INDUSTRY" }, select: { id: true } })).map((c) => c.id)
+    : [];
+  if (!allSectors && targetIndustryIds.length === 0) return fail(v.formErrors, formData, { targetIndustryIds: ka.sectors.required });
   const category = await db.category.findFirst({ where: { id: d.categoryId, kind: "OFFER", OR: [{ isActive: true }, ...(existing ? [{ id: existing.categoryId ?? "" }] : [])] }, select: { id: true } });
   if (!category) return fail(v.formErrors, formData, { categoryId: v.chooseCategory });
   const companyId = existing ? existing.companyId : await resolvePublisher(user.id, d.publishAs);
@@ -144,9 +152,12 @@ export async function saveOfferAction(_: FormState, formData: FormData): Promise
     validUntil: d.validUntil,
     visibility: d.visibility,
     isAnonymous: d.isAnonymous,
+    targetIndustryIds,
+    allSectors,
   };
 
   let id: string;
+  const firstPublish = publish && (!existing || !existing.publishedAt);
   if (existing) {
     const status: OfferStatus = publish && existing.status === "DRAFT" ? "PUBLISHED" : existing.status;
     await db.offer.update({
@@ -173,6 +184,7 @@ export async function saveOfferAction(_: FormState, formData: FormData): Promise
       })),
     });
   }
+  if (firstPublish) await notifyMatchingSectors(id);
   await audit({ actorId: user.id, action: existing ? "offer.updated" : "offer.created", entityType: "Offer", entityId: id, metadata: { publish, isAnonymous: d.isAnonymous } });
   revalidatePath("/offers");
   redirect(d.type === "REQUEST" ? "/company/requests" : "/company/offers");
@@ -196,6 +208,7 @@ export async function changeOfferStatusAction(formData: FormData) {
   if (op === "publish" && offer.hiddenAt) throw new ForbiddenError();
   const status: OfferStatus = op === "publish" ? "PUBLISHED" : op === "close" ? "CLOSED" : op === "restore" ? "DRAFT" : "ARCHIVED";
   await db.offer.update({ where: { id: offer.id }, data: { status, publishedAt: status === "PUBLISHED" ? (offer.publishedAt ?? new Date()) : offer.publishedAt } });
+  if (status === "PUBLISHED" && !offer.publishedAt) await notifyMatchingSectors(offer.id);
   await audit({ actorId: user.id, action: "offer.status_changed", entityType: "Offer", entityId: offer.id, metadata: { from: offer.status, to: status } });
   revalidatePath("/company", "layout");
   revalidatePath("/offers");

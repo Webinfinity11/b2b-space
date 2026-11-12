@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { requireCompany } from "@/lib/authz";
 import { db } from "@/lib/db";
 import { formatDate } from "@/lib/format";
-import { PERMISSIONS } from "@/lib/permissions";
+import { PERMISSIONS, hasPermission } from "@/lib/permissions";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardBody, CardHeader, PageHeader } from "@/components/ui/Card";
 import { ActionForm, CheckboxGroup, Field, Input, Select, SubmitButton } from "@/components/ui/Form";
@@ -22,6 +22,8 @@ export default async function TeamPage() {
   // Everyone in the company sees the team; only owners manage it.
   const { user, membership } = await requireCompany();
   const isOwner = membership.role === "OWNER";
+  // Owners and HR (team.manage) manage the team; only owners touch owner accounts.
+  const canManage = hasPermission(membership, "team.manage");
   const base = appUrl();
   const emailOn = emailEnabled();
   const lists = await getPeopleLists();
@@ -34,15 +36,15 @@ export default async function TeamPage() {
     },
     orderBy: [{ role: "asc" }, { createdAt: "asc" }],
   });
-  const invitations = !isOwner ? [] : await db.companyInvitation.findMany({
+  const invitations = !canManage ? [] : await db.companyInvitation.findMany({
     where: { companyId: membership.companyId, acceptedAt: null, revokedAt: null, expiresAt: { gt: new Date() } },
     orderBy: { createdAt: "desc" },
   });
 
   return (
     <>
-      <PageHeader title={ka.team.title} text={isOwner ? ka.team.text : ka.team.readOnlyNote} />
-      <div className={`grid gap-6 ${isOwner ? "xl:grid-cols-[minmax(0,1fr)_400px]" : ""}`}>
+      <PageHeader title={ka.team.title} text={canManage ? ka.team.text : ka.team.readOnlyNote} />
+      <div className={`grid gap-6 ${canManage ? "xl:grid-cols-[minmax(0,1fr)_400px]" : ""}`}>
         <div className="space-y-4">
           <h2 className="text-sm font-semibold text-muted">
             {ka.team.members} ({members.length})
@@ -70,14 +72,14 @@ export default async function TeamPage() {
                   </div>
                 </div>
                 <p className="mt-3 text-xs text-muted">{ka.team.roleHelp[m.role]}</p>
-                {isOwner && (
+                {canManage && (isOwner || m.role !== "OWNER") && (
                   <details className="mt-3 rounded-lg border border-line">
                     <summary className="cursor-pointer px-3 py-2 text-sm text-accent-strong">{ka.team.edit}</summary>
                     <div className="border-t border-line p-3">
                       <ActionForm action={updateMemberAction} className="space-y-3">
                         <input type="hidden" name="memberId" value={m.id} />
                         <JobFields lists={lists} position={m.positionId} department={m.departmentId} />
-                        <RolePicker name="role" defaultValue={m.role} idPrefix={m.id} />
+                        <RolePicker name="role" defaultValue={m.role} idPrefix={m.id} allowOwner={isOwner} />
                         <details className="rounded-lg bg-canvas p-3">
                           <summary className="cursor-pointer text-xs text-muted">{ka.team.customPermissions}</summary>
                           <p className="my-2 text-xs text-muted">{ka.team.customHint}</p>
@@ -127,7 +129,7 @@ export default async function TeamPage() {
           )}
         </div>
 
-        {isOwner && <div className="space-y-4">
+        {canManage && <div className="space-y-4">
           <Card className="h-fit border-accent/50">
             <CardHeader title={ka.team.add} />
             <CardBody className="space-y-4">
@@ -155,7 +157,7 @@ export default async function TeamPage() {
                 </Field>
                 <JobFields lists={lists} />
                 <Field label={ka.team.role} name="role">
-                  <RolePicker name="role" defaultValue="EMPLOYEE" idPrefix="new" />
+                  <RolePicker name="role" defaultValue="EMPLOYEE" idPrefix="new" allowOwner={isOwner} />
                 </Field>
                 <details className="rounded-lg bg-canvas p-3">
                   <summary className="cursor-pointer text-xs text-muted">{ka.team.customPermissions}</summary>

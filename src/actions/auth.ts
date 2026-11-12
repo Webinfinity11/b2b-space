@@ -11,6 +11,8 @@ import { fail, invalid, zCheckbox, zEmail, zOptionalText, zPassword, zPhone, zTe
 import { DEFAULT_PERMISSIONS } from "@/lib/permissions";
 import { slugify } from "@/lib/slug";
 import { notify } from "@/lib/notify";
+import { companyAudience } from "@/lib/audience";
+import type { MemberRole } from "@/generated/prisma/client";
 import { emailEnabled, renderEmail, sendEmail } from "@/lib/email";
 import { rateLimit } from "@/lib/rate-limit";
 import { RESET_HOURS, createResetLink, findReset } from "@/lib/password-reset";
@@ -241,7 +243,7 @@ export async function resetPasswordAction(_: FormState, formData: FormData): Pro
 type PendingInvitation = {
   id: string;
   companyId: string;
-  role: "OWNER" | "EMPLOYEE" | "FINANCE";
+  role: MemberRole;
   permissions: string[];
   positionId: string | null;
   departmentId: string | null;
@@ -261,8 +263,7 @@ async function applyInvitations(userId: string, name: string, invitations: Pendi
       db.companyInvitation.update({ where: { id: inv.id }, data: { acceptedAt: new Date(), token: null } }),
     ]);
     await notify([userId], { type: "MEMBER_INVITED", title: ka.notifications.memberAdded(inv.company.tradeName || inv.company.legalName), link: "/company" });
-    const owners = await db.companyMember.findMany({ where: { companyId: inv.companyId, role: "OWNER", status: "ACTIVE", NOT: { userId } }, select: { userId: true } });
-    await notify(owners.map((o) => o.userId), { type: "MEMBER_INVITED", title: ka.team.inviteAccepted(name), link: "/company/team" });
+    await notify(await companyAudience(inv.companyId, "team.manage", userId), { type: "MEMBER_INVITED", title: ka.team.inviteAccepted(name), link: "/company/team" });
     await audit({ actorId: userId, action: "company.invitation_accepted", entityType: "Company", entityId: inv.companyId, metadata: { invitationId: inv.id } });
   }
 }

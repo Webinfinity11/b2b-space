@@ -63,6 +63,7 @@ export const getCurrentUser = cache(async () => {
           status: true,
           emailVerifiedAt: true,
           emailNotifications: true,
+          mutedTopics: true,
           avatarUrl: true,
         },
       },
