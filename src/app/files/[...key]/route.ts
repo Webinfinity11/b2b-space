@@ -1,10 +1,7 @@
-import { getCurrentUser } from "@/lib/session";
 import { mimeForKey, readStoredFile } from "@/lib/storage";
 
 /** Serves public uploads (logos, media, videos, offer attachments). Supports Range for video seeking. */
 export async function GET(req: Request, ctx: RouteContext<"/files/[...key]">) {
-  // Closed platform: uploads (logos, offer files, media) are for signed-in members only.
-  if (!(await getCurrentUser())) return new Response("Not found", { status: 404 });
   const { key } = await ctx.params;
   const path = key.join("/");
   if (!/^[\w-]+(\/[\w-]+)*\.(jpg|png|webp|pdf|mp4|webm|mov)$/.test(path)) return new Response("Not found", { status: 404 });
@@ -14,7 +11,7 @@ export async function GET(req: Request, ctx: RouteContext<"/files/[...key]">) {
   const mime = mimeForKey(path);
   const headers: Record<string, string> = {
     "Content-Type": mime,
-    "Cache-Control": "private, max-age=86400",
+    "Cache-Control": "public, max-age=31536000, immutable",
     "X-Content-Type-Options": "nosniff",
     "Accept-Ranges": "bytes",
     // Images get a sandbox CSP; PDFs and videos must stay renderable by the browser.
