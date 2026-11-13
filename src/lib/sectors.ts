@@ -36,13 +36,15 @@ export async function notifyMatchingSectors(offerId: string) {
       company: {
         verificationStatus: "VERIFIED",
         id: { not: offer.companyId ?? "" },
-        categories: { some: { categoryId: { in: offer.targetIndustryIds } } },
+        // A company in a sub-industry also matches an offer aimed at its parent industry.
+        categories: { some: { OR: [{ categoryId: { in: offer.targetIndustryIds } }, { category: { parentId: { in: offer.targetIndustryIds } } }] } },
       },
     },
     select: { userId: true, role: true, permissions: true },
   });
   const permission = offer.type === "REQUEST" ? "responses.manage" : "purchasing";
-  const userIds = members.filter((m) => hasPermission(m, permission)).map((m) => m.userId);
+  // Ordinary employees can answer requests, but the sector alert is for the people who sell/buy.
+  const userIds = members.filter((m) => hasPermission(m, permission) && m.role !== "EMPLOYEE").map((m) => m.userId);
   const from = offer.isAnonymous || !offer.company ? ka.offer.anonymous : offer.company.tradeName || offer.company.legalName;
   const title = offer.type === "REQUEST" ? ka.notifications.matchingRequest(from, offer.title) : ka.notifications.matchingOffer(from, offer.title);
   await notify(userIds, { type: "MATCHING_OFFER", title, link: `/offers/${offer.id}` });
