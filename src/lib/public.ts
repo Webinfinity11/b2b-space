@@ -240,6 +240,10 @@ export type OfferFilters = {
   companyId?: string;
   /** Offer badge id. */
   badge?: string;
+  /** Hide the viewer's own offers (authored by them or published by their company). */
+  excludeOwn?: { userId: string; companyId?: string | null };
+  /** Exclude offers carrying this badge (shown in their own section). */
+  notBadge?: string;
   /** Only offers for these industries (targeted at one of them, or at all sectors). */
   forIndustries?: string[];
   pageSize?: number;
@@ -269,7 +273,12 @@ export async function searchOffers(f: OfferFilters) {
   }
   if (f.type) and.push({ type: f.type });
   if (f.badge) and.push({ badgeId: f.badge });
+  if (f.notBadge) and.push({ OR: [{ badgeId: null }, { badgeId: { not: f.notBadge } }] });
   if (f.forIndustries) and.push(offersForIndustries(f.forIndustries));
+  if (f.excludeOwn) {
+    and.push({ authorUserId: { not: f.excludeOwn.userId } });
+    if (f.excludeOwn.companyId) and.push({ OR: [{ companyId: null }, { companyId: { not: f.excludeOwn.companyId } }] });
+  }
   if (f.city) and.push({ city: { equals: f.city, mode: "insensitive" } });
   if (f.companyId) and.push({ companyId: f.companyId, isAnonymous: false });
   if (f.category) {

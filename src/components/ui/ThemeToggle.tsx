@@ -20,7 +20,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
   };
   const label = dark ? ka.theme.toLight : ka.theme.toDark;
   return (
-    <button type="button" onClick={toggle} aria-label={label} title={label} className={`grid size-10 shrink-0 place-items-center rounded-full text-ink hover:bg-chip hover:text-accent ${className}`}>
+    <button type="button" onClick={toggle} aria-label={label} title={label} className={`grid size-11 shrink-0 place-items-center rounded-full border border-line bg-surface text-ink transition-colors hover:border-accent/40 hover:text-accent ${className}`}>
       {dark ? (
         <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
           <circle cx="12" cy="12" r="4" />

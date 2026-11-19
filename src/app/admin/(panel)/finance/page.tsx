@@ -5,7 +5,7 @@ import { requireAdmin } from "@/lib/authz";
 import { db } from "@/lib/db";
 import { formatMoney } from "@/lib/format";
 import { OPEN_STATUSES } from "@/lib/invoices";
-import { Card, CardBody, CardHeader, EmptyState, PageHeader, StatCard } from "@/components/ui/Card";
+import { Card, CardBody, CardHeader, EmptyState, PageHeader, StatCard, StatGrid } from "@/components/ui/Card";
 
 export const metadata: Metadata = { title: ka.admin.finance };
 
@@ -67,7 +67,7 @@ export default async function AdminFinancePage() {
           return (
             <section key={c} className="mb-8">
               {currencies.length > 1 && <h2 className="mb-3 text-lg font-semibold">{c}</h2>}
-              <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+              <StatGrid>
                 <StatCard label={f.issued} value={formatMoney(n(iss?._sum.total), c)} hint={f.count(iss?._count ?? 0)} />
                 <StatCard label={f.paid} value={formatMoney(n(pm?._sum.amount), c)} hint={f.paymentsCount(pm?._count ?? 0)} />
                 <StatCard label={f.outstanding} value={formatMoney(n(op?._sum.total) - n(op?._sum.paidAmount), c)} hint={f.count(op?._count ?? 0)} />
@@ -76,7 +76,7 @@ export default async function AdminFinancePage() {
                   value={<span className={od?._count ? "text-danger" : ""}>{formatMoney(n(od?._sum.total) - n(od?._sum.paidAmount), c)}</span>}
                   hint={<Link href="/admin/invoices?status=OVERDUE" className="hover:underline">{f.count(od?._count ?? 0)}</Link>}
                 />
-              </div>
+              </StatGrid>
               <Card className="mt-4">
                 <CardHeader title={f.monthly} />
                 <CardBody>

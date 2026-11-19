@@ -4,7 +4,6 @@ import { ka } from "@/i18n/ka";
 import { startCompanyChatAction } from "@/actions/chat";
 import { getActiveMembership, requireUser } from "@/lib/authz";
 import { CITIES } from "@/lib/cities";
-import { db } from "@/lib/db";
 import { pageParam, param } from "@/lib/params";
 import { companyName, getCategoryTree, searchCompanies } from "@/lib/public";
 import { Icon } from "@/components/ui/Icon";
@@ -33,33 +32,15 @@ export default async function BusinessesPage({ searchParams }: PageProps<"/compa
   const size = sz === "SMALL" || sz === "MEDIUM" || sz === "LARGE" ? sz : undefined;
   const page = pageParam(sp.page);
 
-  const [result, categories, counts] = await Promise.all([
+  const [result, categories] = await Promise.all([
     searchCompanies({ q, category, city, role, size, page, pageSize: 30 }),
-    getCategoryTree(),
-    db.company.groupBy({ by: ["businessRole"], where: { verificationStatus: "VERIFIED" }, _count: true }),
+    getCategoryTree()
   ]);
-  const count = (k: string) => counts.find((c) => c.businessRole === k)?._count ?? 0;
-  const totalVerified = counts.reduce((s, c) => s + c._count, 0);
   const canMessage = Boolean(m);
 
   return (
     <>
-      <PageHeader eyebrow={ka.sgba.bizEyebrow} title={ka.sgba.bizTitle} text={ka.sgba.bizText(result.total)} />
-
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-4 rounded-[14px] border border-line-strong bg-blue-soft px-5 py-4">
-        <div className="flex items-start gap-3">
-          <Icon name="shield" size={20} className="mt-0.5 text-accent-strong" />
-          <div>
-            <div className="text-sm font-semibold text-ink">{ka.sgba.bizStrip(totalVerified)}</div>
-            <div className="text-xs text-muted">{ka.sgba.bizStripText}</div>
-          </div>
-        </div>
-        <div className="flex flex-wrap gap-2 text-xs font-semibold">
-          {(["BUYER", "SELLER", "BOTH"] as const).map((k) => (
-            <span key={k} className={`rounded-full px-3 py-1 ${ROLE_STYLE[k]}`}>{count(k)} {ka.sgba.rolesPlural[k]}</span>
-          ))}
-        </div>
-      </div>
+      <PageHeader title={ka.sgba.bizTitle} />
 
       <form action="/companies" className="mb-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.6fr)_repeat(4,minmax(0,1fr))_auto]">
         <label className="flex h-10 items-center gap-2 rounded-[10px] border border-line bg-surface px-3 text-muted sm:col-span-2 lg:col-span-1">
@@ -98,7 +79,7 @@ export default async function BusinessesPage({ searchParams }: PageProps<"/compa
             const industry = c.categories[0]?.category.name ?? c.customCategory ?? "—";
             const self = c.id === m?.companyId;
             return (
-              <article key={c.id} className="flex flex-col rounded-[16px] border border-line bg-surface p-5 transition hover:border-line-strong hover:shadow-[0_8px_24px_-18px_rgb(16_43_76/0.35)]">
+              <article key={c.id} className="flex flex-col rounded-[13px] border border-line bg-surface p-4 transition hover:border-accent/40">
                 <div className="flex items-start justify-between gap-3">
                   {c.logoUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element -- uploaded logos
@@ -117,10 +98,14 @@ export default async function BusinessesPage({ searchParams }: PageProps<"/compa
                   {c.city && <span className="inline-flex items-center gap-1"><Icon name="pin" size={13} /> {c.city}</span>}
                   <span className="inline-flex items-center gap-1"><Icon name="building" size={13} /> {ka.sgba.sizeFull[c.size]}</span>
                 </div>
-                <div className="mt-3 flex-1 rounded-[10px] bg-canvas px-3 py-2.5">
-                  <div className="text-[11px] text-muted">{ka.sgba.direction}</div>
-                  <div className="text-sm font-medium">{c.direction || "—"}</div>
-                </div>
+                {c.direction ? (
+                  <div className="mt-3 flex-1 rounded-[10px] bg-canvas px-3 py-2.5">
+                    <div className="text-[11px] text-muted">{ka.sgba.direction}</div>
+                    <div className="text-sm font-medium">{c.direction}</div>
+                  </div>
+                ) : (
+                  <div className="flex-1" />
+                )}
                 <div className="mt-4 grid grid-cols-2 gap-2">
                   <Link href={`/companies/${c.slug}`} className="grid h-10 place-items-center rounded-[10px] border border-line text-sm font-medium text-ink hover:bg-canvas">
                     {ka.sgba.profile}

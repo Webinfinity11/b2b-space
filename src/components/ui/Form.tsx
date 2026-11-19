@@ -36,6 +36,12 @@ export function ActionForm({
   useEffect(() => {
     if (state.ok && resetOnSuccess) ref.current?.reset();
   }, [state, resetOnSuccess]);
+  // Long forms: after a failed submit, bring the first error into view (the message sits at the top, the button at the bottom).
+  useEffect(() => {
+    if (state.ok || !state.message) return;
+    const target = ref.current?.querySelector<HTMLElement>("p.text-danger") ?? ref.current?.querySelector<HTMLElement>("[role=alert]");
+    target?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [state]);
   // Every submission returns a new state object → show a fresh toast.
   const [toastKey, setToastKey] = useState(0);
   // eslint-disable-next-line react-hooks/set-state-in-effect -- re-key the toast per result

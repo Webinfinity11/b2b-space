@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ka } from "@/i18n/ka";
+import { db } from "@/lib/db";
 import { getActiveMembership, requireUser } from "@/lib/authz";
 import { pageParam, param } from "@/lib/params";
 import { getPopularCategories, searchOffers } from "@/lib/public";
@@ -24,11 +25,17 @@ export default async function OffersPage({ searchParams }: PageProps<"/offers">)
   const page = pageParam(sp.page);
   // Default view: what fits my company's sector; "scope=all" is the general catalog.
   const industries = m ? await companyIndustryIds(m.companyId) : [];
-  const forMe = industries.length > 0 && param(sp.scope) !== "all";
+  const forMe = industries.length > 0 && param(sp.scope) !== "all" && !badge;
   const scope = forMe ? undefined : industries.length > 0 ? "all" : undefined;
-  const [result, categories] = await Promise.all([
-    searchOffers({ q, category, badge, type, page, pageSize: 16, loggedIn: true, forIndustries: forMe ? industries : undefined }),
+  // Programme badges (e.g. "ქალები ქმნიან ბიზნესს"): own tab, and the featured one gets its own section on top.
+  const badges = await db.offerBadge.findMany({ where: { isActive: true }, orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }] });
+  const featured = badges.find((b) => b.showBanner) ?? null;
+  const activeBadge = badges.find((b) => b.id === badge) ?? null;
+  const showFeatured = !!featured && !badge && !q && !category && page === 1 && type === "OFFER";
+  const [result, categories, featuredResult] = await Promise.all([
+    searchOffers({ q, category, badge, type, page, pageSize: 16, loggedIn: true, forIndustries: forMe ? industries : undefined, excludeOwn: { userId: user.id, companyId: m?.companyId }, notBadge: showFeatured ? featured!.id : undefined }),
     getPopularCategories(12, "OFFER"),
+    showFeatured ? searchOffers({ badge: featured!.id, type: "OFFER", page: 1, pageSize: 4, loggedIn: true, excludeOwn: { userId: user.id, companyId: m?.companyId } }) : null,
   ]);
 
   const href = (extra: Record<string, string | undefined>) => {
@@ -53,8 +60,18 @@ export default async function OffersPage({ searchParams }: PageProps<"/offers">)
         }
       />
 
+      {activeBadge && (
+        <section className="mb-6 border-l-[3px] border-accent bg-blue-soft px-5 py-4">
+          <h2 className="text-lg font-bold text-ink">{activeBadge.name}</h2>
+          {activeBadge.description && <p className="mt-1 max-w-2xl text-sm leading-relaxed text-secondary">{activeBadge.description}</p>}
+        </section>
+      )}
+
       <div className="mb-3 flex gap-2 overflow-x-auto pb-1">
         <Link href={href({ category: undefined, badge: undefined })} className={pill(!category && !badge)}>{ka.sgba.all}</Link>
+        {badges.map((b) => (
+          <Link key={b.id} href={href({ badge: b.id, category: undefined, page: undefined })} className={pill(badge === b.id)}>{b.name}</Link>
+        ))}
         {categories.map((c) => (
           <Link key={c.id} href={href({ category: c.slug, badge: undefined })} className={pill(category === c.slug)}>{c.name}</Link>
         ))}
@@ -82,7 +99,25 @@ export default async function OffersPage({ searchParams }: PageProps<"/offers">)
         </form>
       </div>
 
-      {result.items.length === 0 ? (
+      {featured && featuredResult && featuredResult.items.length > 0 && (
+        <section className="mb-9">
+          <div className="mb-4 flex items-end justify-between gap-4 border-b border-line pb-3">
+            <div>
+              <div className="text-xs font-bold text-accent">{ka.sgba.promoEyebrow}</div>
+              <h2 className="text-xl font-bold tracking-[-0.3px] text-ink">{featured.name}</h2>
+            </div>
+            <Link href={href({ badge: featured.id, page: undefined })} className="inline-flex shrink-0 items-center gap-1.5 text-[13px] font-bold text-accent hover:text-accent-hover">
+              {ka.sgba.viewAll} <Icon name="arrow" size={16} />
+            </Link>
+          </div>
+          <OfferGrid offers={featuredResult.items} respondAs={m?.companyId ?? "personal"} ownSlug={m?.company.slug} />
+        </section>
+      )}
+      {featured && featuredResult && featuredResult.items.length > 0 && result.items.length > 0 && (
+        <h2 className="mb-4 text-xl font-bold tracking-[-0.3px] text-ink">{ka.sgba.perksTitle}</h2>
+      )}
+
+      {result.items.length === 0 && featuredResult && featuredResult.items.length > 0 ? null : result.items.length === 0 ? (
         <p className="rounded-[17px] border border-dashed border-line-strong bg-surface px-4 py-14 text-center text-sm text-muted">{ka.sgba.noOffers}</p>
       ) : (
         <OfferGrid offers={result.items} respondAs={m?.companyId ?? "personal"} ownSlug={m?.company.slug} />

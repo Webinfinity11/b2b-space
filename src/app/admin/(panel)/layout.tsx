@@ -26,6 +26,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
     {
       items: [
         { href: "/admin", label: ka.admin.overview, icon: "home" },
+        { href: "/admin/offers", label: ka.admin.offers, icon: "tag" },
         { href: "/admin/registrations", label: ka.sgba.approvalsTitle, badge: pendingUsers, icon: "inbox" },
       ],
     },
@@ -41,7 +42,6 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
     {
       title: ka.admin.moderation,
       items: [
-        { href: "/admin/offers", label: ka.admin.offers, icon: "tag" },
         { href: "/admin/conversations", label: ka.admin.conversations, icon: "chat" },
         { href: "/admin/campaigns", label: ka.sgba.campAdminTitle, badge: newCampaigns, icon: "trend" },
         { href: "/admin/reports", label: ka.reports.adminTitle, badge: openReports, icon: "shield" },

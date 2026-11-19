@@ -1,15 +1,15 @@
 import type { ReactNode } from "react";
 
 export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`rounded-card border border-line bg-card shadow-card ${className}`}>{children}</div>;
+  return <div className={`rounded-[13px] border border-line bg-card ${className}`}>{children}</div>;
 }
 
 export function CardHeader({ title, text, action }: { title: ReactNode; text?: ReactNode; action?: ReactNode }) {
   return (
-    <div className="flex flex-wrap items-start justify-between gap-3 border-b border-line px-5 py-4">
+    <div className="flex flex-wrap items-start justify-between gap-3 border-b border-line px-4 py-3">
       <div>
-        <h2 className="text-[15px] font-semibold text-ink">{title}</h2>
-        {text && <p className="mt-0.5 text-sm text-muted">{text}</p>}
+        <h2 className="text-[13px] font-bold text-ink">{title}</h2>
+        {text && <p className="mt-0.5 text-xs text-muted">{text}</p>}
       </div>
       {action}
     </div>
@@ -17,18 +17,18 @@ export function CardHeader({ title, text, action }: { title: ReactNode; text?: R
 }
 
 export function CardBody({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`p-5 ${className}`}>{children}</div>;
+  return <div className={`p-4 ${className}`}>{children}</div>;
 }
 
-export function PageHeader({ title, text, action, eyebrow }: { title: ReactNode; text?: ReactNode; action?: ReactNode; eyebrow?: ReactNode }) {
+export function PageHeader({ title, text, action }: { title: ReactNode; text?: ReactNode; action?: ReactNode; eyebrow?: ReactNode }) {
   return (
-    <div className="mb-7 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
+    <div className="mb-5 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
       <div className="min-w-0">
-        {eyebrow && <div className="mb-1.5 text-xs font-bold text-muted">{eyebrow}</div>}
-        <h1 className="text-[27px] font-bold leading-[1.35] tracking-[-0.8px] text-ink sm:text-[33px]">{title}</h1>
-        {text && <p className="mt-1.5 text-sm leading-relaxed text-secondary">{text}</p>}
+        <h1 className="text-[22px] font-extrabold leading-[1.35] tracking-[-0.4px] text-ink sm:text-[26px]">{title}</h1>
+        {/* Only data-bearing subtitles (counts) are shown; generic marketing copy is dropped. */}
+        {typeof text === "string" && /d/.test(text) && <p className="mt-0.5 text-[13px] leading-relaxed text-muted">{text}</p>}
       </div>
-      {action && <div className="flex flex-wrap items-center gap-3">{action}</div>}
+      {action && <div className="flex flex-wrap items-center gap-2.5">{action}</div>}
     </div>
   );
 }
@@ -37,29 +37,24 @@ export function PageHeader({ title, text, action, eyebrow }: { title: ReactNode;
  * KPI tile (dashboard design): label + blue line icon, big number, footnote.
  * `dark`/`featured` = the highlighted first tile (light-blue gradient with a blue accent bar).
  */
-export function KpiCard({ label, value, hint, icon, dark, featured }: { label: ReactNode; value: ReactNode; hint?: ReactNode; icon?: ReactNode; tone?: string; dark?: boolean; featured?: boolean }) {
-  const hi = dark || featured;
+export function KpiCard({ label, value, hint, icon }: { label: ReactNode; value: ReactNode; hint?: ReactNode; icon?: ReactNode; tone?: string; dark?: boolean; featured?: boolean }) {
   return (
-    <div className={`relative flex min-h-[150px] flex-col justify-center rounded-card border border-line px-6 pb-5 pt-6 ${hi ? "bg-gradient-to-r from-blue-soft to-blue-soft-2" : "bg-surface"}`}>
-      {hi && <span className="absolute left-6 top-3.5 h-[5px] w-10 rounded-full bg-accent" />}
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <div className="text-sm leading-snug text-ink">{label}</div>
-        {icon && <span className="text-accent [&_svg]:size-6">{icon}</span>}
+    <div className="flex min-h-[104px] flex-col rounded-[13px] border border-line bg-surface p-3.5">
+      <div className="flex items-center gap-2.5 text-xs font-bold text-ink">
+        {icon && <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-blue-soft text-accent [&_svg]:size-[15px]">{icon}</span>}
+        <span className="min-w-0 truncate">{label}</span>
       </div>
-      <div className="whitespace-nowrap text-[30px] font-bold leading-none tracking-[-1px] text-ink tabular-nums xl:text-[35px]">{value}</div>
-      {hint && <div className="mt-3 text-xs text-secondary">{hint}</div>}
+      <div className="mt-2.5 truncate text-[22px] font-extrabold leading-none tracking-[-0.5px] text-ink tabular-nums">{value}</div>
+      {hint && <div className="mt-1.5 truncate text-[11px] text-muted">{hint}</div>}
     </div>
   );
 }
 
 /** Eyebrow + title used at the top of a section. */
-export function SectionTitle({ eyebrow, title, action }: { eyebrow?: ReactNode; title: ReactNode; action?: ReactNode }) {
+export function SectionTitle({ title, action }: { eyebrow?: ReactNode; title: ReactNode; action?: ReactNode }) {
   return (
-    <div className="mb-5 flex items-end justify-between gap-5">
-      <div>
-        {eyebrow && <div className="mb-0.5 text-xs text-muted">{eyebrow}</div>}
-        <h2 className="text-[20px] font-bold leading-normal tracking-[-0.4px] text-ink sm:text-[24px]">{title}</h2>
-      </div>
+    <div className="mb-3 flex items-center justify-between gap-5">
+      <h2 className="text-[16px] font-bold leading-normal tracking-[-0.2px] text-ink">{title}</h2>
       {action}
     </div>
   );
@@ -80,12 +75,17 @@ export function EmptyState({ text, action }: { text: ReactNode; action?: ReactNo
   );
 }
 
+/** Flat metric cell; place several inside <StatGrid> so they share hairline dividers. */
 export function StatCard({ label, value, hint }: { label: ReactNode; value: ReactNode; hint?: ReactNode }) {
   return (
-    <div className="card-glass rounded-card p-5">
-      <div className="text-xs font-medium text-secondary">{label}</div>
-      <div className="mt-2 text-[26px] font-bold tracking-tight text-ink tabular-nums">{value}</div>
-      {hint && <div className="mt-1 text-xs text-muted">{hint}</div>}
+    <div className="bg-card px-5 py-4">
+      <div className="text-xs text-muted">{label}</div>
+      <div className="mt-1.5 text-2xl font-semibold tracking-tight text-ink tabular-nums">{value}</div>
+      {hint && <div className="mt-0.5 text-xs text-muted">{hint}</div>}
     </div>
   );
+}
+
+export function StatGrid({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return <div className={`grid grid-cols-2 gap-px overflow-hidden rounded-[6px] border border-line bg-line lg:grid-cols-4 ${className}`}>{children}</div>;
 }

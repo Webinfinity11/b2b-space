@@ -113,14 +113,12 @@ export function OfferForm({
           <Field label={f.currency} name="currency" optional>
             <Select name="currency" defaultValue={defaults.currency ?? "GEL"} placeholder="—" options={CURRENCIES.map((c) => ({ value: c, label: c }))} />
           </Field>
-          <div className="grid grid-cols-2 gap-3">
-            <Field label={f.quantity} name="quantity" optional>
-              <Input name="quantity" inputMode="decimal" defaultValue={defaults.quantity} />
-            </Field>
-            <Field label={f.unit} name="unit" optional>
-              <Input name="unit" defaultValue={defaults.unit} placeholder={f.unitPlaceholder} maxLength={30} />
-            </Field>
-          </div>
+          <Field label={f.quantity} name="quantity" optional>
+            <Input name="quantity" inputMode="decimal" defaultValue={defaults.quantity} />
+          </Field>
+          <Field label={f.unit} name="unit" optional>
+            <Input name="unit" defaultValue={defaults.unit} placeholder={f.unitPlaceholder} maxLength={30} />
+          </Field>
         </CardBody>
       </Card>
 

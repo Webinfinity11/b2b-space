@@ -4,7 +4,7 @@ import { ResponsiveTable } from "./ResponsiveTable";
 export function Table({ head, children }: { head: ReactNode[]; children: ReactNode }) {
   return (
     <ResponsiveTable>
-    <div className="overflow-x-auto rounded-card border border-line bg-surface shadow-card max-md:overflow-visible max-md:border-0 max-md:bg-transparent max-md:shadow-none">
+    <div className="overflow-x-auto rounded-[13px] border border-line bg-surface max-md:overflow-visible max-md:border-0 max-md:bg-transparent max-md:shadow-none">
       <table className="w-full text-sm md:min-w-[640px]">
         <thead className="border-b border-line bg-canvas/60">
           <tr>

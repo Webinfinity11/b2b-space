@@ -93,7 +93,7 @@ export function HeaderSearch({ defaultValue = "", placeholder = ka.search.placeh
           else if (term) go(allHref);
         }}
       >
-        <label className="flex h-[42px] w-full items-center gap-3 rounded-[11px] border border-line bg-surface-2 px-4 text-ink focus-within:border-accent/50 focus-within:bg-surface">
+        <label className="flex h-11 w-full items-center gap-3 rounded-full border border-line bg-surface-2 px-4 text-ink focus-within:border-accent/50 focus-within:bg-surface">
           <Icon name="search" size={16} />
           <input
             ref={input}
