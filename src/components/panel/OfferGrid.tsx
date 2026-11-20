@@ -24,6 +24,10 @@ const CAT_ICON: Record<string, "car" | "bank" | "calendar" | "users" | "shield" 
 
 const initials = (name: string) => name.replace(/[^\p{L}\p{N}]/gu, "").slice(0, 2).toUpperCase();
 
+function logoOf(o: PublicOffer) {
+  return o.publisher.kind === "company" ? o.publisher.logoUrl : null;
+}
+
 function publisherName(o: PublicOffer) {
   return o.publisher.kind === "anonymous" ? ka.offer.anonymous : o.publisher.name;
 }
@@ -55,9 +59,14 @@ export function OfferGrid({ offers, respondAs, ownSlug, cols = 4 }: { offers: Pu
           return (
             <article key={o.id} className="flex min-w-0 flex-col rounded-card border border-line bg-surface px-[22px] pb-3.5 pt-[19px] transition hover:-translate-y-[3px] hover:border-accent/40 hover:shadow-[0_10px_28px_rgb(36_62_128/0.04)]">
               <div className="mb-3 flex min-h-9 items-center gap-3.5">
-                <span className="grid size-9 shrink-0 place-items-center rounded-[10px] bg-blue-soft text-[17px] font-bold text-accent">
-                  {CAT_ICON[o.category?.name ?? ""] ? <Icon name={CAT_ICON[o.category!.name]} size={22} /> : initials(publisherName(o))}
-                </span>
+                {logoOf(o) ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- uploads served from /files
+                  <img src={logoOf(o)!} alt={publisherName(o)} className="h-9 max-w-[112px] shrink-0 object-contain object-left" />
+                ) : (
+                  <span className="grid size-9 shrink-0 place-items-center rounded-[10px] bg-blue-soft text-[17px] font-bold text-accent">
+                    {CAT_ICON[o.category?.name ?? ""] ? <Icon name={CAT_ICON[o.category!.name]} size={22} /> : initials(publisherName(o))}
+                  </span>
+                )}
                 <span className="whitespace-nowrap text-xs text-muted">{o.category?.name ?? (o.type === "REQUEST" ? ka.offer.typeRequest : ka.offer.typeOffer)}</span>
                 {o.badge?.isActive && <span className={`ml-auto max-w-[156px] truncate rounded-full px-2.5 py-1 text-[10px] ${BADGE_STYLE[o.badge.color] ?? BADGE_STYLE.blue}`}>{o.badge.name}</span>}
                 {o.type === "REQUEST" && !o.badge?.isActive && <span className="ml-auto rounded-full bg-[#fff4dc] px-2.5 py-1 text-[10px] text-[#a06a12]">{ka.offer.typeRequest}</span>}
@@ -82,6 +91,10 @@ export function OfferGrid({ offers, respondAs, ownSlug, cols = 4 }: { offers: Pu
           <div className="relative max-h-[90dvh] w-full max-w-[560px] overflow-y-auto rounded-[16px] bg-surface p-6 shadow-2xl">
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
+                {logoOf(open) && (
+                  // eslint-disable-next-line @next/next/no-img-element -- uploads served from /files
+                  <img src={logoOf(open)!} alt={publisherName(open)} className="mb-3 h-10 max-w-[160px] object-contain object-left" />
+                )}
                 <div className="text-xs text-muted">{open.category?.name ?? ka.offer.notSpecified}</div>
                 <h2 id="offer-modal-title" className="mt-1 text-xl font-semibold text-ink">{open.title}</h2>
                 <div className="mt-1 text-sm font-semibold text-muted">
