@@ -131,6 +131,7 @@ export default async function ConversationPage({ params }: PageProps<"/app/conve
             <input type="hidden" name="conversationId" value={c.id} />
             <label htmlFor="body" className="sr-only">{ka.chat.placeholder}</label>
             <Textarea name="body" rows={2} maxLength={5000} placeholder={ka.chat.placeholder} />
+            <p className="text-[11px] text-muted">{ka.chat.adminNotice}</p>
             <div className="flex flex-wrap items-center justify-between gap-2">
               <label className="flex min-w-0 items-center gap-2 text-xs text-muted">
                 <span className="sr-only">{ka.chat.attach}</span>

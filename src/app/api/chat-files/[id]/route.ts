@@ -1,4 +1,4 @@
-import { activeChatGrant } from "@/lib/admin-access";
+import { ensureChatAccess } from "@/lib/admin-access";
 import { audit } from "@/lib/audit";
 import { getActiveMembership } from "@/lib/authz";
 import { db } from "@/lib/db";
@@ -18,7 +18,7 @@ export async function GET(_req: Request, ctx: RouteContext<"/api/chat-files/[id]
   });
   if (!message && user.platformRole === "ADMIN") {
     const candidate = await db.message.findFirst({ where: { id, kind: "FILE" }, select: { fileUrl: true, fileName: true, conversationId: true } });
-    if (candidate && (await activeChatGrant(user.id, candidate.conversationId))) {
+    if (candidate && (await ensureChatAccess(user.id, candidate.conversationId))) {
       message = candidate;
       await audit({ actorId: user.id, action: "conversation.admin_file_viewed", entityType: "Conversation", entityId: candidate.conversationId, metadata: { messageId: id } });
     }
