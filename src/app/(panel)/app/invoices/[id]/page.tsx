@@ -271,7 +271,6 @@ function Party({ title, p }: { title: string; p: InvoiceParty }) {
       {p.registrationNumber && <div className="text-muted">{i.regNumber}: {p.registrationNumber}</div>}
       {p.taxNumber && <div className="text-muted">{i.taxNumber}: {p.taxNumber}</div>}
       {p.address && <div className="text-muted">{p.address}</div>}
-      {(p.email || p.phone) && <div className="text-muted">{[p.email, p.phone].filter(Boolean).join(" · ")}</div>}
     </div>
   );
 }

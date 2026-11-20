@@ -96,7 +96,6 @@ export function renderInvoicePdf(inv: PdfInvoice): Promise<Buffer> {
       p.registrationNumber ? `${i.regNumber}: ${p.registrationNumber}` : null,
       p.taxNumber ? `${i.taxNumber}: ${p.taxNumber}` : null,
       p.address ? `${i.address}: ${p.address}` : null,
-      [p.email, p.phone].filter(Boolean).join(" · ") || null,
     ].filter(Boolean) as string[];
     for (const line of lines) {
       doc.text(line, x, yy, { width: colW });

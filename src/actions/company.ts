@@ -9,7 +9,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { audit } from "@/lib/audit";
 import { ForbiddenError, assertCompanyPermission, assertUser } from "@/lib/authz";
 import { db } from "@/lib/db";
-import { fail, invalid, zCheckbox, zEmail, zOptionalPhone, zOptionalText, zOptionalUrl, zText, type FormState } from "@/lib/forms";
+import { fail, invalid, zEmail, zOptionalPhone, zOptionalText, zOptionalUrl, zText, type FormState } from "@/lib/forms";
 import { notify } from "@/lib/notify";
 import { companyAudience } from "@/lib/audience";
 import { readPeopleFields } from "@/lib/people";
@@ -119,7 +119,8 @@ export async function updateCompanyProfileAction(_: FormState, formData: FormDat
 export async function updateCompanySettingsAction(_: FormState, formData: FormData): Promise<FormState> {
   const companyId = String(formData.get("companyId"));
   const { user } = await assertCompanyPermission(companyId, "owner");
-  const data = z.object({ showEmailPublicly: zCheckbox, showPhonePublicly: zCheckbox }).parse(Object.fromEntries(formData));
+  // Contact details are never public: negotiation happens on the platform.
+  const data = { showEmailPublicly: false, showPhonePublicly: false };
   const company = await db.company.update({ where: { id: companyId }, data });
   await audit({ actorId: user.id, action: "company.updated", entityType: "Company", entityId: companyId, metadata: data });
   revalidatePath(`/companies/${company.slug}`);

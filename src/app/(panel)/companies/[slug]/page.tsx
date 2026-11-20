@@ -37,8 +37,6 @@ export default async function CompanyPage({ params }: PageProps<"/companies/[slu
     { label: ka.companyForm.linkedin, url: company.linkedinUrl },
     { label: ka.companyForm.instagram, url: company.instagramUrl },
   ].filter((s) => s.url);
-  const showEmail = company.showEmailPublicly && company.contactEmail;
-  const showPhone = company.showPhonePublicly && company.contactPhone;
 
   return (
     <>
@@ -171,27 +169,9 @@ export default async function CompanyPage({ params }: PageProps<"/companies/[slu
             </Card>
             <Card>
               <CardHeader title={ka.company.contacts} />
-              <CardBody className="space-y-3 text-sm">
-                {showEmail || showPhone ? (
-                  <>
-                    {showEmail && (
-                      <InfoRow label={ka.company.email}>
-                        <a href={`mailto:${company.contactEmail}`} className="text-accent-strong hover:underline">
-                          {company.contactEmail}
-                        </a>
-                      </InfoRow>
-                    )}
-                    {showPhone && (
-                      <InfoRow label={ka.company.phone}>
-                        <a href={`tel:${company.contactPhone!.replace(/\s/g, "")}`} className="text-accent-strong hover:underline">
-                          {company.contactPhone}
-                        </a>
-                      </InfoRow>
-                    )}
-                  </>
-                ) : (
-                  <p className="text-muted">{ka.company.contactsHidden}</p>
-                )}
+              <CardBody className="text-sm">
+                {/* Contact details are never shown: deals, chat and meetings happen on the platform. */}
+                <p className="text-muted">{ka.company.contactsHidden}</p>
               </CardBody>
             </Card>
             {m && m.companyId !== company.id && <ReportButton targetType="COMPANY" targetId={company.id} />}
