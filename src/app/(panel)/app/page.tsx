@@ -116,21 +116,12 @@ export default async function DashboardPage() {
     </div>
   );
   const TONES_ORDER = ["blue", "green", "violet", "amber", "pink"] as const;
-  // TEST: tiles with no real activity get a sample curve so every sparkline is active (remove once there is real data).
-  const DEMO_SPARKS = [
-    [2, 3, 2, 4, 5, 4, 6, 5, 7, 6, 8, 7, 9, 8, 7, 9, 10, 9, 8, 10, 12, 11, 10, 12, 13, 12, 14, 13, 15, 16],
-    [4, 3, 5, 4, 6, 7, 5, 6, 8, 7, 9, 8, 7, 9, 10, 8, 9, 11, 10, 12, 11, 13, 12, 11, 13, 14, 13, 15, 14, 16],
-    [1, 2, 4, 3, 2, 5, 6, 4, 5, 7, 6, 5, 8, 7, 9, 6, 8, 9, 7, 10, 9, 11, 8, 10, 12, 10, 11, 13, 12, 14],
-    [3, 2, 3, 5, 4, 6, 5, 4, 6, 8, 7, 9, 8, 10, 9, 8, 10, 11, 9, 11, 12, 10, 12, 13, 11, 13, 14, 12, 14, 15],
-    [2, 4, 3, 5, 4, 3, 6, 5, 7, 6, 8, 9, 7, 8, 10, 9, 11, 10, 9, 11, 12, 11, 13, 12, 14, 13, 12, 14, 15, 17],
-  ];
-  const withDemo = (t: Trend, i: number): Trend => (t.spark.some((v) => v > 0) ? t : { ...t, spark: DEMO_SPARKS[i % DEMO_SPARKS.length] });
   const kpis: { label: string; value: string | number; hint: string; icon: "chat" | "trend" | "mail" | "file" | "box"; t: Trend }[] = [
-    { label: ka.sgba.kpiDeals, value: activeDeals, hint: ka.sgba.kpiDealsHint(dealCount), icon: "chat", t: withDemo(tDeals, 0) },
-    { label: ka.sgba.kpiForecast, value: formatAmount(Number(forecast._sum.amount ?? 0), "GEL"), hint: ka.sgba.kpiForecastHint, icon: "trend", t: withDemo(tForecast, 1) },
-    { label: ka.sgba.kpiMessages, value: unread, hint: ka.sgba.kpiMessagesHint(unreadMsgLinks.length), icon: "mail", t: withDemo(tMessages, 2) },
-    { label: ka.sgba.kpiReceivable, value: formatAmount(receivable, "GEL"), hint: ka.sgba.kpiReceivableHint, icon: "file", t: withDemo(tReceivable, 3) },
-    { label: d.kpiRequests, value: requests.total, hint: d.kpiRequestsHint, icon: "box", t: withDemo(tRequests, 4) },
+    { label: ka.sgba.kpiDeals, value: activeDeals, hint: ka.sgba.kpiDealsHint(dealCount), icon: "chat", t: tDeals },
+    { label: ka.sgba.kpiForecast, value: formatAmount(Number(forecast._sum.amount ?? 0), "GEL"), hint: ka.sgba.kpiForecastHint, icon: "trend", t: tForecast },
+    { label: ka.sgba.kpiMessages, value: unread, hint: ka.sgba.kpiMessagesHint(unreadMsgLinks.length), icon: "mail", t: tMessages },
+    { label: ka.sgba.kpiReceivable, value: formatAmount(receivable, "GEL"), hint: ka.sgba.kpiReceivableHint, icon: "file", t: tReceivable },
+    { label: d.kpiRequests, value: requests.total, hint: d.kpiRequestsHint, icon: "box", t: tRequests },
   ];
   const shortcuts: { href: string; label: string; icon: "tag" | "box" | "building" | "chat" | "invoice" | "chart" }[] = [
     { href: "/company/offers/new?type=OFFER", label: d.qOffer, icon: "tag" },
