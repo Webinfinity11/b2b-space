@@ -9,11 +9,11 @@ import { Wordmark } from "@/components/ui/Wordmark";
 import { BrandMarkSvg } from "@/components/ui/BrandMark";
 import { AdminNav } from "./AdminNav";
 
-export type NavItem = { href: string; label: string; badge?: number; icon?: IconName };
+export type NavItem = { href: string; label: string; short?: string; badge?: number; icon?: IconName };
 export type NavGroup = { title?: string; items: NavItem[] };
 
 /**
- * Workspace shell. Member: pill nav inside `top`. Admin: same header, side menu below it.
+ * Workspace shell. Member: pill nav inside `top`. Admin: same header, unfolded pill bar below it.
  * On narrow screens the sections move into a drawer.
  */
 export function Shell({
@@ -22,7 +22,7 @@ export function Shell({
   top,
   children,
   homeHref,
-  mainClassName = variant === "admin" ? "pb-8" : "px-4 pb-8 pt-2 sm:px-8",
+  mainClassName = "px-4 pb-8 pt-2 sm:px-8",
 }: {
   footerNote?: ReactNode;
   mainClassName?: string;
@@ -107,7 +107,7 @@ export function Shell({
     );
   }
 
-  // Admin: the member design, plus a side menu with every section visible.
+  // Admin: the member design, with every section unfolded in a pill bar under the header.
   return (
     <div className="member admin min-h-dvh bg-surface-2">
       {mobileDrawer}
@@ -120,12 +120,10 @@ export function Shell({
           {top}
         </div>
       </header>
-      <div className="mx-auto flex max-w-[1440px] items-start gap-6 px-4 sm:px-8">
-        <aside className="sticky top-4 hidden max-h-[calc(100dvh-32px)] w-[250px] shrink-0 overflow-y-auto pb-2 lg:block">
-          <AdminNav groups={groups} />
-        </aside>
-        <main className={`min-w-0 flex-1 ${mainClassName}`}>{children}</main>
+      <div className="mx-auto mb-4 hidden max-w-[1440px] px-8 lg:block">
+        <AdminNav groups={groups} />
       </div>
+      <main className={`mx-auto max-w-[1440px] ${mainClassName}`}>{children}</main>
     </div>
   );
 }

@@ -25,9 +25,9 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   const groups: NavGroup[] = [
     {
       items: [
-        { href: "/admin", label: ka.admin.overview, icon: "home" },
-        { href: "/admin/offers", label: ka.admin.offers, icon: "tag" },
-        { href: "/admin/registrations", label: ka.sgba.approvalsTitle, badge: pendingUsers, icon: "inbox" },
+        { href: "/admin", short: "მიმოხილვა", label: ka.admin.overview, icon: "home" },
+        { href: "/admin/offers", short: "შეთავაზებები", label: ka.admin.offers, icon: "tag" },
+        { href: "/admin/registrations", short: "რეგისტრაციები", label: ka.sgba.approvalsTitle, badge: pendingUsers, icon: "inbox" },
       ],
     },
     {
@@ -42,25 +42,25 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
     {
       title: "მოდერაცია",
       items: [
-        { href: "/admin/conversations", label: ka.admin.conversations, icon: "chat" },
-        { href: "/admin/campaigns", label: ka.sgba.campAdminTitle, badge: newCampaigns, icon: "trend" },
-        { href: "/admin/reports", label: ka.reports.adminTitle, badge: openReports, icon: "shield" },
+        { href: "/admin/conversations", short: "მოლაპარაკებები", label: ka.admin.conversations, icon: "chat" },
+        { href: "/admin/campaigns", short: "კამპანიები", label: ka.sgba.campAdminTitle, badge: newCampaigns, icon: "trend" },
+        { href: "/admin/reports", short: "საჩივრები", label: ka.reports.adminTitle, badge: openReports, icon: "shield" },
       ],
     },
     {
       title: ka.admin.financeGroup,
       items: [
         { href: "/admin/invoices", label: ka.admin.invoices, icon: "invoice" },
-        { href: "/admin/commissions", label: ka.sgba.commissionsAdmin, icon: "check" },
-        { href: "/admin/finance", label: ka.admin.finance, icon: "chart" },
-        { href: "/admin/analytics", label: ka.analyticsFilter.adminTitle, icon: "trend" },
+        { href: "/admin/commissions", short: "საკომისიოები", label: ka.sgba.commissionsAdmin, icon: "check" },
+        { href: "/admin/finance", short: "ფინანსები", label: ka.admin.finance, icon: "chart" },
+        { href: "/admin/analytics", short: "ანალიტიკა", label: ka.analyticsFilter.adminTitle, icon: "trend" },
       ],
     },
     {
       title: ka.admin.systemGroup,
       items: [
         { href: "/admin/settings", label: ka.settings.title, icon: "settings" },
-        { href: "/admin/audit-log", label: ka.admin.auditLog, icon: "list" },
+        { href: "/admin/audit-log", short: "ჟურნალი", label: ka.admin.auditLog, icon: "list" },
       ],
     },
   ];
