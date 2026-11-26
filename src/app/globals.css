@@ -205,3 +205,10 @@ select option { color: var(--color-ink); background: var(--color-surface); }
 .hero-bar { transform-origin: bottom; animation: hero-bar-grow 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
 @keyframes hero-bar-grow { from { transform: scaleY(0.1); opacity: 0; } to { transform: scaleY(1); opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .hero-bar { animation: none; } }
+
+/* Member workspace (not admin): softer, rounder cards to match the offers page. */
+.member .ui-card { border-radius: 20px; }
+.member .form-page .ui-card-head { padding: 16px 22px; }
+.member .form-page .ui-card-head h2 { font-size: 15px; }
+.member .form-page .ui-card-body { padding: 22px; }
+.member .form-page :is(input:not([type="checkbox"], [type="radio"]), select, textarea) { border-radius: 12px; }

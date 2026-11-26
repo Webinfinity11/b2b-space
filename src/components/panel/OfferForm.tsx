@@ -38,12 +38,15 @@ export function OfferForm({
   industries,
   publishAs,
   lockedPublisher,
+  stacked = false,
 }: {
   defaults: OfferDefaults;
   categories: CategoryNode[];
   industries: CategoryNode[];
   publishAs: { value: string; label: string }[];
   lockedPublisher?: string;
+  /** One column, for pages that already have their own side column. */
+  stacked?: boolean;
 }) {
   const f = ka.offerForm;
   const categoryOptions = categories.flatMap((root) => [
@@ -53,9 +56,10 @@ export function OfferForm({
   const isDraft = !defaults.status || defaults.status === "DRAFT";
 
   return (
-    <ActionForm action={saveOfferAction} className="max-w-3xl space-y-6">
+    <ActionForm action={saveOfferAction} className={stacked ? "form-page space-y-4" : "form-page grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_340px]"}>
       {defaults.id && <input type="hidden" name="offerId" value={defaults.id} />}
       <input type="hidden" name="type" value={defaults.type} />
+      <div className="min-w-0 space-y-4">
       <Card>
         <CardBody className="grid gap-4 md:grid-cols-2">
           <Field label={f.title} name="title" className="md:col-span-2">
@@ -145,8 +149,11 @@ export function OfferForm({
         </CardBody>
       </Card>
 
+      </div>
+
+      <div className={stacked ? "space-y-4" : "space-y-4 lg:sticky lg:top-4"}>
       <Card>
-        <CardBody className="grid gap-4 md:grid-cols-2">
+        <CardBody className={stacked ? "grid gap-4 md:grid-cols-2" : "grid gap-4"}>
           <Field label={f.publishAs} name="publishAs" hint={publishAs.length === 1 && !lockedPublisher ? f.noCompanyVerified : undefined}>
             {lockedPublisher ? (
               <>
@@ -160,13 +167,13 @@ export function OfferForm({
           <Field label={f.visibility} name="visibility">
             <Select name="visibility" defaultValue={defaults.visibility ?? "PUBLIC"} options={opts(ka.enums.offerVisibility)} />
           </Field>
-          <div className="md:col-span-2">
+          <div className={stacked ? "md:col-span-2" : ""}>
             <Checkbox name="isAnonymous" defaultChecked={defaults.isAnonymous} label={<><span className="font-medium">{f.anonymous}</span><span className="mt-0.5 block text-xs text-muted">{f.anonymousHint}</span></>} />
           </div>
         </CardBody>
       </Card>
 
-      <div className="flex flex-wrap justify-end gap-2">
+      <div className={stacked ? "flex flex-wrap justify-end gap-2" : "flex flex-col-reverse gap-2 [&_button]:w-full"}>
         {isDraft ? (
           <>
             <SubmitButton variant="secondary" name="intent" value="draft">{f.saveDraft}</SubmitButton>
@@ -175,6 +182,7 @@ export function OfferForm({
         ) : (
           <SubmitButton name="intent" value="save">{ka.common.save}</SubmitButton>
         )}
+      </div>
       </div>
     </ActionForm>
   );

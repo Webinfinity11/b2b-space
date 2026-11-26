@@ -8,14 +8,14 @@ export const metadata: Metadata = { title: ka.companySettings.title };
 export default async function CompanySettingsPage() {
   await requireCompany("owner");
   return (
-    <>
+    <div className="form-page mx-auto max-w-2xl">
       <PageHeader title={ka.companySettings.title} text={ka.companySettings.text} />
-      <Card className="max-w-2xl">
+      <Card>
         <CardHeader title={ka.companySettings.visibility} />
         <CardBody>
           <p className="text-sm text-muted">{ka.company.contactsHidden}</p>
         </CardBody>
       </Card>
-    </>
+    </div>
   );
 }

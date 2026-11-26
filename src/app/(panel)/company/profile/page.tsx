@@ -25,7 +25,7 @@ export default async function CompanyProfilePage() {
   const name = companyName(company);
 
   return (
-    <>
+    <div className="form-page mx-auto max-w-3xl">
       <PageHeader
         title={ka.panel.companyProfile}
         text={name}
@@ -35,7 +35,7 @@ export default async function CompanyProfilePage() {
           </Link>
         }
       />
-      <ActionForm action={updateCompanyProfileAction} className="max-w-3xl space-y-6">
+      <ActionForm action={updateCompanyProfileAction} className="space-y-6">
         <input type="hidden" name="companyId" value={company.id} />
         {legalLocked && (
           <>
@@ -64,7 +64,7 @@ export default async function CompanyProfilePage() {
           <SubmitButton size="lg">{ka.common.save}</SubmitButton>
         </div>
       </ActionForm>
-      <div className="mt-6 grid max-w-3xl gap-6 md:grid-cols-2">
+      <div className="mt-6 grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader title={ka.media.title} text={ka.media.text} />
           <CardBody>
@@ -101,6 +101,6 @@ export default async function CompanyProfilePage() {
           </Card>
         )}
       </div>
-    </>
+    </div>
   );
 }

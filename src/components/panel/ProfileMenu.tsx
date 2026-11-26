@@ -56,11 +56,11 @@ export function ProfileMenu({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           {avatarUrl ? <img src={avatarUrl} alt="" className="size-full object-cover" /> : initials}
         </span>
-        <span className="hidden min-w-0 max-w-[190px] text-left leading-tight sm:block">
+        <span className="hidden min-w-0 max-w-[190px] text-left leading-tight sm:block xl:max-[1399px]:hidden">
           <span className="block truncate text-[13px] font-bold text-ink">{fullName}</span>
           <span className="block truncate text-[11px] text-muted">{sub}</span>
         </span>
-        <Icon name="chevron" size={14} className={`hidden text-muted transition-transform sm:block ${open ? "rotate-180" : ""}`} />
+        <Icon name="chevron" size={14} className={`hidden text-muted transition-transform sm:block xl:max-[1399px]:hidden ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
         <div className="absolute right-0 top-[52px] z-40 w-72 rounded-[13px] border border-line bg-surface p-2 shadow-[0_14px_40px_rgb(33_55_105/0.14)]">

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { ka } from "@/i18n/ka";
 import { Icon } from "@/components/ui/Icon";
 import { HeaderSearch } from "@/components/ui/HeaderSearch";
@@ -20,7 +21,10 @@ export async function Topbar({
   companyLinks = [],
   label,
   avatarUrl = null,
+  center,
 }: {
+  /** Replaces the search field (member header: pill navigation). */
+  center?: ReactNode;
   subtitle?: string;
   searchPlaceholder?: string;
   firstName: string;
@@ -49,20 +53,22 @@ export async function Topbar({
         <Wordmark />
         {label && <span className="hidden rounded-full bg-chip px-3 py-1 text-xs font-semibold text-accent lg:inline-block">{label}</span>}
       </div>
-      <div className="hidden w-full max-w-[640px] flex-1 md:ml-4 md:block xl:ml-8">
-        {searchAction === "/offers" ? (
-          <HeaderSearch placeholder={searchPlaceholder} />
-        ) : (
-          <form action={searchAction} method="get" role="search">
-            <label className="flex h-11 items-center gap-3 rounded-full border border-line bg-surface-2 px-4 text-muted focus-within:border-accent/50 focus-within:bg-surface">
-              <Icon name="search" size={18} />
-              <input name="q" type="search" placeholder={searchPlaceholder} aria-label={searchPlaceholder} className="h-full w-full bg-transparent text-sm text-ink placeholder:text-muted focus:outline-none" />
-            </label>
-          </form>
-        )}
-      </div>
+      {center ?? (
+        <div className="hidden w-full max-w-[640px] flex-1 md:ml-4 md:block xl:ml-8">
+          {searchAction === "/offers" ? (
+            <HeaderSearch placeholder={searchPlaceholder} />
+          ) : (
+            <form action={searchAction} method="get" role="search">
+              <label className="flex h-11 items-center gap-3 rounded-full border border-line bg-surface-2 px-4 text-muted focus-within:border-accent/50 focus-within:bg-surface">
+                <Icon name="search" size={18} />
+                <input name="q" type="search" placeholder={searchPlaceholder} aria-label={searchPlaceholder} className="h-full w-full bg-transparent text-sm text-ink placeholder:text-muted focus:outline-none" />
+              </label>
+            </form>
+          )}
+        </div>
+      )}
       <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-2.5">
-        <a href="/search" aria-label={ka.search.pageTitle} className="grid size-10 place-items-center rounded-[10px] text-ink hover:bg-chip md:hidden">
+        <a href="/search" aria-label={ka.search.pageTitle} className={`grid size-10 shrink-0 place-items-center rounded-full text-ink hover:bg-chip ${center ? "sm:border sm:border-line sm:bg-surface" : "md:hidden"}`}>
           <Icon name="search" size={20} />
         </a>
         <ThemeToggle />

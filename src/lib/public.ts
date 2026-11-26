@@ -264,6 +264,8 @@ export async function searchOffers(f: OfferFilters) {
       OR: [
         { title: { contains: f.q, mode: "insensitive" } },
         { description: { contains: f.q, mode: "insensitive" } },
+        { category: { name: { contains: f.q, mode: "insensitive" } } },
+        { isAnonymous: false, company: { OR: [{ legalName: { contains: f.q, mode: "insensitive" } }, { tradeName: { contains: f.q, mode: "insensitive" } }] } },
       ],
     });
   }

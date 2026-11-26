@@ -16,12 +16,13 @@ export type NavGroup = { title?: string; items: NavItem[] };
  * sticky white top bar. On phones the rail becomes a drawer with labels.
  */
 export function Shell({
+  variant,
   groups,
   top,
   sidebarBottom,
   children,
   homeHref,
-  mainClassName = "px-4 py-6 sm:px-8",
+  mainClassName = "px-4 pb-8 pt-2 sm:px-8",
 }: {
   footerNote?: ReactNode;
   mainClassName?: string;
@@ -113,19 +114,43 @@ export function Shell({
     </div>
   );
 
+  const mobileDrawer = open && (
+    <div className={`fixed inset-0 z-50 ${variant === "admin" ? "lg:hidden" : "xl:hidden"}`}>
+      <button type="button" aria-label={ka.nav.close} className="absolute inset-0 bg-[rgb(11_18_37/0.35)]" onClick={() => setOpen(false)} />
+      <aside className="absolute inset-y-0 left-0 w-[280px] max-w-[85vw] shadow-2xl">{drawer}</aside>
+    </div>
+  );
+  const menuButton = (
+    <button type="button" onClick={() => setOpen(true)} aria-label={ka.nav.menu} className={`grid size-10 shrink-0 place-items-center rounded-[10px] text-ink hover:bg-chip ${variant === "admin" ? "lg:hidden" : "xl:hidden"}`}>
+      <Icon name="menu" size={22} />
+    </button>
+  );
+
+  // Member workspace: marketplace-style header with the sections in a row (no side rail).
+  if (variant !== "admin") {
+    return (
+      <div className="member min-h-dvh bg-surface-2">
+        {mobileDrawer}
+        <header className="relative z-30">
+          <div className="mx-auto flex h-[84px] max-w-[1440px] items-center gap-2 px-4 sm:gap-4 sm:px-8">
+            {menuButton}
+            <Link href={homeHref} aria-label={ka.brand} className="hidden shrink-0 sm:block">
+              <BrandMarkSvg className="h-[34px] w-[26px]" />
+            </Link>
+            {top}
+          </div>
+        </header>
+        <main className={`mx-auto max-w-[1440px] ${mainClassName}`}>{children}</main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-dvh bg-canvas lg:pl-[86px]">
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-[86px] border-r border-line bg-surface/95 lg:block">{rail}</aside>
-      {open && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <button type="button" aria-label={ka.nav.close} className="absolute inset-0 bg-[rgb(11_18_37/0.35)]" onClick={() => setOpen(false)} />
-          <aside className="absolute inset-y-0 left-0 w-[280px] max-w-[85vw] shadow-2xl">{drawer}</aside>
-        </div>
-      )}
+      {mobileDrawer}
       <header className="sticky top-0 z-20 flex h-[72px] items-center gap-4 border-b border-line bg-surface/95 px-4 backdrop-blur sm:px-8">
-        <button type="button" onClick={() => setOpen(true)} aria-label={ka.nav.menu} className="grid size-10 shrink-0 place-items-center rounded-[10px] text-ink hover:bg-chip lg:hidden">
-          <Icon name="menu" size={22} />
-        </button>
+        {menuButton}
         {top}
       </header>
       <main className={`mx-auto max-w-[1900px] ${mainClassName}`}>{children}</main>

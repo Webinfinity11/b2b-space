@@ -47,7 +47,7 @@ export default async function EditOfferPage({ params }: PageProps<"/company/offe
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div>
           {offer.attachments.length > 0 && (
-            <Card className="mb-6 max-w-3xl">
+            <Card className="mb-4">
               <CardHeader title={ka.offer.attachments} />
               <CardBody>
                 <ul className="divide-y divide-line">
@@ -65,6 +65,7 @@ export default async function EditOfferPage({ params }: PageProps<"/company/offe
             </Card>
           )}
           <OfferForm
+            stacked
             categories={categories}
             industries={industries}
             publishAs={[]}

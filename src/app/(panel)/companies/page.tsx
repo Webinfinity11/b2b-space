@@ -83,7 +83,7 @@ export default async function BusinessesPage({ searchParams }: PageProps<"/compa
                 <div className="flex items-start justify-between gap-3">
                   {c.logoUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element -- uploaded logos
-                    <img src={c.logoUrl} alt="" className="size-12 rounded-[12px] border border-line object-cover" />
+                    <img src={c.logoUrl} alt="" className="h-14 w-28 rounded-[12px] border border-line bg-white object-contain p-1" />
                   ) : (
                     <span className="grid size-12 place-items-center rounded-[12px] bg-blue-soft text-sm font-bold text-accent">{abbr}</span>
                   )}

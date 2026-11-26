@@ -6,6 +6,7 @@ import { hasPermission } from "@/lib/permissions";
 import { companyName } from "@/lib/public";
 import { Shell, type NavGroup } from "@/components/panel/Shell";
 import { Topbar } from "@/components/panel/Topbar";
+import { PillNav } from "@/components/panel/PillNav";
 
 export const metadata: Metadata = { title: { default: ka.panel.title, template: `%s — ${ka.brand}` } };
 
@@ -67,6 +68,7 @@ export default async function PanelLayout({ children }: LayoutProps<"/">) {
       groups={groups}
       top={
         <Topbar
+          center={<PillNav groups={groups} />}
           firstName={user.firstName}
           avatarUrl={user.avatarUrl}
           fullName={`${user.firstName} ${user.lastName}`}

@@ -30,9 +30,9 @@ export default async function CorrectInvoicePage({ params }: PageProps<"/app/inv
     );
   }
   return (
-    <>
+    <div className="form-page mx-auto max-w-3xl">
       <PageHeader title={`${ka.invoice.correct}: ${inv.number}`} text={ka.invoice.correctText} action={back} />
-      <Card className="max-w-3xl">
+      <Card>
         <CardBody>
           <InvoiceCorrectionForm
             conversationId={snap.deal.conversationId}
@@ -52,6 +52,6 @@ export default async function CorrectInvoicePage({ params }: PageProps<"/app/inv
           />
         </CardBody>
       </Card>
-    </>
+    </div>
   );
 }

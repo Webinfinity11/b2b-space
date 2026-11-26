@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 
 export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`rounded-[13px] border border-line bg-card ${className}`}>{children}</div>;
+  return <div className={`ui-card rounded-[13px] border border-line bg-card ${className}`}>{children}</div>;
 }
 
 export function CardHeader({ title, text, action }: { title: ReactNode; text?: ReactNode; action?: ReactNode }) {
   return (
-    <div className="flex flex-wrap items-start justify-between gap-3 border-b border-line px-4 py-3">
+    <div className="ui-card-head flex flex-wrap items-start justify-between gap-3 border-b border-line px-4 py-3">
       <div>
         <h2 className="text-[13px] font-bold text-ink">{title}</h2>
         {text && <p className="mt-0.5 text-xs text-muted">{text}</p>}
@@ -17,7 +17,7 @@ export function CardHeader({ title, text, action }: { title: ReactNode; text?: R
 }
 
 export function CardBody({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`p-4 ${className}`}>{children}</div>;
+  return <div className={`ui-card-body p-4 ${className}`}>{children}</div>;
 }
 
 export function PageHeader({ title, text, action }: { title: ReactNode; text?: ReactNode; action?: ReactNode; eyebrow?: ReactNode }) {

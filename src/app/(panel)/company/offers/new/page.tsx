@@ -14,12 +14,12 @@ export default async function NewOfferPage({ searchParams }: PageProps<"/company
   const user = await requireUser("/company/offers/new");
   const [categories, industries, publishAs] = await Promise.all([getCategoryTree("OFFER"), getCategoryTree("INDUSTRY"), actingIdentities(user.id, "offers.manage")]);
   return (
-    <>
+    <div className="mx-auto max-w-[1180px]">
       <PageHeader
         title={type === "REQUEST" ? ka.offerForm.newRequest : ka.offerForm.newOffer}
         text={type === "REQUEST" ? ka.offerForm.requestsText : ka.offerForm.offersText}
       />
       <OfferForm defaults={{ type, isAnonymous: false }} categories={categories} industries={industries} publishAs={publishAs} />
-    </>
+    </div>
   );
 }

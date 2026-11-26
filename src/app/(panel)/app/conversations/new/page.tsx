@@ -27,9 +27,9 @@ export default async function NewDealPage({ searchParams }: PageProps<"/app/conv
   });
   const s = ka.sgba;
   return (
-    <>
+    <div className="form-page mx-auto max-w-2xl">
       <PageHeader eyebrow={s.dealsEyebrow} title={s.newDeal} text={s.newDealText} action={<Link href="/app/conversations" className="text-sm text-accent-strong hover:underline">← {s.nav.deals}</Link>} />
-      <Card className="max-w-2xl">
+      <Card>
         <CardBody>
           <ActionForm action={startDealAction} className="space-y-4">
             <Field label={s.newDealCompany} name="companyId">
@@ -48,6 +48,6 @@ export default async function NewDealPage({ searchParams }: PageProps<"/app/conv
           </ActionForm>
         </CardBody>
       </Card>
-    </>
+    </div>
   );
 }
