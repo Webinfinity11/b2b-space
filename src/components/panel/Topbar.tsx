@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { ka } from "@/i18n/ka";
 import { Icon } from "@/components/ui/Icon";
 import { HeaderSearch } from "@/components/ui/HeaderSearch";
+import { SearchDialog } from "@/components/ui/SearchDialog";
 import { ProfileMenu } from "./ProfileMenu";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -67,9 +68,7 @@ export async function Topbar({
         </div>
       )}
       <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-2.5">
-        <a href={searchAction === "/offers" ? "/search" : searchAction} aria-label={ka.search.pageTitle} className={`grid size-10 shrink-0 place-items-center rounded-full text-ink hover:bg-chip ${center ? "sm:border sm:border-line sm:bg-surface" : "md:hidden"}`}>
-          <Icon name="search" size={20} />
-        </a>
+        <SearchDialog admin={searchAction.startsWith("/admin")} className={center ? "sm:border sm:border-line sm:bg-surface" : "md:hidden"} />
         <ThemeToggle />
         {notificationsHref && (
           <Link
