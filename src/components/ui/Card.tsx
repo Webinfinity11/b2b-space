@@ -25,8 +25,8 @@ export function PageHeader({ title, text, action }: { title: ReactNode; text?: R
     <div className="mb-5 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
       <div className="min-w-0">
         <h1 className="text-[22px] font-extrabold leading-[1.35] tracking-[-0.4px] text-ink sm:text-[26px]">{title}</h1>
-        {/* Only data-bearing subtitles (counts) are shown; generic marketing copy is dropped. */}
-        {typeof text === "string" && /d/.test(text) && <p className="mt-0.5 text-[13px] leading-relaxed text-muted">{text}</p>}
+        {/* Members see only data-bearing subtitles (counts); admins also get the explanatory ones. */}
+        {typeof text === "string" && <p className={`mt-0.5 text-[13px] leading-relaxed text-muted ${/\d/.test(text) ? "" : "hidden [.admin_&]:block"}`}>{text}</p>}
       </div>
       {action && <div className="flex flex-wrap items-center gap-2.5">{action}</div>}
     </div>

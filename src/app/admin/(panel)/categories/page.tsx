@@ -44,12 +44,12 @@ export default async function AdminCategoriesPage({ searchParams }: PageProps<"/
     <>
       <PageHeader title={s.catTitle} text={s.catText} />
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-        <div className="inline-flex rounded-[12px] bg-surface-2 p-1">
+        <div className="inline-flex max-w-full flex-wrap rounded-[12px] border border-line bg-surface p-1">
           {tabs.map((t) => (
             <Link
               key={t.value}
               href={`/admin/categories?kind=${t.value}`}
-              className={`rounded-[10px] px-4 py-2 text-sm font-bold ${kind === t.value ? "bg-surface text-ink shadow-[0_2px_8px_rgb(33_55_105/0.08)]" : "text-muted hover:text-ink"}`}
+              className={`rounded-[10px] px-4 py-2 text-sm font-bold ${kind === t.value ? "bg-blue-soft text-ink" : "text-muted hover:text-ink"}`}
             >
               {t.label} <span className="ml-1 text-xs font-normal text-muted">{count(t.value)}</span>
             </Link>

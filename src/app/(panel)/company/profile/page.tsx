@@ -48,7 +48,7 @@ export default async function CompanyProfilePage() {
           <CardBody>
             <div className="flex items-center gap-4">
               <CompanyLogo name={name} url={company.logoUrl} size={64} />
-              <Field label={ka.companyForm.logo} name="logo" hint={ka.companyForm.imageHint} className="flex-1">
+              <Field label={ka.companyForm.logo} name="logo" hint={ka.companyForm.imageHint} className="min-w-0 flex-1">
                 <Input name="logo" type="file" accept="image/jpeg,image/png,image/webp" className="pt-2" />
               </Field>
             </div>
@@ -64,7 +64,7 @@ export default async function CompanyProfilePage() {
           <SubmitButton size="lg">{ka.common.save}</SubmitButton>
         </div>
       </ActionForm>
-      <div className="mt-6 grid gap-6 md:grid-cols-2">
+      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
         <Card>
           <CardHeader title={ka.media.title} text={ka.media.text} />
           <CardBody>

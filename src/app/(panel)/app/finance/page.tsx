@@ -150,7 +150,7 @@ export default async function FinancePage() {
             {rules.map((r) => (
               <li key={r.id} className="flex items-center justify-between gap-4 py-3 text-sm">
                 <span>{r.title}</span>
-                <span className="shrink-0 font-semibold text-success">{r.rate}</span>
+                <span className="max-w-[55%] shrink-0 text-right font-semibold text-success">{r.rate}</span>
               </li>
             ))}
           </ul>

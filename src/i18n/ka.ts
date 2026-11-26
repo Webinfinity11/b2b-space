@@ -1464,6 +1464,8 @@ export const ka = {
     hideOffer: "დაარქივება",
     offerAuthor: "ავტორი (შიდა)",
     financeGroup: "ფინანსები",
+    systemGroup: "სისტემა",
+    panelBadge: "ადმინ პანელი",
     reason: "მიზეზი",
     reasonRequired: "მიუთითეთ მიზეზი (მინ. 5 სიმბოლო).",
     byPlatform: "პლატფორმის ადმინისტრატორი",

@@ -25,9 +25,9 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   const groups: NavGroup[] = [
     {
       items: [
-        { href: "/admin", label: ka.admin.overview, icon: "home" },
-        { href: "/admin/offers", label: ka.admin.offers, icon: "tag" },
-        { href: "/admin/registrations", label: ka.sgba.approvalsTitle, badge: pendingUsers, icon: "inbox" },
+        { href: "/admin", label: ka.admin.overview, short: "მიმოხილვა", icon: "home" },
+        { href: "/admin/offers", label: ka.admin.offers, short: "შეთავაზებები", icon: "tag" },
+        { href: "/admin/registrations", label: ka.sgba.approvalsTitle, short: "რეგისტრაციები", badge: pendingUsers, icon: "inbox" },
       ],
     },
     {
@@ -40,7 +40,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
       ],
     },
     {
-      title: ka.admin.moderation,
+      title: "მოდერაცია",
       items: [
         { href: "/admin/conversations", label: ka.admin.conversations, icon: "chat" },
         { href: "/admin/campaigns", label: ka.sgba.campAdminTitle, badge: newCampaigns, icon: "trend" },
@@ -57,7 +57,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
       ],
     },
     {
-      title: ka.admin.auditLog,
+      title: ka.admin.systemGroup,
       items: [
         { href: "/admin/settings", label: ka.settings.title, icon: "settings" },
         { href: "/admin/audit-log", label: ka.admin.auditLog, icon: "list" },
@@ -78,7 +78,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
           searchAction="/admin/companies"
           notificationsHref={null}
           profileHref="/admin"
-          label={ka.sgba.adminPanel}
+          label={ka.admin.panelBadge}
           searchPlaceholder={ka.top.adminSearch}
         />
       }

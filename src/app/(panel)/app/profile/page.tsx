@@ -17,7 +17,7 @@ export default async function ProfilePage() {
   return (
     <>
       <PageHeader title={ka.profile.title} text={ka.profile.text} />
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader title={ka.profile.personalData} />
           <CardBody>
@@ -27,7 +27,7 @@ export default async function ProfilePage() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   {user.avatarUrl ? <img src={user.avatarUrl} alt="" className="size-full object-cover" /> : `${user.firstName.slice(0, 1)}${user.lastName.slice(0, 1)}`}
                 </span>
-                <div className="flex-1 space-y-1">
+                <div className="min-w-0 flex-1 space-y-1">
                   <Field label={ka.profile.avatar} name="avatar" optional hint={ka.profile.avatarHint}>
                     <Input name="avatar" type="file" accept="image/jpeg,image/png,image/webp" className="pt-1.5 text-xs" />
                   </Field>

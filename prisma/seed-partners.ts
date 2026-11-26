@@ -9,6 +9,7 @@ import { randomBytes } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
+import { DEFAULT_PERMISSIONS } from "../src/lib/permissions";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL, max: 1 }) });
 
@@ -16,7 +17,7 @@ const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.
 const PARTNERS: [string, string, string[], string, string | null, string][] = [
   ["procredit", "ProCredit Bank", ["პროკრედიტ ბანკი"], "ბუღალტერია და ფინანსები", "ფინანსები", "ბიზნეს საბანკო მომსახურება"],
   ["gpi", "GPI Holding", ["GPI", "ჯიპიაი ჰოლდინგი"], "დაზღვევა", "დაზღვევა", "კორპორაციული დაზღვევა"],
-  ["gorgia", "Gorgia", ["გორგია"], "რიტეილი და მშენებლობა", null, "სამშენებლო და სარემონტო მასალები"],
+  ["gorgia", "Gorgia", ["გორგია"], "სამშენებლო მასალები", null, "სამშენებლო და სარემონტო მასალები"],
   ["amboli", "Amboli", ["ამბოლი"], "ავტომობილები", "ავტო", "ავტოპარკის მომსახურება"],
   ["gulf", "Gulf", ["Gulf Georgia"], "საწვავი და ენერგია", "საწვავი", "კორპორაციული საწვავი"],
   ["itechnics", "iTechnics", [], "IT და ტექნოლოგიები", null, "Apple ტექნიკა კომპანიებისთვის"],
@@ -28,16 +29,16 @@ const PARTNERS: [string, string, string[], string, string | null, string][] = [
   ["infinity", "Infinity Solutions", ["ინფინიტი სოლუშენსი"], "IT და ტექნოლოგიები", null, "ვებ და IT გადაწყვეტილებები"],
   ["akhalimzera", "ახალი მზერა", [], "ჯანდაცვა", null, "თვალის კლინიკის მომსახურება"],
   ["geosafety", "ჯეოსეიფთი", ["GeoSafety"], "შრომის უსაფრთხოება", null, "შრომის უსაფრთხოების მომსახურება"],
-  ["shuaguli", "Shuaguli", ["შუაგული"], "HoReCa და ღონისძიებები", null, "კორპორაციული მომსახურება"],
+  ["shuaguli", "Shuaguli", ["შუაგული"], "ღონისძიებები", null, "კორპორაციული მომსახურება"],
   ["igal", "IGAL", ["IGAL | IRGlobal"], "იურიდიული მომსახურება", null, "იურიდიული მომსახურება კომპანიებისთვის"],
-  ["metaphora", "Metaphora", [], "HR და განათლება", "HR", "ტრენინგები და განვითარება"],
+  ["metaphora", "Metaphora", [], "განათლება", "HR", "ტრენინგები და განვითარება"],
   ["talant", "Talant.ge", [], "HR და რეკრუტინგი", "HR", "თანამშრომლების შერჩევა"],
   ["adhub", "AdHub", [], "მედია და მარკეტინგი", null, "მარკეტინგული მომსახურება"],
   ["arena", "Arena", ["Sports Complex Arena"], "ფიტნესი და სპორტი", null, "კორპორაციული სპორტული აბონემენტი"],
   ["litz", "Litz Resort", [], "სასტუმროები", "სასტუმროები", "კორპორაციული დასვენება და ღონისძიებები"],
 ];
 
-const PERMISSIONS = ["company.edit", "offers.manage", "responses.manage", "terms.manage", "invoices.view", "invoices.manage", "finance.view"];
+const PERMISSIONS = [...DEFAULT_PERMISSIONS.OWNER];
 
 async function main() {
   const cats = await db.category.findMany({ select: { id: true, name: true, kind: true } });

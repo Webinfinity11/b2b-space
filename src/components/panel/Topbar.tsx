@@ -50,8 +50,8 @@ export async function Topbar({
   return (
     <>
       <div className="flex shrink-0 items-center gap-3">
-        <Wordmark />
-        {label && <span className="hidden rounded-full bg-chip px-3 py-1 text-xs font-semibold text-accent lg:inline-block">{label}</span>}
+        <span className={label ? "hidden sm:inline-flex" : "inline-flex"}><Wordmark /></span>
+        {label && <span className="whitespace-nowrap rounded-full bg-[#ffc247] px-3 py-1 text-xs font-bold text-[#0b1225]">{label}</span>}
       </div>
       {center ?? (
         <div className="hidden w-full max-w-[640px] flex-1 md:ml-4 md:block xl:ml-8">

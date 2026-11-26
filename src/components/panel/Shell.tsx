@@ -7,22 +7,22 @@ import { ka } from "@/i18n/ka";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { BrandMarkSvg } from "@/components/ui/BrandMark";
+import { AdminNav } from "./AdminNav";
 
-export type NavItem = { href: string; label: string; badge?: number; icon?: IconName };
+export type NavItem = { href: string; label: string; short?: string; badge?: number; icon?: IconName };
 export type NavGroup = { title?: string; items: NavItem[] };
 
 /**
- * Workspace shell (B2B Space dashboard design): narrow white icon rail on the left with tooltips,
- * sticky white top bar. On phones the rail becomes a drawer with labels.
+ * Workspace shell: header with horizontal sections (member: pill nav inside `top`; admin: AdminNav
+ * row under a dark header). On narrow screens the sections move into a drawer.
  */
 export function Shell({
   variant,
   groups,
   top,
-  sidebarBottom,
   children,
   homeHref,
-  mainClassName = "px-4 pb-8 pt-2 sm:px-8",
+  mainClassName = "px-4 pb-8 pt-5 sm:px-8",
 }: {
   footerNote?: ReactNode;
   mainClassName?: string;
@@ -44,45 +44,6 @@ export function Shell({
   const matches = (href: string) => pathname === href || (href !== homeHref && pathname.startsWith(`${href}/`));
   const best = allHrefs.filter(matches).sort((a, b) => b.length - a.length)[0];
 
-  const rail = (
-    <div className="flex h-full flex-col items-center px-3 pb-4">
-      <Link href={homeHref} aria-label={ka.brand} title={ka.brand} className="grid h-[72px] w-[50px] shrink-0 place-items-center">
-        <BrandMarkSvg />
-      </Link>
-      {groups.map((g, gi) => (
-        <div key={gi} className="flex w-full flex-col items-center">
-          {gi > 0 && <div className="my-4 h-px w-11 shrink-0 bg-line" />}
-          <nav className="flex flex-col items-center gap-1.5" aria-label={g.title ?? ka.nav.menu}>
-            {g.items.map((item) => {
-              const active = item.href === best;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  aria-label={item.label}
-                  aria-current={active ? "page" : undefined}
-                  className={`group relative grid h-[46px] w-[54px] place-items-center rounded-[12px] transition-colors ${
-                    active ? "bg-blue-soft text-accent" : "text-ink hover:bg-chip hover:text-accent"
-                  }`}
-                >
-                  {item.icon && <Icon name={item.icon} size={24} />}
-                  {item.badge ? (
-                    <span className="absolute right-1 top-0.5 grid h-[19px] min-w-[19px] place-items-center rounded-full border-2 border-surface bg-accent px-1 text-[10px] font-bold text-white tabular-nums">{item.badge}</span>
-                  ) : null}
-                  <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 hidden -translate-y-1/2 whitespace-nowrap nav-tip rounded-[8px] border border-white/10 bg-deep px-2.5 py-1.5 text-xs font-medium text-white shadow-lg group-hover:block group-focus-visible:block">
-                    {item.label}
-                  </span>
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
-      ))}
-      <div className="min-h-6 flex-1" />
-      {sidebarBottom}
-    </div>
-  );
-
   const drawer = (
     <div className="flex h-full flex-col overflow-y-auto bg-surface px-4 pb-4">
       <div className="flex h-[68px] items-center justify-between">
@@ -96,6 +57,7 @@ export function Shell({
       </div>
       {groups.map((g, gi) => (
         <div key={gi} className={gi > 0 ? "mt-3 border-t border-line pt-3" : ""}>
+          {variant === "admin" && g.title && <div className="px-3 pb-1 text-[11px] font-bold text-muted">{g.title}</div>}
           {g.items.map((item) => (
             <Link
               key={item.href}
@@ -145,15 +107,23 @@ export function Shell({
     );
   }
 
+  // Admin: same rounded look as the member side, under a dark header so the two are never confused.
   return (
-    <div className="min-h-dvh bg-canvas lg:pl-[86px]">
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-[86px] border-r border-line bg-surface/95 lg:block">{rail}</aside>
+    <div className="admin min-h-dvh bg-surface-2">
       {mobileDrawer}
-      <header className="sticky top-0 z-20 flex h-[72px] items-center gap-4 border-b border-line bg-surface/95 px-4 backdrop-blur sm:px-8">
-        {menuButton}
-        {top}
+      <header className="admin-head sticky top-0 z-30 border-b border-line bg-canvas text-ink">
+        <div className="mx-auto flex h-[68px] max-w-[1440px] items-center gap-2 px-4 sm:gap-4 sm:px-8">
+          {menuButton}
+          <Link href={homeHref} aria-label={ka.brand} className="hidden shrink-0 sm:block">
+            <BrandMarkSvg className="h-[34px] w-[26px]" />
+          </Link>
+          {top}
+        </div>
+        <div className="mx-auto hidden max-w-[1440px] px-8 pb-3 lg:block">
+          <AdminNav groups={groups} />
+        </div>
       </header>
-      <main className={`mx-auto max-w-[1900px] ${mainClassName}`}>{children}</main>
+      <main className={`mx-auto max-w-[1440px] ${mainClassName}`}>{children}</main>
     </div>
   );
 }
