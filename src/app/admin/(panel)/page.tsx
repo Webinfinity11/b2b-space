@@ -88,9 +88,9 @@ export default async function AdminOverviewPage() {
     <>
       <PageHeader title={ka.admin.overview} text={ka.admin.overviewText} />
 
-      <section className="grid grid-cols-2 gap-2.5 lg:grid-cols-5">
+      <section className="grid grid-cols-2 gap-2.5 lg:grid-cols-6 2xl:grid-cols-5">
         {kpis.map((k, i) => (
-          <KpiTile key={k.id} tone={(["blue", "green", "violet", "amber", "pink"] as const)[i]} {...k} className={i === 4 ? "col-span-2 lg:col-span-1" : ""} />
+          <KpiTile key={k.id} tone={(["blue", "green", "violet", "amber", "pink"] as const)[i]} {...k} className={`2xl:col-span-1 ${i < 3 ? "lg:col-span-2" : "lg:col-span-3"} ${i === 4 ? "col-span-2" : ""}`} />
         ))}
       </section>
 
@@ -189,7 +189,7 @@ export default async function AdminOverviewPage() {
 
         <div className={panel}>
           {head(d.quickTitle)}
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2 lg:grid-cols-1 2xl:grid-cols-2">
             {quick.map((q) => (
               <Link key={q.href} href={q.href} className="flex min-h-[46px] items-center gap-2 rounded-[9px] border border-line px-2.5 py-2 text-xs font-bold text-ink transition-colors hover:border-accent/40 hover:bg-blue-soft">
                 <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-blue-soft text-accent">

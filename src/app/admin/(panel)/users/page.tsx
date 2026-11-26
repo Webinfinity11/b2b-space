@@ -140,7 +140,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                   ) : (
                     <form action={setUserRoleAction} className="flex items-center gap-2">
                       <input type="hidden" name="userId" value={u.id} />
-                      <select name="role" defaultValue={u.platformRole} className={`${controlClass} h-8 w-auto text-xs`}>
+                      <select name="role" defaultValue={u.platformRole} className={`${controlClass} h-8 w-auto min-w-[150px] text-xs`}>
                         {ROLES.map((r) => <option key={r} value={r}>{ka.enums.platformRole[r]}</option>)}
                       </select>
                       <Button type="submit" size="sm" variant="secondary">{ka.common.save}</Button>

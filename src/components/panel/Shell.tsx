@@ -9,12 +9,12 @@ import { Wordmark } from "@/components/ui/Wordmark";
 import { BrandMarkSvg } from "@/components/ui/BrandMark";
 import { AdminNav } from "./AdminNav";
 
-export type NavItem = { href: string; label: string; short?: string; badge?: number; icon?: IconName };
+export type NavItem = { href: string; label: string; badge?: number; icon?: IconName };
 export type NavGroup = { title?: string; items: NavItem[] };
 
 /**
- * Workspace shell: header with horizontal sections (member: pill nav inside `top`; admin: AdminNav
- * row under a dark header). On narrow screens the sections move into a drawer.
+ * Workspace shell. Member: pill nav inside `top`. Admin: same header, side menu below it.
+ * On narrow screens the sections move into a drawer.
  */
 export function Shell({
   variant,
@@ -22,7 +22,7 @@ export function Shell({
   top,
   children,
   homeHref,
-  mainClassName = "px-4 pb-8 pt-5 sm:px-8",
+  mainClassName = variant === "admin" ? "pb-8" : "px-4 pb-8 pt-2 sm:px-8",
 }: {
   footerNote?: ReactNode;
   mainClassName?: string;
@@ -107,23 +107,25 @@ export function Shell({
     );
   }
 
-  // Admin: same rounded look as the member side, under a dark header so the two are never confused.
+  // Admin: the member design, plus a side menu with every section visible.
   return (
-    <div className="admin min-h-dvh bg-surface-2">
+    <div className="member admin min-h-dvh bg-surface-2">
       {mobileDrawer}
-      <header className="admin-head sticky top-0 z-30 border-b border-line bg-canvas text-ink">
-        <div className="mx-auto flex h-[68px] max-w-[1440px] items-center gap-2 px-4 sm:gap-4 sm:px-8">
+      <header className="relative z-30">
+        <div className="mx-auto flex h-[84px] max-w-[1440px] items-center gap-2 px-4 sm:gap-4 sm:px-8">
           {menuButton}
           <Link href={homeHref} aria-label={ka.brand} className="hidden shrink-0 sm:block">
             <BrandMarkSvg className="h-[34px] w-[26px]" />
           </Link>
           {top}
         </div>
-        <div className="mx-auto hidden max-w-[1440px] px-8 pb-3 lg:block">
-          <AdminNav groups={groups} />
-        </div>
       </header>
-      <main className={`mx-auto max-w-[1440px] ${mainClassName}`}>{children}</main>
+      <div className="mx-auto flex max-w-[1440px] items-start gap-6 px-4 sm:px-8">
+        <aside className="sticky top-4 hidden max-h-[calc(100dvh-32px)] w-[250px] shrink-0 overflow-y-auto pb-2 lg:block">
+          <AdminNav groups={groups} />
+        </aside>
+        <main className={`min-w-0 flex-1 ${mainClassName}`}>{children}</main>
+      </div>
     </div>
   );
 }

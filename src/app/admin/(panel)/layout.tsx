@@ -25,9 +25,9 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   const groups: NavGroup[] = [
     {
       items: [
-        { href: "/admin", label: ka.admin.overview, short: "მიმოხილვა", icon: "home" },
-        { href: "/admin/offers", label: ka.admin.offers, short: "შეთავაზებები", icon: "tag" },
-        { href: "/admin/registrations", label: ka.sgba.approvalsTitle, short: "რეგისტრაციები", badge: pendingUsers, icon: "inbox" },
+        { href: "/admin", label: ka.admin.overview, icon: "home" },
+        { href: "/admin/offers", label: ka.admin.offers, icon: "tag" },
+        { href: "/admin/registrations", label: ka.sgba.approvalsTitle, badge: pendingUsers, icon: "inbox" },
       ],
     },
     {

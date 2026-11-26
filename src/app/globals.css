@@ -213,21 +213,6 @@ select option { color: var(--color-ink); background: var(--color-surface); }
 .member .form-page .ui-card-body { padding: 22px; }
 .member .form-page :is(input:not([type="checkbox"], [type="radio"]), select, textarea) { border-radius: 12px; }
 
-/* Admin panel: rounded cards like the member side; the header is always dark navy (in both themes). */
-.admin .ui-card, .admin [class~="rounded-[13px]"] { border-radius: 18px; }
+/* Admin panel shares the member look; its own panels get the same rounding. */
+.admin [class~="rounded-[13px]"] { border-radius: 20px; }
 .admin thead th { font-weight: 700; color: var(--color-secondary); }
-.admin-head {
-  color-scheme: dark;
-  --color-canvas: #0b1225;
-  --color-surface: #131d36;
-  --color-surface-2: #18233c;
-  --color-card: #131d36;
-  --color-chip: #202d4f;
-  --color-line: #2a3860;
-  --color-ink: #eef2fb;
-  --color-secondary: #b4bed3;
-  --color-muted: #8b96b0;
-  --color-accent: #8fa9ff;
-  --color-accent-strong: #8fa9ff;
-}
-:root[data-theme="dark"] .admin-head { --color-canvas: #050a16; }
