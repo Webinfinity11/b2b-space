@@ -50,8 +50,7 @@ export async function Topbar({
   return (
     <>
       <div className="flex shrink-0 items-center gap-3">
-        <span className={label ? "hidden sm:inline-flex" : "inline-flex"}><Wordmark /></span>
-        {label && <span className="whitespace-nowrap rounded-full bg-blue-soft px-3 py-1 text-xs font-bold text-accent">{label}</span>}
+        <Wordmark sub={label} />
       </div>
       {center ?? (
         <div className="hidden w-full max-w-[640px] flex-1 md:ml-4 md:block xl:ml-8">
@@ -68,7 +67,7 @@ export async function Topbar({
         </div>
       )}
       <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-2.5">
-        <a href="/search" aria-label={ka.search.pageTitle} className={`grid size-10 shrink-0 place-items-center rounded-full text-ink hover:bg-chip ${center ? "sm:border sm:border-line sm:bg-surface" : "md:hidden"}`}>
+        <a href={searchAction === "/offers" ? "/search" : searchAction} aria-label={ka.search.pageTitle} className={`grid size-10 shrink-0 place-items-center rounded-full text-ink hover:bg-chip ${center ? "sm:border sm:border-line sm:bg-surface" : "md:hidden"}`}>
           <Icon name="search" size={20} />
         </a>
         <ThemeToggle />

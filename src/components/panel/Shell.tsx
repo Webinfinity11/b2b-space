@@ -7,13 +7,12 @@ import { ka } from "@/i18n/ka";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { BrandMarkSvg } from "@/components/ui/BrandMark";
-import { AdminNav } from "./AdminNav";
 
 export type NavItem = { href: string; label: string; short?: string; badge?: number; icon?: IconName };
 export type NavGroup = { title?: string; items: NavItem[] };
 
 /**
- * Workspace shell. Member: pill nav inside `top`. Admin: same header, unfolded pill bar below it.
+ * Workspace shell. Member: pill nav inside `top`. Admin: same header, with grouped navigation (AdminNav) inside `top`.
  * On narrow screens the sections move into a drawer.
  */
 export function Shell({
@@ -77,13 +76,13 @@ export function Shell({
   );
 
   const mobileDrawer = open && (
-    <div className={`fixed inset-0 z-50 ${variant === "admin" ? "lg:hidden" : "xl:hidden"}`}>
+    <div className={`fixed inset-0 z-50 ${"xl:hidden"}`}>
       <button type="button" aria-label={ka.nav.close} className="absolute inset-0 bg-[rgb(11_18_37/0.35)]" onClick={() => setOpen(false)} />
       <aside className="absolute inset-y-0 left-0 w-[280px] max-w-[85vw] shadow-2xl">{drawer}</aside>
     </div>
   );
   const menuButton = (
-    <button type="button" onClick={() => setOpen(true)} aria-label={ka.nav.menu} className={`grid size-10 shrink-0 place-items-center rounded-[10px] text-ink hover:bg-chip ${variant === "admin" ? "lg:hidden" : "xl:hidden"}`}>
+    <button type="button" onClick={() => setOpen(true)} aria-label={ka.nav.menu} className={`grid size-10 shrink-0 place-items-center rounded-[10px] text-ink hover:bg-chip ${"xl:hidden"}`}>
       <Icon name="menu" size={22} />
     </button>
   );
@@ -107,7 +106,7 @@ export function Shell({
     );
   }
 
-  // Admin: the member design, with every section unfolded in a pill bar under the header.
+  // Admin: the member design; `top` carries AdminNav in the header line.
   return (
     <div className="member admin min-h-dvh bg-surface-2">
       {mobileDrawer}
@@ -120,9 +119,6 @@ export function Shell({
           {top}
         </div>
       </header>
-      <div className="mx-auto mb-4 hidden max-w-[1440px] px-8 lg:block">
-        <AdminNav groups={groups} />
-      </div>
       <main className={`mx-auto max-w-[1440px] ${mainClassName}`}>{children}</main>
     </div>
   );

@@ -4,6 +4,7 @@ import { requireAdmin } from "@/lib/authz";
 import { db } from "@/lib/db";
 import { Shell, type NavGroup } from "@/components/panel/Shell";
 import { Topbar } from "@/components/panel/Topbar";
+import { AdminNav } from "@/components/panel/AdminNav";
 
 export const metadata: Metadata = {
   title: { default: ka.admin.title, template: `%s — ${ka.admin.title}` },
@@ -76,6 +77,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
           sub={ka.enums.platformRole.ADMIN}
           unread={0}
           searchAction="/admin/companies"
+          center={<AdminNav groups={groups} />}
           notificationsHref={null}
           profileHref="/admin"
           label={ka.admin.panelBadge}
